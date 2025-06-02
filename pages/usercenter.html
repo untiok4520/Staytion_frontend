@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/scss/user_center/main.css" />
+    <title>Staytion</title>
+  </head>
+  <body>
+    <header>
+      <nav class="my-navbar navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="../assets/logo.png" class="logo_img" alt="logo" />
+          </a>
+
+          <div class="d-flex ms-auto align-items-center">
+            <ul class="navbar-nav ms-auto d-none d-lg-flex">
+              <li class="nav-item dropdown">
+                <button
+                  id="currencyDropdown"
+                  class="btn btn-outline-primary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  TWD
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="currencyDropdown">
+                  <li><a class="dropdown-item" href="#">台幣 TWD</a></li>
+                  <li><a class="dropdown-item" href="#">日元 JPY</a></li>
+                  <li><a class="dropdown-item" href="#">美元 USD</a></li>
+                  <li><a class="dropdown-item" href="#">人民幣 CNY</a></li>
+                  <li><a class="dropdown-item" href="#">港幣 HKD</a></li>
+                  <li><a class="dropdown-item" href="#">英鎊 GBP</a></li>
+                  <li><a class="dropdown-item" href="#">韓元 KRW</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <button
+                  id="langDropdown"
+                  class="btn btn-outline-primary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <img
+                    src="../assets/user_center/globe.png"
+                    class="nav_img-icon"
+                    alt=""
+                  />
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="langDropdown">
+                  <li>
+                    <a class="dropdown-item" href="?lang=zh_TW">繁體中文</a>
+                  </li>
+                  <li><a class="dropdown-item" href="?lang=zh">简体中文</a></li>
+                  <li><a class="dropdown-item" href="?lang=en">English</a></li>
+                  <li><a class="dropdown-item" href="?lang=ja">日本語</a></li>
+                  <li><a class="dropdown-item" href="?lang=ko">한국어</a></li>
+                </ul>
+              </li>
+            </ul>
+
+            <div class="auth-buttons">
+              <button class="btn btn-primary">登入</button>
+            </div>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarCollapse"
+              aria-controls="navbarCollapse"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <button
+              id="currencyDropdown2"
+              class="btn btn-outline-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              TWD
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="currencyDropdown2">
+              <li><a class="dropdown-item" href="#">台幣 TWD</a></li>
+              <li><a class="dropdown-item" href="#">日元 JPY</a></li>
+              <li><a class="dropdown-item" href="#">美元 USD</a></li>
+              <li><a class="dropdown-item" href="#">人民幣 CNY</a></li>
+              <li><a class="dropdown-item" href="#">港幣 HKD</a></li>
+              <li><a class="dropdown-item" href="#">英鎊 GBP</a></li>
+              <li><a class="dropdown-item" href="#">韓元 KRW</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <button
+              id="langDropdown2"
+              class="btn btn-outline-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <img
+                src="../assets/user_center/globe.png"
+                class="nav_img-icon"
+                width="20px"
+                height="20px"
+              />
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="langDropdown2">
+              <li>
+                <a class="dropdown-item" href="?lang=zh_TW">繁體中文</a>
+              </li>
+              <li><a class="dropdown-item" href="?lang=zh">简体中文</a></li>
+              <li><a class="dropdown-item" href="?lang=en">English</a></li>
+              <li><a class="dropdown-item" href="?lang=ja">日本語</a></li>
+              <li><a class="dropdown-item" href="?lang=ko">한국어</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <div class="usercenter_container">
+      <!-- sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-item" data-page="orders">
+          <span>管理訂單</span>
+        </div>
+        <div class="sidebar-item" data-page="messages">
+          <span>住宿訊息</span>
+        </div>
+        <div class="sidebar-item" data-page="reviews">
+          <span>住宿評論</span>
+        </div>
+        <div class="sidebar-item" data-page="favorites">
+          <span>收藏清單</span>
+        </div>
+        <div class="sidebar-item" data-page="profile">
+          <span>個人資料</span>
+        </div>
+      </aside>
+      <!-- 區塊更新內容 -->
+      <main class="uc-main-content">
+        <div id="orders" class="content-page">
+          <div class="tabs">
+            <div class="tab active" data-type="future">未來式</div>
+            <div class="tab" data-type="past">過去式</div>
+            <div class="tab" data-type="cancelled">已取消</div>
+          </div>
+
+          <div class="filter">
+            <div class="sort-dropdown">
+              <img
+                src="../assets/user_center/filtering.png"
+                width="30px"
+                height="30px"
+              />
+              <span>排序方式：入住日期</span>
+              <span>▼</span>
+            </div>
+            <div class="search-box">
+              <img src="../assets/user_center/search.png width="18px"
+              height="18px" />
+              <input type="text" placeholder="以訂單編號搜尋" />
+            </div>
+          </div>
+
+          <div class="location">
+            <div class="location-title">台中市</div>
+            <div class="location-date">6月18日（週三）</div>
+          </div>
+
+          <div class="order-list">
+            <div class="order-number">編號：XXXXXX</div>
+            <div class="order-content">
+              <div class="hotel-image"></div>
+              <div class="hotel-info">
+                <div class="hotel-name">Hotel Name</div>
+                <div class="hotel-dates">
+                  <span>入住日期</span>
+                  <span>退房日期</span>
+                </div>
+              </div>
+              <div class="order-detail">
+                <button class="btn btn-primary">訂單內容</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div id="messages" class="content-page" style="display: none"></div>
+      <div id="reviews" class="content-page" style="display: none"></div>
+      <div id="favorites" class="content-page" style="display: none"></div>
+      <div id="profile" class="content-page" style="display: none"></div>
+    </div>
+
+    <footer>
+      <div class="bg-secondary footer_container">
+        <div class="footer_item">
+          <p>客服中心</p>
+          <a href="#">服務中心</a>
+        </div>
+        <div class="footer_item">
+          <p>認識出趣玩</p>
+          <a href="#">關於出趣玩</a>
+        </div>
+        <div class="footer_item">
+          <p>服務條款</p>
+          <a href="#">服務條款</a>
+          <a href="#">隱私權政策</a>
+        </div>
+        <div class="footer_item">
+          <p>合作夥伴</p>
+          <a href="#">登入後台</a>
+        </div>
+      </div>
+    </footer>
+    <script src="../script/user_center/usercenter.js"></script>
+    <script src="../script/user_center/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

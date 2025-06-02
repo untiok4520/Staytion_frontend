@@ -1,0 +1,90 @@
+@use "../abstract/custom-variables" as v;
+@use "../bootstrap/bootstrap" as bs;
+
+.my-navbar {
+  background-color: bs.$body-bg;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  .container-fluid {
+    display: flex;
+    align-items: center;
+  }
+  .logo_img {
+    width: v.$logo-width;
+    height: v.$logo-height;
+  }
+  .nav_img-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .navbar-nav {
+    display: flex;
+    gap: map-get(bs.$spacers, 2);
+    margin-right: map-get(bs.$spacers, 2);
+  }
+  // 註冊登入按鈕包裹區
+  .auth-buttons {
+    display: flex;
+    gap: map-get(bs.$spacers, 2);
+    margin-right: map-get(bs.$spacers, 2);
+  }
+
+  .btn {
+    padding: bs.$spacer * 0.375 bs.$spacer;
+    min-width: 80px;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      background-color: white;
+      color: v.$primary;
+    }
+  }
+  .navbar-toggler {
+    outline: none;
+    box-shadow: none;
+    transition: all 0.2s ease-in;
+    &:hover {
+      border: 2px solid v.$primary;
+    }
+
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+  .btn-outline-primary {
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      background-color: transparent;
+      color: v.$primary;
+      border: 3px solid v.$primary;
+    }
+  }
+}
+
+@media (max-width: map-get(bs.$grid-breakpoints, lg)) {
+  .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+    padding-right: 1rem;
+  }
+  .collapse {
+    margin: 1rem 0;
+    .btn-outline-primary {
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        background-color: transparent;
+        color: v.$primary;
+        border: 3px solid v.$primary;
+      }
+    }
+  }
+}
+@media (min-width: map-get(bs.$grid-breakpoints, lg)) {
+  .collapse {
+    display: none;
+  }
+}
