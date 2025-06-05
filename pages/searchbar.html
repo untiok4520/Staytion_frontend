@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>搜尋列</title>
+
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+  <style>
+    .search-bar {
+      background: #1f487e;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+    }
+
+    /* 自訂 col-md-3.5 */
+    @media (min-width: 768px) {
+      .col-md-3-5 {
+        flex: 0 0 calc(100% * 3.5 / 12);
+        max-width: calc(100% * 3.5 / 12);
+      }
+
+      .col-md-1-5 {
+        flex: 0 0 calc(100% * 1.5 / 12);
+        max-width: calc(100% * 1.5 / 12);
+      }
+    }
+
+    .search-bar input,
+    .search-bar select {
+      border-radius: 0.25rem;
+      border: 1px solid #ccc;
+      transition: border-color 0.3s ease;
+    }
+
+    .search-bar input:focus,
+    .search-bar select:focus {
+      border-color: #376996;
+      outline: none;
+      box-shadow: 0 0 8px rgba(55, 105, 150, 0.4);
+    }
+
+    .search-bar button {
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-bar #search-btn {
+      background-color: #ff8800;
+      color: #fff;
+    }
+
+    .search-bar #search-btn:hover {
+      background-color: #ff9e2e;
+    }
+
+    .input-group-text {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-right: none;
+    }
+
+    #guest-btn {
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    /* popup 視窗 */
+    #guest-popup {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 0.25rem;
+      padding: 1rem;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      width: 230px;
+      z-index: 1000;
+      display: none;
+    }
+
+    #guest-popup .guest-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    #guest-popup .guest-row:last-child {
+      margin-bottom: 0;
+    }
+
+    #guest-popup .guest-label {
+      font-weight: 600;
+      color: #333;
+    }
+
+    #guest-popup .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #guest-popup button.qty-btn {
+      border: 1px solid #ccc;
+      background: #f8f9fa;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #guest-popup span.count {
+      min-width: 20px;
+      text-align: center;
+      font-weight: 600;
+      user-select: none;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+
+  <!-- 搜尋列 -->
+  <section class="container search-bar sticky-top position-relative">
+    <form class="row g-3 align-items-end" autocomplete="off">
+
+      <!-- 目的地 -->
+      <div class="col-12 col-md-3-5">
+        <div class="input-group" id="destination-group">
+          <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+          <select id="destination" class="form-select">
+            <option selected disabled>請選擇目的地</option>
+            <option value="台北">台北</option>
+            <option value="東京">東京</option>
+            <option value="巴黎">巴黎</option>
+            <option value="紐約">紐約</option>
+            <option value="倫敦">倫敦</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 日期 -->
+      <div class="col-12 col-md-3-5">
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+          <input type="text" id="daterange" class="form-control" placeholder="選擇日期範圍" />
+        </div>
+      </div>
+
+      <!-- 房客 -->
+      <div class="col-8 col-md-3-5 position-relative">
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-people"></i></span>
+          <input type="text" class="form-control" id="guest-btn" readonly />
+        </div>
+
+        <!-- popup -->
+        <div id="guest-popup" aria-label="房客選擇視窗">
+          <div class="guest-row">
+            <span class="guest-label">成人</span>
+            <div class="qty-control">
+              <button type="button" class="qty-btn" data-action="decrease" data-type="adults">−</button>
+              <span class="count" id="adults-count">2</span>
+              <button type="button" class="qty-btn" data-action="increase" data-type="adults">+</button>
+            </div>
+          </div>
+          <div class="guest-row">
+            <span class="guest-label">孩童</span>
+            <div class="qty-control">
+              <button type="button" class="qty-btn" data-action="decrease" data-type="children">−</button>
+              <span class="count" id="children-count">0</span>
+              <button type="button" class="qty-btn" data-action="increase" data-type="children">+</button>
+            </div>
+          </div>
+          <div class="guest-row">
+            <span class="guest-label">房間</span>
+            <div class="qty-control">
+              <button type="button" class="qty-btn" data-action="decrease" data-type="rooms">−</button>
+              <span class="count" id="rooms-count">1</span>
+              <button type="button" class="qty-btn" data-action="increase" data-type="rooms">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 搜尋按鈕 -->
+      <div class="col-4 col-md-1-5 d-grid">
+        <button type="submit" class="btn" id="search-btn">
+          <i class="bi bi-search"></i> 搜尋
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- JS Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
+
+  <script>
+    // 日期選擇器初始化
+    flatpickr("#daterange", {
+      locale: "zh_tw",
+      mode: "range",
+      minDate: "today",
+      dateFormat: "Y-m-d",
+      showMonths: 2
+    });
+
+    // 房客 popup 與數量控制
+    const guestBtn = document.getElementById("guest-btn");
+    const guestPopup = document.getElementById("guest-popup");
+
+    const guestCounts = {
+      adults: 2,
+      children: 0,
+      rooms: 1
+    };
+
+    // 更新顯示文字
+    function updateGuestText() {
+      guestBtn.value = `${guestCounts.adults} 位成人・${guestCounts.children} 位孩童・${guestCounts.rooms} 間房`;
+    }
+
+    // 顯示/隱藏 popup
+    guestBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (guestPopup.style.display === "block") {
+        guestPopup.style.display = "none";
+      } else {
+        guestPopup.style.display = "block";
+      }
+    });
+
+    // 點擊外部關閉 popup
+    document.addEventListener("click", (e) => {
+      if (!guestPopup.contains(e.target) && e.target !== guestBtn) {
+        guestPopup.style.display = "none";
+      }
+    });
+
+    // 控制加減按鈕
+    guestPopup.querySelectorAll("button.qty-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.type;
+        const action = btn.dataset.action;
+
+        if (action === "increase") {
+          guestCounts[type]++;
+        } else if (action === "decrease") {
+          if ((type === "adults" || type === "rooms") && guestCounts[type] > 1) {
+            guestCounts[type]--;
+          } else if (type === "children" && guestCounts[type] > 0) {
+            guestCounts[type]--;
+          }
+        }
+
+        // 更新 popup 顯示數字
+        document.getElementById(type + "-count").textContent = guestCounts[type];
+        // 更新輸入欄文字
+        updateGuestText();
+      });
+    });
+
+    // 初始化文字顯示
+    updateGuestText();
+  </script>
+</body>
+
+</html>
