@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../styles/scss/user_center/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
+    />
     <title>Staytion</title>
   </head>
   <body>
@@ -16,7 +20,69 @@
 
           <div class="d-flex ms-auto align-items-center">
             <ul class="navbar-nav ms-auto d-none d-lg-flex">
-              <li class="nav-item dropdown">
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  TWD
+                </button>
+                <div
+                  class="modal fade"
+                  id="exampleModal"
+                  tabindex="-1"
+                  aria-labelledby="exampleModalLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                          選擇您使用的貨幣
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <div>新台幣</div>
+                        <div>日元 JPY</div>
+                        <div>美元 JPY</div>
+                        <div>歐元 JPY</div>
+                        <div>港幣 JPY</div>
+                        <div>人民幣 JPY</div>
+                        <div>英鎊 JPY</div>
+                        <div>丹麥克朗 JPY</div>
+                        <div>JPY</div>
+                        <div>丹麥克朗 JPY</div>
+                        <div>丹麥克朗 JPY</div>
+                        <div>丹麥克朗 JPY</div>
+                        <div>丹麥克朗 JPY</div>
+                        <div>丹麥克朗 JPY</div>
+                        <div>丹麥克朗 JPY</div>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                          Save changes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- <li class="nav-item dropdown">
                 <button
                   id="currencyDropdown"
                   class="btn btn-outline-primary dropdown-toggle"
@@ -36,8 +102,8 @@
                   <li><a class="dropdown-item" href="#">英鎊 GBP</a></li>
                   <li><a class="dropdown-item" href="#">韓元 KRW</a></li>
                 </ul>
-              </li>
-              <li class="nav-item dropdown">
+              </li> -->
+              <!-- <li class="nav-item dropdown">
                 <button
                   id="langDropdown"
                   class="btn btn-outline-primary dropdown-toggle"
@@ -46,11 +112,7 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  <img
-                    src="../assets/user_center/globe.png"
-                    class="nav_img-icon"
-                    alt=""
-                  />
+                  <span class="fi fi-tw fis"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="langDropdown">
                   <li>
@@ -61,7 +123,7 @@
                   <li><a class="dropdown-item" href="?lang=ja">日本語</a></li>
                   <li><a class="dropdown-item" href="?lang=ko">한국어</a></li>
                 </ul>
-              </li>
+              </li> -->
             </ul>
 
             <div class="auth-buttons">
@@ -163,7 +225,24 @@
           </div>
 
           <div class="filter">
-            <div class="sort-dropdown">
+            <div class="dropdown">
+              <a
+                class="btn btn-secondary dropdown-toggle"
+                href="#"
+                role="button"
+                id="dropdownMenuLink"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                排序方式
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="#">入住日期</a></li>
+                <li><a class="dropdown-item" href="#">訂單日期</a></li>
+              </ul>
+            </div>
+            <!-- <div class="sort-dropdown">
               <img
                 src="../assets/user_center/filtering.png"
                 width="30px"
@@ -171,10 +250,13 @@
               />
               <span>排序方式：入住日期</span>
               <span>▼</span>
-            </div>
+            </div> -->
             <div class="search-box">
-              <img src="../assets/user_center/search.png width="18px"
-              height="18px" />
+              <img
+                src="../assets/user_center/search.png "
+                width="18px"
+                height="18px"
+              />
               <input type="text" placeholder="以訂單編號搜尋" />
             </div>
           </div>
@@ -196,7 +278,7 @@
                 </div>
               </div>
               <div class="order-detail">
-                <button class="btn btn-primary">訂單內容</button>
+                <button class="btn btn-secondary">訂單內容</button>
               </div>
             </div>
           </div>
