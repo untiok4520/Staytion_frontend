@@ -1,0 +1,64 @@
+.navbar {
+    background-color: #376996;
+}
+
+#logo {
+    color: white;
+    margin-left: 10px;
+}
+
+/* 語言、客服icon樣式 */
+.navbar-options button img {
+    width: 24px;
+    display: block;
+    margin: 0 auto;
+    padding: 1px;
+}
+
+/* 幣別、語言、客服位置 */
+.navbar-options {
+    margin: auto 10px auto auto;
+    display: flex;
+    align-items: center;
+}
+
+/* 幣別、語言、客服按鈕樣式 */
+.navbar-options button {
+    color: white;
+    background-color: transparent;
+    border: 0px;
+}
+
+.navbar-options button:hover {
+    color: white;
+    background-color: #1d3461;
+    border-radius: 5px;
+}
+
+.container.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+}
+
+#email,
+#emailContinue {
+    width: 100%;
+}
+
+.social-icon {
+    display: flex;
+    /* 使用 flexbox 來排列子元素 */
+    justify-content: center;
+    /* 水平居中 */
+    gap: 10px;
+    /* 兩個圖片之間的間距 */
+}
+
+
+
+.register a img {
+    width: 50px;
+    /* 設定圖片寬度 */
+}

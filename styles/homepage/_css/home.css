@@ -1,0 +1,253 @@
+.navbar {
+    background-color: #376996;
+}
+
+#logo {
+    color: white;
+    margin-left: 10px;
+}
+
+/* 語言、客服icon樣式 */
+.navbar-options button img {
+    width: 24px;
+    display: block;
+    margin: 0 auto;
+    padding: 1px;
+}
+
+/* 幣別、語言、客服位置 */
+.navbar-options {
+    margin: auto 10px auto auto;
+    display: flex;
+    align-items: center;
+}
+
+/* 登入、註冊位置 */
+.login {
+    margin-right: 10px;
+    align-items: center;
+}
+
+/* 幣別、語言、客服按鈕樣式 */
+.navbar-options button {
+    color: white;
+    background-color: transparent;
+    border: 0px;
+}
+
+.navbar-options button:hover {
+    color: white;
+    background-color: #1d3461;
+    border-radius: 5px;
+}
+
+/* 登入、註冊樣式 */
+.login button {
+    color: white;
+    background-color: #1F487E;
+    border: 1px solid #1d3461;
+    border-radius: 5px;
+}
+
+.login button:hover {
+    color: white;
+    background-color: #1d3461;
+    border: 1px solid #1d3461;
+    border-radius: 5px;
+}
+
+
+/* 搜尋列 */
+
+.search-bar {
+    background: #1f487e;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    /* 滿版的話也要關掉這個 */
+    padding: 1rem;
+}
+
+/* 自訂 col-md-3.5 */
+@media (min-width: 768px) {
+    .col-md-3-5 {
+        flex: 0 0 calc(100% * 3.5 / 12);
+        max-width: calc(100% * 3.5 / 12);
+    }
+
+    .col-md-1-5 {
+        flex: 0 0 calc(100% * 1.5 / 12);
+        max-width: calc(100% * 1.5 / 12);
+    }
+}
+
+.search-bar input {
+    border-radius: 0.25rem;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+    border-color: #376996;
+    outline: none;
+    box-shadow: 0 0 8px rgba(55, 105, 150, 0.4);
+}
+
+.search-bar button {
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar #search-btn {
+    background-color: #1a81ff;
+    color: #fff;
+}
+
+.search-bar #search-btn:hover {
+    background-color: #569ff7;
+}
+
+.input-group-text {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-right: none;
+}
+
+#guest-btn {
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* popup 視窗 */
+#guest-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    width: 230px;
+    z-index: 1000;
+    display: none;
+}
+
+#guest-popup .guest-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+#guest-popup .guest-row:last-child {
+    margin-bottom: 0;
+}
+
+#guest-popup .guest-label {
+    font-weight: 600;
+    color: #333;
+}
+
+#guest-popup .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#guest-popup button.qty-btn {
+    border: 1px solid #ccc;
+    background: #f8f9fa;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+
+#guest-popup span.count {
+    min-width: 20px;
+    text-align: center;
+    font-weight: 600;
+    user-select: none;
+    display: inline-block;
+}
+
+.suggestion-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+
+}
+
+
+.suggestion-list li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+}
+
+.suggestion-list li:hover {
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+}
+
+.suggestion-list .suggestion-header {
+    font-weight: bold;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+    color: #333;
+    font-size: 1rem;
+    cursor: default;
+    user-select: none;
+}
+
+/* 熱門城市、精選飯店區塊 */
+.city,
+.high {
+    background-color: #FEFCF0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.card {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* 頁尾 */
+footer {
+    background-color: #376996;
+}
+
+footer h5 {
+    font-weight: bold;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.social-icons a {
+    font-size: 1.5rem;
+    color: white;
+    transition: color 0.2s;
+}
+
+.social-icons a:hover {
+    color: #fcfef0;
+}
