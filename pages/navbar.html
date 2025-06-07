@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
+    />
+    <link rel="stylesheet" href="../styles/scss/user_center/shared-navbar.css">
+</head>
+<body>
+    <nav class="my-navbar navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="../assets/logo.png" class="logo_img" alt="logo" />
+          </a>
+          <div class="navbar-right">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#currencyModal"
+                >
+                  TWD
+                </button>
+                <div
+                  class="modal fade"
+                  id="currencyModal"
+                  tabindex="-1"
+                  aria-labelledby="currencyModalLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="currencyModalLabel">
+                          選擇您使用的貨幣
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body modal-grid">
+                        <div>
+                          <a href="#">新台幣<br />TWD</a>
+                        </div>
+                        <div>
+                          <a href="#">日元<br />JPY</a>
+                        </div>
+                        <div>
+                          <a href="#">美元<br />USD</a>
+                        </div>
+                        <div>
+                          <a href="#">歐元<br />EUR</a>
+                        </div>
+                        <div>
+                          <a href="#">港幣<br />HKD</a>
+                        </div>
+                        <div>
+                          <a href="#">人民幣<br />CNY</a>
+                        </div>
+                        <div>
+                          <a href="#">英鎊<br />GBP</a>
+                        </div>
+                        <div>
+                          <a href="#">丹麥克朗<br />DKK</a>
+                        </div>
+                        <div>
+                          <a href="#">亞賽拜然新馬納特<br />AZN</a>
+                        </div>
+                        <div>
+                          <a href="#">以色列新謝克爾<br />ILS</a>
+                        </div>
+                        <div>
+                          <a href="#">俄羅斯盧布<br />RUB</a>
+                        </div>
+                        <div>
+                          <a href="#">保加利亞列弗<br />BGN</a>
+                        </div>
+                        <div>
+                          <a href="#">冰島克朗<br />ISK</a>
+                        </div>
+                        <div>
+                          <a href="#">加幣<br />CAD</a>
+                        </div>
+                        <div>
+                          <a href="#">匈牙利福林<br />HUF</a>
+                        </div>
+                        <div>
+                          <a href="#">南非鍰<br />ZAR</a>
+                        </div>
+                        <div>
+                          <a href="#">卡達里亞爾<br />QAR</a>
+                        </div>
+                        <div>
+                          <a href="#">印尼盾<br />IDR</a>
+                        </div>
+                        <div>
+                          <a href="#">印度盧比 <br />INR</a>
+                        </div>
+                        <div>
+                          <a href="#">哈薩克坦吉<br />KZT</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#languageModal"
+                >
+                  <span class="fi fi-tw fis"></span>
+                </button>
+                <div
+                  class="modal fade"
+                  id="languageModal"
+                  tabindex="-1"
+                  aria-labelledby="languageModalLabel"
+                  aria-hidden="true"
+                >
+                  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="languageModalLabel">
+                          選擇您使用的語言
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="modal-body modal-grid">
+                        <div><span class="fi fi-tw fis"></span>繁體中文</div>
+                        <div><span class="fi fi-gb fis"></span>English(UK)</div>
+                        <div><span class="fi fi-us fis"></span>English(UA)</div>
+                        <div><span class="fi fi-jp fis"></span>日本語</div>
+                        <div><span class="fi fi-fr fis"></span>Français</div>
+                        <div><span class="fi fi-de fis"></span>Deutsch</div>
+                        <div><span class="fi fi-it fis"></span>Italiano</div>
+                        <div><span class="fi fi-es fis"></span>Español</div>
+                        <div><span class="fi fi-kr fis"></span>한국어</div>
+                        <div><span class="fi fi-cn fis"></span>简体中文</div>
+                        <div><span class="fi fi-hk fis"></span>粵語</div>
+                        <div><span class="fi fi-ru fis"></span>Русский</div>
+                        <div><span class="fi fi-th fis"></span>ไทย</div>
+                        <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
+                        <div>
+                          <span class="fi fi-id fis"></span>Bahasa Indonesia
+                        </div>
+                        <div>
+                          <span class="fi fi-my fis"></span>Bahasa Melayu
+                        </div>
+                        <div><span class="fi fi-ph fis"></span>Filipino</div>
+                        <div><span class="fi fi-in fis"></span>हिन्दी</div>
+                        <div><span class="fi fi-tr fis"></span>Türkçe</div>
+                        <div><span class="fi fi-sa fis"></span>العربية</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item auth-buttons">
+                <button class="btn btn-primary">登入</button>
+              </li>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    //貨幣切換按鈕
+        document
+        .querySelectorAll("#currencyModal .modal-body.modal-grid a")
+        .forEach(function (item) {
+            item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const html = this.innerHTML.trim();
+            const parts = html.split("<br>");
+            const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
+            const btn = document.querySelector(
+                'button[data-bs-target="#currencyModal"]'
+            );
+            if (btn) {
+                btn.textContent = code;
+            }
+            //關閉modal
+            const modalEl = document.getElementById("currencyModal");
+            const modalInstance =
+                window.bootstrap && window.bootstrap.Modal
+                ? window.bootstrap.Modal.getInstance(modalEl)
+                : typeof bootstrap !== "undefined" && bootstrap.Modal
+                ? bootstrap.Modal.getInstance(modalEl)
+                : null;
+            if (modalInstance) modalInstance.hide();
+            });
+        });
+
+        //語言切換按鈕
+        document
+        .querySelectorAll("#languageModal .modal-body.modal-grid > div")
+        .forEach(function (item) {
+            item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const span = this.querySelector("span.fi");
+            const btn = document.querySelector(
+                'button[data-bs-target="#languageModal"]'
+            );
+            if (span && btn) {
+                // 將button的內容換成<span>
+                btn.innerHTML = span.outerHTML;
+            }
+            // 關閉 modal
+            const modalEl = document.getElementById("languageModal");
+            const modalInstance =
+                window.bootstrap && window.bootstrap.Modal
+                ? window.bootstrap.Modal.getInstance(modalEl)
+                : typeof bootstrap !== "undefined" && bootstrap.Modal
+                ? bootstrap.Modal.getInstance(modalEl)
+                : null;
+            if (modalInstance) modalInstance.hide();
+            });
+        });
+
+
+    </script>
+
+</body>
+</html>
