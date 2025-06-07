@@ -1,29 +1,25 @@
 @use "../abstract/custom-variables" as v;
 
-.footer_container {
-  margin-top: 1rem;
-  height: 150px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: flex-start;
-  padding-top: 1.5rem;
-
-  .footer_item {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    p {
-      color: white;
-      font-weight: bold;
+footer {
+  background-color: v.$primary;
+  h5 {
+    font-weight: bold;
+  }
+  a {
+    color: white;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
     }
-    a {
-      text-decoration: none;
-      color: rgb(230, 230, 230);
-      &:hover {
-        text-decoration: underline;
-      }
+  }
+}
+.social-icons {
+  a {
+    font-size: 1.5rem;
+    color: white;
+    transition: color 0.2s;
+    &:hover {
+      color: #fcfef0;
     }
   }
 }

@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../styles/scss/user_center/main.css" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-    />
-
-    <title>Staytion</title>
-  </head>
-  <body>
-    <header>
-      <nav class="my-navbar navbar navbar-expand-lg">
+    <link rel="stylesheet" href="../styles/scss/user_center/shared-navbar.css">
+</head>
+<body>
+    <nav class="my-navbar navbar navbar-expand-lg">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">
             <img src="../assets/logo.png" class="logo_img" alt="logo" />
@@ -186,148 +180,64 @@
 
           </div>
         </div>
-      </nav>
-    </header>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    //貨幣切換按鈕
+        document
+        .querySelectorAll("#currencyModal .modal-body.modal-grid a")
+        .forEach(function (item) {
+            item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const html = this.innerHTML.trim();
+            const parts = html.split("<br>");
+            const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
+            const btn = document.querySelector(
+                'button[data-bs-target="#currencyModal"]'
+            );
+            if (btn) {
+                btn.textContent = code;
+            }
+            //關閉modal
+            const modalEl = document.getElementById("currencyModal");
+            const modalInstance =
+                window.bootstrap && window.bootstrap.Modal
+                ? window.bootstrap.Modal.getInstance(modalEl)
+                : typeof bootstrap !== "undefined" && bootstrap.Modal
+                ? bootstrap.Modal.getInstance(modalEl)
+                : null;
+            if (modalInstance) modalInstance.hide();
+            });
+        });
 
-    <div class="usercenter_container">
-      <!-- sidebar -->
-      <aside class="sidebar">
-        <div class="sidebar-item" data-page="orders">
-          <span>管理訂單</span>
-        </div>
-        <div class="sidebar-item" data-page="messages">
-          <span>住宿訊息</span>
-        </div>
-        <div class="sidebar-item" data-page="reviews">
-          <span>住宿評論</span>
-        </div>
-        <div class="sidebar-item" data-page="favorites">
-          <span>收藏清單</span>
-        </div>
-        <div class="sidebar-item" data-page="profile">
-          <span>個人資料</span>
-        </div>
-      </aside>
-      <!-- 區塊更新內容 -->
-      <main class="uc-main-content">
-        <div id="orders" class="content-page">
-          <div class="tabs">
-            <div class="tab active" data-type="future">未來式</div>
-            <div class="tab" data-type="past">過去式</div>
-            <div class="tab" data-type="cancelled">已取消</div>
-          </div>
+        //語言切換按鈕
+        document
+        .querySelectorAll("#languageModal .modal-body.modal-grid > div")
+        .forEach(function (item) {
+            item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const span = this.querySelector("span.fi");
+            const btn = document.querySelector(
+                'button[data-bs-target="#languageModal"]'
+            );
+            if (span && btn) {
+                // 將button的內容換成<span>
+                btn.innerHTML = span.outerHTML;
+            }
+            // 關閉 modal
+            const modalEl = document.getElementById("languageModal");
+            const modalInstance =
+                window.bootstrap && window.bootstrap.Modal
+                ? window.bootstrap.Modal.getInstance(modalEl)
+                : typeof bootstrap !== "undefined" && bootstrap.Modal
+                ? bootstrap.Modal.getInstance(modalEl)
+                : null;
+            if (modalInstance) modalInstance.hide();
+            });
+        });
 
-          <div class="filter">
-            <div class="dropdown">
-              <a
-                class="btn btn-secondary dropdown-toggle"
-                href="#"
-                role="button"
-                id="dropdownMenuLink"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                排序方式
-              </a>
 
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li><a class="dropdown-item" href="#">入住日期</a></li>
-                <li><a class="dropdown-item" href="#">訂單日期</a></li>
-              </ul>
-            </div>
-            <!-- <div class="sort-dropdown">
-              <img
-                src="../assets/user_center/filtering.png"
-                width="30px"
-                height="30px"
-              />
-              <span>排序方式：入住日期</span>
-              <span>▼</span>
-            </div> -->
-            <div class="search-box">
-              <img
-                src="../assets/user_center/search.png "
-                width="18px"
-                height="18px"
-              />
-              <input type="text" placeholder="以訂單編號搜尋" />
-            </div>
-          </div>
+    </script>
 
-          <div class="location">
-            <div class="location-title">台中市</div>
-            <div class="location-date">6月18日（週三）</div>
-          </div>
-
-          <div class="order-list">
-            <div class="order-number">編號：XXXXXX</div>
-            <div class="order-content">
-              <div class="hotel-image"></div>
-              <div class="hotel-info">
-                <div class="hotel-name">Hotel Name</div>
-                <div class="hotel-dates">
-                  <span>入住日期</span>
-                  <span>退房日期</span>
-                </div>
-              </div>
-              <div class="order-detail">
-                <button class="btn btn-secondary">訂單內容</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <div id="messages" class="content-page" style="display: none"></div>
-      <div id="reviews" class="content-page" style="display: none"></div>
-      <div id="favorites" class="content-page" style="display: none"></div>
-      <div id="profile" class="content-page" style="display: none"></div>
-    </div>
-
-    <footer class="text-white py-4 mt-5">
-      <div class="container">
-        <div class="row row-cols-2 row-cols-md-4 g-4 text-center">
-          <div>
-            <h5>客服中心</h5>
-            <ul class="list-unstyled">
-              <li><a href="#">服務中心</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5>認識出趣玩</h5>
-            <ul class="list-unstyled">
-              <li><a href="#">關於出趣玩</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5>服務條款</h5>
-            <ul class="list-unstyled">
-              <li><a href="#">服務條款</a></li>
-              <li><a href="#">隱私權政策</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5>合作夥伴</h5>
-            <ul class="list-unstyled">
-              <li><a href="#">登入後台</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <hr class="my-4" />
-
-        <div class="text-center">
-          <p class="mb-0">© 2025 Staytion. All rights reserved.</p>
-          <p class="mb-0">Powered by Bootstrap 5</p>
-        </div>
-
-        <div class="d-flex justify-content-center mt-4 gap-3 social-icons">
-          <a href="#"><i class="bi bi-facebook"></i></a>
-          <a href="#"><i class="bi bi-instagram"></i></a>
-          <a href="#"><i class="bi bi-twitter"></i></a>
-        </div>
-      </div>
-    </footer>
-    <script src="../script/user_center/usercenter.js"></script>
-    <script src="../script/user_center/bootstrap.bundle.min.js"></script>
-  </body>
+</body>
 </html>

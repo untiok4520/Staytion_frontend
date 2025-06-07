@@ -2,7 +2,7 @@
 @use "../bootstrap/bootstrap" as bs;
 
 .my-navbar {
-  background-color: bs.$body-bg;
+  background-color: #fff;
   padding-top: 0;
   padding-bottom: 0;
 
@@ -19,16 +19,46 @@
     height: 20px;
   }
 
-  .navbar-nav {
-    display: flex;
-    gap: map-get(bs.$spacers, 2);
-    margin-right: map-get(bs.$spacers, 2);
-  }
-  // 註冊登入按鈕包裹區
-  .auth-buttons {
-    display: flex;
-    gap: map-get(bs.$spacers, 2);
-    margin-right: map-get(bs.$spacers, 2);
+  .navbar-right {
+    padding-right: 1rem;
+    .navbar-nav {
+      display: flex;
+      justify-content: end;
+      flex-direction: row;
+      gap: map-get(bs.$spacers, 2);
+
+      .nav-item {
+        .modal-dialog {
+          .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            div {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 200px;
+              height: 50px;
+              border-radius: 1rem;
+              transition: all 0.2s ease-in-out;
+              text-align: center;
+              &:hover {
+                background-color: #376a964e;
+                cursor: pointer;
+              }
+              a {
+                // width: 200px;
+                color: black;
+                text-decoration: none;
+              }
+              .fi {
+                margin-right: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   .btn {
@@ -58,33 +88,7 @@
     &:hover {
       background-color: transparent;
       color: v.$primary;
-      border: 3px solid v.$primary;
+      border: 2px solid v.$primary;
     }
-  }
-}
-
-@media (max-width: map-get(bs.$grid-breakpoints, lg)) {
-  .navbar-nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 5px;
-    padding-right: 1rem;
-  }
-  .collapse {
-    margin: 1rem 0;
-    .btn-outline-primary {
-      transition: all 0.2s ease-in-out;
-      &:hover {
-        background-color: transparent;
-        color: v.$primary;
-        border: 3px solid v.$primary;
-      }
-    }
-  }
-}
-@media (min-width: map-get(bs.$grid-breakpoints, lg)) {
-  .collapse {
-    display: none;
   }
 }

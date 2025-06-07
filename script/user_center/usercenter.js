@@ -1,25 +1,51 @@
-// 找出所有「貨幣下拉」選項，選擇時更新按鈕文字
+//貨幣按鈕
 document
-  .querySelectorAll("#currencyDropdown + .dropdown-menu .dropdown-item")
+  .querySelectorAll("#currencyModal .modal-body.modal-grid a")
   .forEach(function (item) {
     item.addEventListener("click", function (e) {
       e.preventDefault();
-      // 只顯示貨幣代號（取最後一段，例如「美元 USD」取「USD」）
-      const fullText = this.textContent.trim();
-      const parts = fullText.split(" ");
-      const code = parts[parts.length - 1];
-      document.getElementById("currencyDropdown").textContent = code;
+      const html = this.innerHTML.trim();
+      const parts = html.split("<br>");
+      const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
+      const btn = document.querySelector(
+        'button[data-bs-target="#currencyModal"]'
+      );
+      if (btn) {
+        btn.textContent = code;
+      }
+      const modalEl = document.getElementById("currencyModal");
+      const modalInstance =
+        window.bootstrap && window.bootstrap.Modal
+          ? window.bootstrap.Modal.getInstance(modalEl)
+          : typeof bootstrap !== "undefined" && bootstrap.Modal
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
+      if (modalInstance) modalInstance.hide();
     });
   });
+
+//語言按鈕
 document
-  .querySelectorAll("#currencyDropdown2 + .dropdown-menu .dropdown-item")
+  .querySelectorAll("#languageModal .modal-body.modal-grid > div")
   .forEach(function (item) {
     item.addEventListener("click", function (e) {
       e.preventDefault();
-      // 只顯示貨幣代號（取最後一段，例如「美元 USD」取「USD」）
-      const fullText = this.textContent.trim();
-      const parts = fullText.split(" ");
-      const code = parts[parts.length - 1];
-      document.getElementById("currencyDropdown2").textContent = code;
+      const span = this.querySelector("span.fi");
+      const btn = document.querySelector(
+        'button[data-bs-target="#languageModal"]'
+      );
+      if (span && btn) {
+        // 將button的內容換成<span>
+        btn.innerHTML = span.outerHTML;
+      }
+      // 關閉 modal
+      const modalEl = document.getElementById("languageModal");
+      const modalInstance =
+        window.bootstrap && window.bootstrap.Modal
+          ? window.bootstrap.Modal.getInstance(modalEl)
+          : typeof bootstrap !== "undefined" && bootstrap.Modal
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
+      if (modalInstance) modalInstance.hide();
     });
   });
