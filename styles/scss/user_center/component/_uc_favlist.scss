@@ -1,0 +1,90 @@
+#favorites {
+  .favlist-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+
+    label {
+      font-weight: bold;
+    }
+
+    select {
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+  }
+
+  .favlist-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  .favlist-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .fav-card {
+    width: 260px;
+    border: 1px solid #ccc;
+    border-radius: 14px;
+    overflow: hidden;
+    background-color: #fff;
+    padding-bottom: 16px;
+
+    .fav-img {
+      height: 150px;
+      background-color: #ccc;
+    }
+
+    .fav-content {
+      padding: 12px 16px;
+
+      h5 {
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      .fav-stars {
+        color: #000;
+        margin-bottom: 8px;
+      }
+
+      .fav-score-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+
+        .score {
+          border: 1px solid #000;
+          padding: 4px 8px;
+          border-radius: 8px;
+        }
+
+        .desc {
+          font-size: 14px;
+        }
+
+        .count {
+          font-size: 12px;
+          color: #888;
+        }
+      }
+
+      .fav-location {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 8px;
+      }
+
+      .fav-price {
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+  }
+}

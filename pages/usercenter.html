@@ -249,19 +249,13 @@
               <div class="chat-list-item active">
                 <div class="chat-hotel-info">
                   <div class="chat-hotel-name">台北大飯店</div>
-                  <div class="chat-preview">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Commodi, laborum?
-                  </div>
+                  <div class="chat-preview"></div>
                 </div>
               </div>
               <div class="chat-list-item">
                 <div class="chat-hotel-info">
                   <div class="chat-hotel-name">高雄大飯店</div>
-                  <div class="chat-preview">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Quod, rem.
-                  </div>
+                  <div class="chat-preview"></div>
                 </div>
               </div>
             </div>
@@ -272,59 +266,52 @@
             </div>
           </div>
         </div>
-        <div id="reviews" class="content-page" style="display: none">
-          <div class="review-card">
-            <div class="review-img"></div>
-            <div class="review-content">
-              <h5>Hotel Name</h5>
-              <p class="review-date">2025年5月26日</p>
-              <div class="review-score">
-                <span class="score">8.0</span>
-                <span class="desc">非常好</span>
-              </div>
-              <p class="review-text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Similique voluptates dignissimos debitis exercitationem! Quis
-                earum aliquam porro laboriosam saepe odit.
-              </p>
-            </div>
+        <div id="reviews" class="content-page" style="display: none"></div>
+        <div id="favorites" class="content-page" style="display: none">
+          <div class="favlist-filter">
+            <label for="fav-location">選擇清單：</label>
+            <select id="fav-location">
+              <option value="kaohsiung">高雄</option>
+              <option value="taipei">台北</option>
+            </select>
           </div>
-
-          <div class="review-card">
-            <div class="review-img"></div>
-            <div class="review-content">
-              <h5>Hotel Name</h5>
-              <p class="review-date">2025年5月26日</p>
-              <div class="review-score">
-                <span class="score">8.0</span>
-                <span class="desc">非常好</span>
+          <h4 class="favlist-title">高雄</h4>
+          <div class="favlist-grid">
+            <div class="fav-card">
+              <div class="fav-img"></div>
+              <div class="fav-content">
+                <h5>Hotel Name</h5>
+                <div class="fav-stars">★ ★ ★</div>
+                <div class="fav-score-line">
+                  <span class="score">8.0</span>
+                  <span class="desc">非常好</span>
+                  <span class="count">99,999則評論</span>
+                </div>
+                <div class="fav-location">
+                  <i class="bi bi-geo-alt"></i> 鹽埕區，高雄
+                </div>
+                <div class="fav-price">TWD 99,999</div>
               </div>
-              <p class="review-text">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                fuga, earum vel consequatur voluptatem nulla.
-              </p>
             </div>
-          </div>
 
-          <div class="review-card">
-            <div class="review-img"></div>
-            <div class="review-content">
-              <h5>Hotel Name</h5>
-              <p class="review-date">2025年5月26日</p>
-              <div class="review-score">
-                <span class="score">8.0</span>
-                <span class="desc">非常好</span>
+            <div class="fav-card">
+              <div class="fav-img"></div>
+              <div class="fav-content">
+                <h5>Hotel Name</h5>
+                <div class="fav-stars">★ ★</div>
+                <div class="fav-score-line">
+                  <span class="score">8.0</span>
+                  <span class="desc">非常好</span>
+                  <span class="count">99,999則評論</span>
+                </div>
+                <div class="fav-location">
+                  <i class="bi bi-geo-alt"></i> 鹽埕區，高雄
+                </div>
+                <div class="fav-price">TWD 99,999</div>
               </div>
-              <p class="review-text">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Soluta
-                natus omnis, nemo nostrum dolorem exercitationem non vitae velit
-                praesentium vel debitis iure voluptates earum commodi numquam
-                magni sapiente ad eum?
-              </p>
             </div>
           </div>
         </div>
-        <div id="favorites" class="content-page" style="display: none"></div>
         <div id="profile" class="content-page" style="display: none"></div>
       </main>
     </div>

@@ -24,7 +24,7 @@ document
     });
   });
 
-//語言按鈕
+//=====語言按鈕=====
 document
   .querySelectorAll("#languageModal .modal-body.modal-grid > div")
   .forEach(function (item) {
@@ -50,7 +50,7 @@ document
     });
   });
 
-// 排序方式下拉選單
+//======排序方式下拉選單=======
 document
   .querySelectorAll("#dropdownMenuLink + .dropdown-menu .dropdown-item")
   .forEach(function (item) {
@@ -64,7 +64,7 @@ document
     });
   });
 
-//sidebar
+//===========sidebar================
 // 側邊欄點擊切換 active 樣式
 document.querySelectorAll(".sidebar-item").forEach((item) => {
   item.addEventListener("click", () => {
@@ -81,6 +81,27 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
     const targetEl = document.getElementById(targetPage);
     if (targetEl) {
       targetEl.style.display = "block";
+
+      //========住宿評論資料=============
+      if (targetPage === "reviews") {
+        const mockReviews = [
+          {
+            hotelName: "Hotel Name",
+            date: "2025年5月26日",
+            score: "8.0",
+            scoreDesc: "非常好",
+            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+          },
+          {
+            hotelName: "Another Hotel",
+            date: "2025年5月20日",
+            score: "9.2",
+            scoreDesc: "超棒",
+            text: "這間真的很乾淨，交通方便。",
+          },
+        ];
+        renderReviews(mockReviews);
+      }
     }
   });
 });
@@ -421,3 +442,27 @@ document.querySelectorAll(".chat-list-item").forEach((item) => {
     );
   });
 });
+
+//=======住宿評論渲染=============
+function renderReviews(reviews) {
+  const reviewsContainer = document.getElementById("reviews");
+  reviewsContainer.innerHTML = ""; // 清空舊資料
+
+  reviews.forEach((review) => {
+    const card = document.createElement("div");
+    card.className = "review-card";
+    card.innerHTML = `
+      <div class="review-img"></div>
+      <div class="review-content">
+        <h5>${review.hotelName}</h5>
+        <p class="review-date">${review.date}</p>
+        <div class="review-score">
+          <span class="score">${review.score}</span>
+          <span class="desc">${review.scoreDesc}</span>
+        </div>
+        <p class="review-text">${review.text}</p>
+      </div>
+    `;
+    reviewsContainer.appendChild(card);
+  });
+}

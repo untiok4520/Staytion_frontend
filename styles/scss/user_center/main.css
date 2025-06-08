@@ -12579,4 +12579,78 @@ footer a:hover {
   font-size: 14px;
   line-height: 1.4;
   white-space: pre-line;
+}
+
+#favorites .favlist-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+#favorites .favlist-filter label {
+  font-weight: bold;
+}
+#favorites .favlist-filter select {
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+#favorites .favlist-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+#favorites .favlist-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+#favorites .fav-card {
+  width: 260px;
+  border: 1px solid #ccc;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: #fff;
+  padding-bottom: 16px;
+}
+#favorites .fav-card .fav-img {
+  height: 150px;
+  background-color: #ccc;
+}
+#favorites .fav-card .fav-content {
+  padding: 12px 16px;
+}
+#favorites .fav-card .fav-content h5 {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+#favorites .fav-card .fav-content .fav-stars {
+  color: #000;
+  margin-bottom: 8px;
+}
+#favorites .fav-card .fav-content .fav-score-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+#favorites .fav-card .fav-content .fav-score-line .score {
+  border: 1px solid #000;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+#favorites .fav-card .fav-content .fav-score-line .desc {
+  font-size: 14px;
+}
+#favorites .fav-card .fav-content .fav-score-line .count {
+  font-size: 12px;
+  color: #888;
+}
+#favorites .fav-card .fav-content .fav-location {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+#favorites .fav-card .fav-content .fav-price {
+  font-weight: bold;
+  font-size: 16px;
 }/*# sourceMappingURL=main.css.map */
