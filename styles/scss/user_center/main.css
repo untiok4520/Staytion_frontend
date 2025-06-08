@@ -12653,4 +12653,107 @@ footer a:hover {
 #favorites .fav-card .fav-content .fav-price {
   font-weight: bold;
   font-size: 16px;
+}
+
+#profile .profile-card {
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background-color: #fff;
+}
+#profile .profile-card .profile-field {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+#profile .profile-card .profile-field label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+#profile .profile-card .profile-field .profile-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+#profile .profile-card .profile-field .profile-value .value {
+  flex: 1;
+}
+#profile .profile-card .profile-field .profile-value .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 12px;
+}
+#profile .profile-card .profile-field .profile-value .info {
+  flex: 1;
+}
+#profile .profile-card .profile-field .profile-value .edit-btn {
+  padding: 6px 10px;
+  background-color: #1f487e;
+  color: white;
+  border-radius: 6px;
+}
+#profile .profile-card .profile-field .profile-value .switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+#profile .profile-card .profile-field .profile-value .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+#profile .profile-card .profile-field .profile-value .switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+#profile .profile-card .profile-field .profile-value .switch .slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+#profile .profile-card .profile-field .profile-value .switch input:checked + .slider {
+  background-color: #1f487e;
+}
+#profile .profile-card .profile-field .profile-value .switch input:checked + .slider::before {
+  transform: translateX(20px);
+}
+#profile .profile-card .profile-field .profile-value .edit-input {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+#profile .profile-card .payment-box {
+  border: 1px solid #aaa;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#profile .profile-card .payment-box .delete-icon {
+  font-size: 18px;
+  cursor: pointer;
 }/*# sourceMappingURL=main.css.map */

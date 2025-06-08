@@ -466,3 +466,31 @@ function renderReviews(reviews) {
     reviewsContainer.appendChild(card);
   });
 }
+
+// 個人資料 - 編輯切換
+document.querySelectorAll("#profile .edit-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const container = btn.closest(".profile-value");
+    const valueEl = container.querySelector(".value");
+
+    if (btn.textContent === "儲存") {
+      const input = container.querySelector("input");
+      if (input) {
+        valueEl.textContent = input.value;
+        input.remove();
+        valueEl.style.display = "block";
+        btn.textContent = "編輯";
+      }
+      return;
+    }
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = valueEl.textContent;
+    input.classList.add("edit-input");
+
+    valueEl.style.display = "none";
+    valueEl.insertAdjacentElement("afterend", input);
+    btn.textContent = "儲存";
+  });
+});
