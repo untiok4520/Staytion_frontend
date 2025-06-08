@@ -12527,4 +12527,56 @@ footer a:hover {
 .chat-container .chat-box .chat-input button {
   padding: 8px 16px;
   border-radius: 20px;
+}
+
+#reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+#reviews .review-card {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 20px;
+  background-color: #fff;
+  margin-bottom: 1rem;
+}
+#reviews .review-card .review-img {
+  width: 100px;
+  height: 100px;
+  background-color: #ccc;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+#reviews .review-card .review-content {
+  flex: 1;
+}
+#reviews .review-card .review-content h5 {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+#reviews .review-card .review-content .review-date {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+#reviews .review-card .review-content .review-score {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+#reviews .review-card .review-content .review-score .score {
+  border: 1px solid #333;
+  padding: 6px 12px;
+  border-radius: 10px;
+}
+#reviews .review-card .review-content .review-score .desc {
+  font-size: 16px;
+}
+#reviews .review-card .review-content .review-text {
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: pre-line;
 }/*# sourceMappingURL=main.css.map */
