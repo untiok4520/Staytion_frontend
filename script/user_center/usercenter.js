@@ -375,3 +375,49 @@ function showOrderDetail(detail) {
       document.getElementById("changeDateModal").style.display = "none";
     });
 }
+
+// ===================== 住宿訊息聊天室 =====================
+// 預設載入每個聊天室項目的預覽訊息
+document.querySelectorAll(".chat-list-item").forEach((item) => {
+  const lastHotelMessage = "您好，入住時間為下午 3 點後。"; // 可換成從資料讀取
+  const previewEl = item.querySelector(".chat-preview");
+  if (previewEl) {
+    previewEl.textContent = lastHotelMessage.slice(0, 10);
+  }
+});
+
+document.querySelectorAll(".chat-list-item").forEach((item) => {
+  item.addEventListener("click", () => {
+    document.querySelectorAll(".chat-list-item").forEach((el) => {
+      el.classList.remove("active");
+    });
+    // 為當前點擊項目加上 active
+    item.classList.add("active");
+
+    // 取得飯店名稱
+    const hotelName = item.querySelector(".chat-hotel-name").textContent;
+
+    // 更新右側聊天區塊內容
+    const chatBox = document.querySelector(".chat-box");
+    const lastHotelMessage = "您好，入住時間為下午 3 點後。";
+    chatBox.innerHTML = `
+      <div class="chat-header">
+        <h4>${hotelName}</h4>
+      </div>
+      <div class="chat-messages">
+        <div class="message from-user">請問入住時間是幾點？</div>
+        <div class="message from-hotel">${lastHotelMessage}</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" placeholder="輸入訊息..." />
+        <button class="btn btn-secondary">送出</button>
+      </div>
+    `;
+
+    // 更新對應的 chat-preview 內容
+    item.querySelector(".chat-preview").textContent = lastHotelMessage.slice(
+      0,
+      10
+    );
+  });
+});
