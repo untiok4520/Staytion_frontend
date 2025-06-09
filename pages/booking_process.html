@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>預訂流程 - 輸入個人資料</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
+    />
+    <style>
+      /* ✅ navbar 樣式：命名為 navbar-shared 避免污染 */
+      .navbar-shared {
+        background-color: #fff;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      .navbar-shared .container-fluid {
+        display: flex;
+        align-items: center;
+      }
+      .navbar-shared .logo_img {
+        width: 250px;
+        height: auto;
+      }
+      .navbar-shared .navbar-nav {
+        display: flex;
+        justify-content: end;
+        flex-direction: row;
+        gap: 1rem;
+        margin-right: 1rem;
+      }
+      .navbar-shared .modal-body.modal-grid > a,
+      .navbar-shared .modal-body.modal-grid > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 50px;
+        border-radius: 1rem;
+        transition: all 0.2s ease-in-out;
+        text-align: center;
+      }
+      .navbar-shared .modal-body.modal-grid > a:hover,
+      .navbar-shared .modal-body.modal-grid > div:hover {
+        background-color: rgba(55, 106, 150, 0.3);
+        cursor: pointer;
+      }
+      .navbar-shared .btn {
+        padding: 0.375rem 1rem;
+        min-width: 80px;
+        border-radius: 1rem;
+        transition: all 0.3s ease-in-out;
+      }
+      .navbar-shared .btn:hover {
+        background-color: white;
+        color: #376996;
+      }
+      .navbar-shared .btn-primary {
+        background-color: #376996;
+        border: 1px solid #376996;
+      }
+      .navbar-shared .btn-outline-primary {
+        border: 1px solid #376996;
+        color: #376996;
+      }
+      .navbar-shared .btn-outline-primary:hover {
+        background-color: transparent;
+        color: #376996;
+        border: 2px solid #376996;
+      }
+
+      /* ✅ 原有樣式 */
+      body {
+        background: linear-gradient(to bottom right, #eef7ff, #ffffff);
+        font-family: "Segoe UI", sans-serif;
+      }
+      .step-indicator {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #e6f0ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        color: #003580;
+        font-weight: 600;
+      }
+      .section-title {
+        border-left: 5px solid #0071c2;
+        padding-left: 0.75rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #003580;
+      }
+      .form-control:focus {
+        border-color: #0071c2;
+        box-shadow: 0 0 0 0.2rem rgba(0, 113, 194, 0.25);
+      }
+      .card-hover:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .alert-info {
+        background-color: #e6f4ff;
+        border-left: 5px solid #0071c2;
+        color: #003580;
+      }
+      .btn-next {
+        background-color: #0071c2;
+        color: #fff;
+        font-size: 1.1rem;
+      }
+      .btn-next:hover {
+        background-color: #005999;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ✅ 共用 Navbar -->
+    <nav class="navbar-shared navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../assets/logo.png" class="logo_img" alt="logo" />
+        </a>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#currencyModal">TWD</button>
+            <div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的貨幣</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body modal-grid">
+                    <a href="#">新台幣<br />TWD</a>
+                    <a href="#">日元<br />JPY</a>
+                    <a href="#">美元<br />USD</a>
+                    <a href="#">歐元<br />EUR</a>
+                    <a href="#">港幣<br />HKD</a>
+                    <a href="#">人民幣<br />CNY</a>
+                    <a href="#">英鎊<br />GBP</a>
+                    <a href="#">加幣<br />CAD</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#languageModal">
+              <span class="fi fi-tw fis"></span>
+            </button>
+            <div class="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的語言</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body modal-grid">
+                    <div><span class="fi fi-tw fis"></span>繁體中文</div>
+                    <div><span class="fi fi-gb fis"></span>English</div>
+                    <div><span class="fi fi-jp fis"></span>日本語</div>
+                    <div><span class="fi fi-fr fis"></span>Français</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-primary">登入</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ✅ 你的頁面內容 -->
+    <div class="container my-4">
+      <div class="step-indicator">
+        <span>✅ 選擇房型與日期</span>
+        <span>② 新增入住資訊</span>
+        <span>③ 完成預訂</span>
+      </div>
+
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">📅 訂房資訊</div>
+        <div class="row">
+          <div class="col-md-6">Check-in：年/月/日</div>
+          <div class="col-md-6">Check-out：年/月/日</div>
+        </div>
+        <p>共入住：X 天</p>
+        <p>已選擇房型：XX 房型</p>
+        <p class="fw-bold">總金額：TWD 2,500</p>
+      </div>
+
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">👤 輸入個人資料</div>
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="英文姓氏" required />
+            </div>
+            <div class="col-md-6">
+              <input type="text" class="form-control" placeholder="英文名" required />
+            </div>
+          </div>
+          <div class="mt-3">
+            <input type="email" class="form-control" placeholder="E-mail" required />
+          </div>
+          <div class="mt-3">
+            <input type="tel" class="form-control" placeholder="電話" required />
+          </div>
+        </form>
+      </div>
+
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">💳 付款方式</div>
+        <div class="mb-3">
+          <label class="form-check-label me-3">
+            <input type="radio" name="paymentMethod" value="credit" class="form-check-input" checked />信用卡付款
+          </label>
+          <label class="form-check-label">
+            <input type="radio" name="paymentMethod" value="cash" class="form-check-input" />現金付款
+          </label>
+        </div>
+
+        <div id="creditCardForm">
+          <div class="mb-3">
+            <label for="cardholder" class="form-label">持卡人姓名</label>
+            <input type="text" class="form-control" id="cardholder" placeholder="請輸入英文姓名，如 KEVIN LIAO" oninput="this.value = this.value.toUpperCase();" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="cardnumber" class="form-label">卡號</label>
+            <input type="text" class="form-control" id="cardnumber" placeholder="請輸入 16 碼卡號" maxlength="19" oninput="formatCardNumber(this)" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="expiry" class="form-label">到期日</label>
+            <input type="text" class="form-control" id="expiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" required />
+          </div>
+        </div>
+
+        <div id="cashPaymentInfo" style="display: none">
+          <p>請於入住時以新台幣現金付款，現場人員將協助您完成付款與入住手續。</p>
+        </div>
+      </div>
+
+      <p class="text-muted text-center mt-2" style="font-size: 0.9rem">登入帳號：Kevin@gmail.com <a href="#">登出</a></p>
+
+      <div class="alert alert-info">
+        <div class="fw-bold mb-1">⏱️ 您的預留時間</div>
+        <p>✅ 房間目前已保留給您</p>
+        <p>退房時間：隔日12:00前</p>
+        <p>🧑‍💻 24hr 線上櫃檯隨時提供服務</p>
+        <p><strong>建議儘快填完以完成預訂</strong></p>
+      </div>
+
+      <div class="text-end mt-4">
+        <a href="booking_success.html" class="btn btn-next btn-lg">前往最後一步 ➤</a>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // 付款方式切換
+      const creditCardForm = document.getElementById("creditCardForm");
+      const cashPaymentInfo = document.getElementById("cashPaymentInfo");
+      const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+      paymentRadios.forEach((radio) => {
+        radio.addEventListener("change", function () {
+          if (this.value === "credit") {
+            creditCardForm.style.display = "block";
+            cashPaymentInfo.style.display = "none";
+          } else {
+            creditCardForm.style.display = "none";
+            cashPaymentInfo.style.display = "block";
+          }
+        });
+      });
+
+      function formatCardNumber(input) {
+        let value = input.value.replace(/\D/g, "").substring(0, 16);
+        let formatted = value.match(/.{1,4}/g);
+        input.value = formatted ? formatted.join(" ") : "";
+      }
+
+      function formatExpiry(input) {
+        let value = input.value.replace(/\D/g, "").substring(0, 4);
+        input.value = value.length > 2 ? value.substring(0, 2) + "/" + value.substring(2) : value;
+      }
+
+      // navbar 語言與幣別切換
+      document.querySelectorAll("#currencyModal .modal-body.modal-grid a").forEach(function (item) {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+          const code = this.innerHTML.trim().split("<br>").pop().trim();
+          document.querySelector('button[data-bs-target="#currencyModal"]').textContent = code;
+          bootstrap.Modal.getInstance(document.getElementById("currencyModal")).hide();
+        });
+      });
+
+      document.querySelectorAll("#languageModal .modal-body.modal-grid > div").forEach(function (item) {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+          const span = this.querySelector("span.fi");
+          if (span) {
+            document.querySelector('button[data-bs-target="#languageModal"]').innerHTML = span.outerHTML;
+          }
+          bootstrap.Modal.getInstance(document.getElementById("languageModal")).hide();
+        });
+      });
+    </script>
+  </body>
+</html>

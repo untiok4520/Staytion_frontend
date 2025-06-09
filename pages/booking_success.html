@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>訂房成功 - Staytion</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
+    />
+
+    <style>
+      body {
+        background: linear-gradient(to bottom right, #f3f9ff, #ffffff);
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      /* ✅ 共用 navbar 樣式隔離 */
+      .navbar-shared {
+        background-color: #fff;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      .navbar-shared .container-fluid {
+        display: flex;
+        align-items: center;
+      }
+      .navbar-shared .logo_img {
+        width: 250px;
+        height: auto;
+      }
+      .navbar-shared .navbar-nav {
+        display: flex;
+        justify-content: end;
+        flex-direction: row;
+        gap: 1rem;
+        margin-right: 1rem;
+      }
+      .navbar-shared .modal-body.modal-grid > a,
+      .navbar-shared .modal-body.modal-grid > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 50px;
+        border-radius: 1rem;
+        transition: all 0.2s ease-in-out;
+        text-align: center;
+      }
+      .navbar-shared .modal-body.modal-grid > a:hover,
+      .navbar-shared .modal-body.modal-grid > div:hover {
+        background-color: rgba(55, 106, 150, 0.3);
+        cursor: pointer;
+      }
+      .navbar-shared .btn {
+        padding: 0.375rem 1rem;
+        min-width: 80px;
+        border-radius: 1rem;
+        transition: all 0.3s ease-in-out;
+      }
+      .navbar-shared .btn:hover {
+        background-color: white;
+        color: #376996;
+      }
+      .navbar-shared .btn-primary {
+        background-color: #376996;
+        border: 1px solid #376996;
+      }
+      .navbar-shared .btn-outline-primary {
+        border: 1px solid #376996;
+        color: #376996;
+      }
+      .navbar-shared .btn-outline-primary:hover {
+        background-color: transparent;
+        color: #376996;
+        border: 2px solid #376996;
+      }
+
+      /* ✅ 原本成功頁面樣式 */
+      .checkmark-container {
+        width: 100px;
+        height: 100px;
+        background-color: #e6f9ed;
+        box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+      .checkmark-container i {
+        font-size: 64px;
+        color: #28a745;
+        animation: pop-in 0.6s ease;
+      }
+      @keyframes pop-in {
+        0% {
+          transform: scale(0.4);
+          opacity: 0;
+        }
+        80% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .section-title {
+        border-left: 5px solid #0071c2;
+        padding-left: 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #003580;
+      }
+      .btn-outline-custom {
+        border-color: #0071c2;
+        color: #0071c2;
+      }
+      .btn-outline-custom:hover {
+        background-color: #0071c2;
+        color: white;
+      }
+      .card-hover:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ✅ 共用 Navbar -->
+    <nav class="navbar-shared navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../assets/logo.png" class="logo_img" alt="logo" />
+        </a>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#currencyModal"
+            >
+              TWD
+            </button>
+            <div
+              class="modal fade"
+              id="currencyModal"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的貨幣</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-grid">
+                    <a href="#">新台幣<br />TWD</a>
+                    <a href="#">美元<br />USD</a>
+                    <a href="#">日元<br />JPY</a>
+                    <a href="#">港幣<br />HKD</a>
+                    <a href="#">歐元<br />EUR</a>
+                    <a href="#">人民幣<br />CNY</a>
+                    <a href="#">英鎊<br />GBP</a>
+                    <a href="#">加幣<br />CAD</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#languageModal"
+            >
+              <span class="fi fi-tw fis"></span>
+            </button>
+            <div
+              class="modal fade"
+              id="languageModal"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的語言</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-grid">
+                    <div><span class="fi fi-tw fis"></span>繁體中文</div>
+                    <div><span class="fi fi-gb fis"></span>English</div>
+                    <div><span class="fi fi-jp fis"></span>日本語</div>
+                    <div><span class="fi fi-fr fis"></span>Français</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-primary">登入</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ✅ 訂房成功內容 -->
+    <div class="container my-5">
+      <div class="text-center mb-5">
+        <div class="checkmark-container">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h2 class="text-success mt-4 fw-bold">預訂成功！</h2>
+        <p class="fs-5 text-secondary">
+          您已成功預訂 <strong class="text-dark">豪華雙人套房</strong>
+        </p>
+        <div class="d-flex justify-content-center align-items-center gap-1">
+          <span class="text-warning fs-4">⭐</span>
+          <span class="text-warning fs-4">⭐</span>
+          <span class="text-warning fs-4">⭐</span>
+          <span class="text-warning fs-4">⭐</span>
+          <span class="text-warning fs-4">☆</span>
+          <span class="ms-2 text-muted">(4.7 分)</span>
+        </div>
+      </div>
+
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">📷 房型圖片</div>
+        <img
+          src="https://via.placeholder.com/600x350?text=房型圖片"
+          class="img-fluid rounded border"
+          alt="房型"
+        />
+      </div>
+
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">📄 訂單資訊</div>
+        <ul class="list-unstyled">
+          <li><strong>訂單編號：</strong>12345678</li>
+          <li><strong>入住日期：</strong>2025/07/18</li>
+          <li><strong>退房日期：</strong>2025/07/20</li>
+          <li><strong>入住天數：</strong>2 晚</li>
+          <li><strong>付款狀態：</strong>已付款（信用卡 Visa）</li>
+        </ul>
+      </div>
+
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">✏️ 如需修改訂單</div>
+        <div class="d-flex flex-column flex-md-row gap-3">
+          <a href="#" class="btn btn-outline-primary w-100">修改日期</a>
+          <a href="#" class="btn btn-outline-primary w-100">修改信用卡資料</a>
+          <a href="#" class="btn btn-outline-primary w-100">更換房型</a>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <a href="#" class="btn btn-outline-custom">加入行事曆</a>
+        <a href="#" class="btn btn-outline-success">分享訂房資訊</a>
+      </div>
+    </div>
+
+    <!-- ✅ Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // 貨幣切換
+      document.querySelectorAll("#currencyModal .modal-body.modal-grid a").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+          const code = this.innerHTML.trim().split("<br>").pop().trim();
+          document.querySelector('button[data-bs-target="#currencyModal"]').textContent = code;
+          bootstrap.Modal.getInstance(document.getElementById("currencyModal")).hide();
+        });
+      });
+
+      // 語言切換
+      document.querySelectorAll("#languageModal .modal-body.modal-grid > div").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          e.preventDefault();
+          const span = this.querySelector("span.fi");
+          if (span) {
+            document.querySelector('button[data-bs-target="#languageModal"]').innerHTML = span.outerHTML;
+          }
+          bootstrap.Modal.getInstance(document.getElementById("languageModal")).hide();
+        });
+      });
+    </script>
+  </body>
+</html>
