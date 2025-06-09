@@ -231,25 +231,7 @@
   </div>
 
 
-<div class="wireframe">
-  <!-- 飯店標題與基本資訊 -->
-  <div class="hotel-header">
-    <div class="hotel-info-row">
-      <h1 class="hotel-title">
-  Brad Hotel
-  <button class="favorite-btn" id="favoriteBtn" aria-label="收藏飯店">
-    <i class="bi bi-heart" id="favoriteIcon"></i>
-  </button>
-</h1>
 
-      <div class="hotel-rating">
-       <!--<span class="stars">★★★★★</span>-->
-        <span>7.8 分 (1,234 則評價)</span>
-      </div>
-      <p class="hotel-address">台中市西屯區公益路77號</p>
-    </div>
-  </div>
-</div>
 
 
 
@@ -263,12 +245,11 @@
 <div class="section">
   <div class="section-title">飯店照片</div>
   <div class="photo-gallery">
-    
     <!-- 主要照片 -->
     <div class="photo-placeholder main-photo">
       <img src="/img/600x400.png" alt="主要照片" width="500" height="300">
     </div>
-    
+
     <!-- 其他照片 -->
     <div class="photo-placeholder">
       <img src="/img/ting.png" alt="大廳" width="300" height="200">
@@ -282,9 +263,46 @@
     <div class="photo-placeholder">
       <img src="/img/eat.png" alt="餐廳" width="300" height="200">
     </div>
+  </div>
 
+  <!-- 飯店標題與資訊 -->
+<div class="hotel-header" style="margin-top: 20px;">
+  <div class="hotel-info-row justify-content-between" style="width: 100%;">
+    <div>
+      <h1 class="hotel-title d-flex align-items-center gap-2">
+        Brad Hotel
+        <button class="favorite-btn" id="favoriteBtn" aria-label="收藏飯店">
+          <i class="bi bi-heart" id="favoriteIcon"></i>
+        </button>
+      </h1>
+      <p class="hotel-address">台中市西屯區公益路77號</p>
+      <p>Brad Hotel 坐落於台中市最熱鬧的西屯區，步行即可抵達知名商圈與捷運站，無論是購物、美食或交通都極為便利。
+    飯店內部設計融合現代與舒適風格，提供多種房型選擇，無論是商務出差或家庭旅遊，都能找到理想的住宿空間。
+    每間客房皆配有高速 Wi-Fi、舒適床鋪與貼心備品，讓您入住期間感受賓至如歸。
+    此外，飯店也設有健身房、景觀泳池與全天候服務櫃台，滿足旅客的各種需求。</p>
+    </div>
+
+ 
+      <!-- 評價卡片（可懸浮顯示詳情） -->
+<div class="review-popup-wrapper">
+  <div class="review-summary">
+    <div class="review-label">好</div>
+    <div class="review-score">7.7</div>
+  </div>
+
+  <!-- 懸浮顯示的詳細內容 -->
+  <div class="review-popup">
+    <strong>1,007 則評語</strong>
+    <hr>
+    <p style="margin-bottom: 5px;">「寢具乾淨，無異味。熱水溫度穩定。電視可看網路平台，不是只有有線。」</p>
+    <p style="color: #666; font-size: 12px;">wei chen・臺灣</p>
   </div>
 </div>
+
+    </div>
+  </div>
+</div>
+
 
 
 <div class="main-content">
@@ -410,14 +428,14 @@
         </div>
       </div>
     </div>
-
-    <!-- 評價 -->
+<!--
+     評價
     <div class="section">
       <div class="section-title">住客評價</div>
       <div class="reviews-grid">
         <div class="rating-summary">
           <div class="rating-score">7.8</div>
-          <!--<div class="stars">★★★★★</div>-->
+          <div class="stars">★★★★★</div>
           <p>超棒 (1,234 則評價)</p>
           <hr style="margin: 15px 0;">
           <div style="text-align: left;">
@@ -432,7 +450,7 @@
             <div class="reviewer-info">
               <strong>黃小靜</strong>
               <div>
-                <!--<span class="stars">★★★★★</span>-->
+                <span class="stars">★★★★★</span>
                 <small>2024/05/20</small>
               </div>
             </div>
@@ -442,7 +460,7 @@
             <div class="reviewer-info">
               <strong>戴小淇</strong>
               <div>
-                <!--<span class="stars">★★★★☆</span>-->
+            
                 <small>2024/05/18</small>
               </div>
             </div>
@@ -452,7 +470,7 @@
             <div class="reviewer-info">
               <strong>趙老大</strong>
               <div>
-                <!--<span class="stars">★★★★★</span>-->
+                
                 <small>2024/05/15</small>
               </div>
             </div>
@@ -460,7 +478,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- 地圖位置 -->
     <div class="section">

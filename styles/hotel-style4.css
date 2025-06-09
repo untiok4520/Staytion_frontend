@@ -146,6 +146,15 @@ body {
   padding: 4px 10px;
   margin-bottom: 20px; /* 增加標題下方間距 */
 }
+.rating-badge {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  color: #333;
+  white-space: nowrap;
+}
 
 
 .hotel-header {
@@ -176,7 +185,7 @@ body {
 
 .photo-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 更自適應 */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
   margin-top: 10px;
   padding-top: 10px; /* 增加與標題的間距 */
@@ -195,7 +204,7 @@ body {
   width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 柔和陰影 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
   transition: transform 0.3s ease;
 }
 
@@ -558,7 +567,7 @@ body {
   display: inline-block;
 }
 
-/* 以上搜尋列         */
+/* 以上搜尋列  */
 
 
 .logo {
@@ -695,17 +704,18 @@ body {
 }
 
 .section {
-  background-color: var(--bg-color);
+  background-color: #ffffff;
   padding: 30px 40px;
   border-radius: 10px;
   margin-bottom: 30px;
-  border: 2px dashed #ccc;
+  border: none; 
 }
+
 
 .section-title {
   font-size: 14px;
   padding: 4px 10px;
-  background-color: #007bff;
+  background-color: #376996;
   color: white;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -804,7 +814,7 @@ body {
 }
 
 .booking-btn {
-  background: #28a745;
+  background: #007bff;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -815,7 +825,7 @@ body {
 }
 
 .booking-btn:hover {
-  background: #218838;
+  background: #376996;
 }
 
 .main-content {
@@ -870,4 +880,92 @@ body {
     font-size: 14px;
     padding: 10px;
   }
+}
+.review-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px 12px;
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-width: 150px;
+}
+
+.review-text {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.review-label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.review-count {
+  font-size: 12px;
+  color: #666;
+}
+
+.review-score {
+  background-color: #003580;
+  color: white;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+.review-popup-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.review-label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.review-score {
+  background-color: #003580;
+  color: white;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* 隱藏彈出層預設 */
+.review-popup {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  width: 250px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+
+/* 滑鼠懸浮時顯示 */
+.review-popup-wrapper:hover .review-popup {
+  display: block;
 }
