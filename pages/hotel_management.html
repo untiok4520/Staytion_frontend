@@ -200,8 +200,8 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>飯店總覽</span>
-                    <a href="hotel_add.html" class="btn btn-primary btn-sm"><i
-                            class="bi bi-plus-circle me-2"></i>新增飯店</a>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addHotelModal"><i
+                            class="bi bi-plus-circle me-2"></i>新增飯店</button>
                 </div>
                 <div class="card-body table-responsive">
                     <table class="table table-bordered table-hover align-middle" style="min-width: 800px;">
@@ -256,8 +256,8 @@
                             <option value="hualien">花蓮海景套房</option>
                         </select>
                     </div>
-                    <a href="roomtype_add.html" class="btn btn-primary btn-sm"><i
-                            class="bi bi-plus-circle me-2"></i>新增房型</a>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRoomModal"><i
+                            class="bi bi-plus-circle me-2"></i>新增房型</button>
                 </div>
                 <div class="card-body table-responsive">
                     <table class="table table-bordered table-hover align-middle" style="min-width: 800px;">
@@ -353,6 +353,114 @@
                         <tbody id="summary-rooms" class="d-none"></tbody>
 
                     </table>
+                </div>
+            </div>
+        </div>
+        <!-- ✅ 新增飯店 Modal -->
+        <div class="modal fade" id="addHotelModal" tabindex="-1" aria-labelledby="addHotelModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addHotelModalLabel">新增飯店</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">飯店名稱 *</label>
+                                <input type="text" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">地址 *</label>
+                                <input type="text" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">描述 *</label>
+                                <textarea class="form-control" rows="2" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">上傳照片 *</label>
+                                <input type="file" class="form-control" multiple />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">設施選擇 *</label><br />
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="wifiModal" />
+                                    <label class="form-check-label" for="wifiModal">WiFi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="parkingModal" />
+                                    <label class="form-check-label" for="parkingModal">停車場</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+                        <button class="btn btn-primary">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ✅ 新增房型 Modal -->
+        <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRoomModalLabel">新增房型</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">所屬飯店 *</label>
+                                <select class="form-select">
+                                    <option selected disabled>請選擇</option>
+                                    <option>台北民宿一館</option>
+                                    <option>台中青年旅店</option>
+                                    <option>花蓮海景套房</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">房型名稱 *</label>
+                                <input type="text" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">房間數 *</label>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">價格 *</label>
+                                <div class="row g-2">
+                                    <div class="col"><input type="number" class="form-control" placeholder="平日" /></div>
+                                    <div class="col"><input type="number" class="form-control" placeholder="假日" /></div>
+                                    <div class="col"><input type="number" class="form-control" placeholder="特殊日" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">是否可退款 *</label>
+                                <select class="form-select">
+                                    <option selected disabled>請選擇</option>
+                                    <option>可退款</option>
+                                    <option>不可退款</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">上傳照片 *</label>
+                                <input type="file" class="form-control" multiple />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">取消政策 *</label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+                        <button class="btn btn-primary">儲存</button>
+                    </div>
                 </div>
             </div>
         </div>
