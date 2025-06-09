@@ -144,6 +144,7 @@ body {
 .section-title {
   font-size: 14px;
   padding: 4px 10px;
+  margin-bottom: 20px; /* 增加標題下方間距 */
 }
 
 
@@ -175,10 +176,10 @@ body {
 
 .photo-gallery {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: 200px 200px;
-  gap: 10px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 更自適應 */
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px; /* 增加與標題的間距 */
 }
 
 .photo-placeholder {
@@ -576,6 +577,22 @@ body {
     align-items: flex-start;
   }
 }
+/* 收藏功能 */
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 1.5rem;
+  color: #dc3545;
+}
+
+.favorite-btn .bi-heart-fill {
+  color: #dc3545;
+}
+
+
+
 /* 導覽列 */
 .my-navbar {
   background-color: #fff;
