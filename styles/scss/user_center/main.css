@@ -12568,9 +12568,10 @@ footer a:hover {
   margin-bottom: 8px;
 }
 #reviews .review-card .review-content .review-score .score {
-  border: 1px solid #333;
+  background-color: #1f487e;
   padding: 6px 12px;
   border-radius: 10px;
+  color: white;
 }
 #reviews .review-card .review-content .review-score .desc {
   font-size: 16px;
@@ -12667,6 +12668,29 @@ footer a:hover {
   padding: 12px 16px;
   margin-bottom: 12px;
 }
+#profile .profile-card .profile-field.name {
+  display: flex;
+  align-items: center;
+}
+#profile .profile-card .profile-field .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-right: 12px;
+}
+#profile .profile-card .profile-field .member-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#profile .profile-card .profile-field button.name {
+  padding: 6px 10px;
+  background-color: #1f487e;
+  color: white;
+  border-radius: 6px;
+  margin-left: auto;
+}
 #profile .profile-card .profile-field label {
   font-weight: bold;
   display: block;
@@ -12677,20 +12701,10 @@ footer a:hover {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
 }
 #profile .profile-card .profile-field .profile-value .value {
   flex: 1;
-}
-#profile .profile-card .profile-field .profile-value .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ccc;
-  margin-right: 12px;
-}
-#profile .profile-card .profile-field .profile-value .info {
-  flex: 1;
+  margin-bottom: 0;
 }
 #profile .profile-card .profile-field .profile-value .edit-btn {
   padding: 6px 10px;
@@ -12752,6 +12766,12 @@ footer a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+#profile .profile-card .payment-box .payment-type {
+  margin-bottom: 0;
+}
+#profile .profile-card .payment-box .payment-mask {
+  margin-bottom: 0;
 }
 #profile .profile-card .payment-box .delete-icon {
   font-size: 18px;

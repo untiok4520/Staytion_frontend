@@ -467,30 +467,54 @@ function renderReviews(reviews) {
   });
 }
 
-// 個人資料 - 編輯切換
+// =======個人資料 - 編輯切換==========
 document.querySelectorAll("#profile .edit-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
-    const container = btn.closest(".profile-value");
+    // Revised logic to select container and valueEl more robustly
+    let container = btn.closest(".profile-value");
+    if (!container) {
+      // Handle the case where button is outside of .profile-value (e.g., in .profile-field.name)
+      const profileField = btn.closest(".profile-field");
+      container = profileField.querySelector(".profile-value") || profileField;
+    }
     const valueEl = container.querySelector(".value");
 
     if (btn.textContent === "儲存") {
       const input = container.querySelector("input");
       if (input) {
-        valueEl.textContent = input.value;
+        // 取得使用者輸入的值
+        const newValue = input.value;
+        const isPassword = input.type === "password";
+
+        // 顯示的文字：密碼顯示固定長度的遮蔽符號，其他正常顯示
+        if (valueEl) {
+          valueEl.textContent = isPassword ? "••••••••••••" : newValue;
+        }
+
         input.remove();
-        valueEl.style.display = "block";
+        if (valueEl) valueEl.style.display = "block";
         btn.textContent = "編輯";
       }
       return;
     }
 
     const input = document.createElement("input");
-    input.type = "text";
-    input.value = valueEl.textContent;
+    // Find the label for the field (may be in ancestor)
+    let labelText = "";
+    let labelEl = container.closest(".profile-field")?.querySelector("label");
+    if (labelEl) labelText = labelEl.textContent;
+    input.type = labelText.includes("密碼") ? "password" : "text";
+    // Use valueEl's text if present, otherwise empty
+    input.value = valueEl ? valueEl.textContent : "";
     input.classList.add("edit-input");
 
-    valueEl.style.display = "none";
-    valueEl.insertAdjacentElement("afterend", input);
+    // Insert input after valueEl if found, otherwise append to container
+    if (valueEl) {
+      valueEl.style.display = "none";
+      valueEl.insertAdjacentElement("afterend", input);
+    } else {
+      container.appendChild(input);
+    }
     btn.textContent = "儲存";
   });
 });

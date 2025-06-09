@@ -1,3 +1,5 @@
+@use "../abstract/custom-variables" as v;
+
 #reviews {
   display: flex;
   flex-direction: column;
@@ -40,9 +42,10 @@
         margin-bottom: 8px;
 
         .score {
-          border: 1px solid #333;
+          background-color: v.$secondary;
           padding: 6px 12px;
           border-radius: 10px;
+          color: white;
         }
 
         .desc {
