@@ -1,12 +1,12 @@
 
 const orderData = [
     {
-        id: '#ORD123', hotel: '星光大飯店', type: '標準雙人', date: '2025/06/10',
+        id: '#ORD123', hotel: '台北民宿一館', type: '雙人房', date: '2025/06/10',
         status: '已付款', method: '信用卡', amount: '$3,200',
         guest: '王小明', guestId: 'guest001'
     },
     {
-        id: '#ORD124', hotel: '星光大飯店', type: '精緻單人', date: '2025/06/12',
+        id: '#ORD124', hotel: '花蓮海景套房', type: '豪華房', date: '2025/06/12',
         status: '未付款', method: '現金', amount: '$2,000',
         guest: '李小華', guestId: 'guest002'
     }
