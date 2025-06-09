@@ -589,22 +589,14 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
 
 <script>
+  // 愛心收藏功能
 const favoriteBtn = document.getElementById("favoriteBtn");
 const favoriteIcon = document.getElementById("favoriteIcon");
 
-// 從 localStorage 讀取是否已收藏
-let isFavorited = localStorage.getItem("bradHotelFavorited") === "true";
-
-// 初始化圖示狀態
-updateFavoriteIcon();
+let isFavorited = false;
 
 favoriteBtn.addEventListener("click", () => {
   isFavorited = !isFavorited;
-  localStorage.setItem("bradHotelFavorited", isFavorited);
-  updateFavoriteIcon();
-});
-
-function updateFavoriteIcon() {
   if (isFavorited) {
     favoriteIcon.classList.remove("bi-heart");
     favoriteIcon.classList.add("bi-heart-fill");
@@ -612,7 +604,7 @@ function updateFavoriteIcon() {
     favoriteIcon.classList.remove("bi-heart-fill");
     favoriteIcon.classList.add("bi-heart");
   }
-}
+});
 
   // 日期選擇器初始化
   flatpickr("#daterange", {

@@ -680,4 +680,194 @@ body {
   color: #376996;
   border: 2px solid #376996;
 }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+.wireframe {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #FEFCF0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  background-color: var(--bg-color);
+  padding: 30px 40px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  border: 2px dashed #ccc;
+}
+
+.section-title {
+  font-size: 14px;
+  padding: 4px 10px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.photo-placeholder {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.photo-placeholder img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.photo-placeholder img:hover {
+  transform: scale(1.02);
+}
+
+.main-photo {
+  grid-row: span 2;
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.room-card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f8f9fa;
+  display: grid;
+  grid-template-columns: 150px 1fr 200px;
+  gap: 20px;
+  align-items: center;
+}
+
+.room-image {
+  background: #e9ecef;
+  border: 2px dashed #adb5bd;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.room-info h3 {
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.room-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.feature-tag {
+  background: #17a2b8;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.room-booking {
+  text-align: right;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #dc3545;
+  margin-bottom: 8px;
+}
+
+.booking-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+}
+
+.booking-btn:hover {
+  background: #218838;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .main-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .photo-gallery {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-photo {
+    grid-row: auto;
+  }
+
+  .room-card {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .room-booking {
+    text-align: left;
+  }
+
+  .right-content {
+    width: 100%;
+  }
+
+  .booking-panel {
+    margin-top: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .hotel-title {
+    font-size: 20px;
+  }
+
+  .booking-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
