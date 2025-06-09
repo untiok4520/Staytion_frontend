@@ -253,13 +253,14 @@
                         <thead>
                             <tr>
                                 <th>訂單編號</th>
+                                <th>房客姓名</th>
                                 <th>飯店名稱</th>
                                 <th>房型</th>
                                 <th>訂購日</th>
+                                <th>入住日期</th>
                                 <th>付款狀態</th>
                                 <th>付款方式</th>
                                 <th>金額</th>
-                                <th>房客</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -280,7 +281,6 @@
                                 <th>電話</th>
                                 <th>總訂單</th>
                                 <th>總消費</th>
-                                <th>最後入住日</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -303,6 +303,10 @@
                                 <div class="col-md-6"><strong>訂購日：</strong> <span id="modalOrderDate"></span></div>
                             </div>
                             <div class="row mb-2">
+                                <div class="col-md-6"><strong>入住日期：</strong> <span id="modalStayDate"></span></div>
+                                <div class="col-md-6"><strong>房客：</strong> <span id="modalGuestName"></span></div>
+                            </div>
+                            <div class="row mb-2">
                                 <div class="col-md-6"><strong>飯店名稱：</strong> <span id="modalHotelName"></span></div>
                                 <div class="col-md-6"><strong>房型：</strong> <span id="modalRoomType"></span></div>
                             </div>
@@ -313,7 +317,6 @@
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-6"><strong>金額：</strong> <span id="modalAmount"></span></div>
-                                <div class="col-md-6"><strong>房客：</strong> <span id="modalGuestName"></span></div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -337,7 +340,6 @@
                             <p><strong>電話：</strong><span id="modalPhone"></span></p>
                             <p><strong>總訂單：</strong><span id="modalOrders"></span></p>
                             <p><strong>總消費：</strong><span id="modalAmountGuest"></span></p>
-                            <p><strong>最後入住日：</strong><span id="modalLastStay"></span></p>
                         </div>
                     </div>
                 </div>
