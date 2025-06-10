@@ -21,19 +21,18 @@
 .hotel-info-row h1,
 .hotel-info-row .hotel-rating,
 .hotel-info-row .hotel-address {
-  margin: 0;
   white-space: nowrap; /* 避免自動換行 */
 }
 
-.hotel-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-}
-
 .hotel-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
   font-size: 1rem;
   color: #f39c12;
 }
+
 
 .hotel-address {
   font-size: 1rem;
@@ -101,13 +100,6 @@ footer a:hover {
   color: #fcfef0;
 }
 
-/* 區塊背景 */
-.section {
-  background-color: var(--bg-color);
-  padding: 30px 40px;
-  border-radius: 10px;
-  margin-bottom: 30px;
-}
 
 /* 按鈕 */
 
@@ -118,34 +110,7 @@ body {
   background-color: #376996;
 }
 
-.wireframe {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #FEFCF0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
-.section {
-  border: 2px dashed #ccc;
-  margin: 20px 0;
-  padding: 20px;
-  background: #fff;
-}
-
-.section-title {
-  font-size: 16px;     /* 減小字體 */
-  padding: 6px 12px;   /* 減少內距 */
-  background-color: #007bff; /* 藍色背景 */
-  color: white;        /* 字體顏色 */
-  border-radius: 4px;  /* 圓角可有可無 */
-  margin-bottom: 10px; /* 跟下方區塊留距離 */
-}
-.section-title {
-  font-size: 14px;
-  padding: 4px 10px;
-  margin-bottom: 20px; /* 增加標題下方間距 */
-}
 .rating-badge {
   background-color: #f8f9fa;
   border: 1px solid #ced4da;
@@ -171,12 +136,7 @@ body {
   color: #2c3e50;
 }
 
-.hotel-rating {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
+
 
 .stars {
   color: #ffc107;
@@ -186,9 +146,11 @@ body {
 .photo-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  flex-direction: column;
   gap: 12px;
   margin-top: 10px;
   padding-top: 10px; /* 增加與標題的間距 */
+  
 }
 
 .photo-placeholder {
@@ -201,6 +163,7 @@ body {
 }
 
 .photo-placeholder img {
+  transform: scale(1.02);
   width: 100%;
   height: auto;
   border-radius: 8px;
@@ -208,9 +171,6 @@ body {
   transition: transform 0.3s ease;
 }
 
-.photo-placeholder img:hover {
-  transform: scale(1.02); /* 滑鼠移上放大 */
-}
 
 
 .main-photo {
@@ -232,6 +192,8 @@ body {
   grid-template-columns: 150px 1fr 200px;
   gap: 20px;
   align-items: center;
+  flex-direction: column;
+  text-align: left;
 }
 
 .room-image {
@@ -269,6 +231,12 @@ body {
   text-align: right;
 }
 
+@media (max-width: 768px) {
+  .room-booking {
+    text-align: left;
+  }
+}
+
 .price {
   font-size: 24px;
   font-weight: bold;
@@ -276,20 +244,6 @@ body {
   margin-bottom: 8px;
 }
 
-.booking-btn {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  width: 100%;
-}
-
-.booking-btn:hover {
-  background: #218838;
-}
 
 .reviews-grid {
   display: grid;
@@ -398,18 +352,8 @@ body {
   margin-top: 20px;
 }
 
-@media (max-width: 768px) {
-  .main-content {
-    flex-direction: column;
-  }
 
-  .photo-gallery {
-    flex-direction: column;
-  }
 
-  .room-card {
-    flex-direction: column;
-  }
 
   .guest-select {
     flex-direction: column;
@@ -441,30 +385,11 @@ body {
     font-size: 13px;
   }
 
-  .section-title {
-    font-size: 18px;
-  }
-
   .hotel-title {
     font-size: 22px;
   }
-}
 
-:root {
-  --primary-color: #376996;
-  --bg-color: #FEFCF0;
-  --button-color: #1F487E;
 
-  /* 補齊以下變數 */
-  --color-primary: #376996;
-  --color-dark-gray: rgba(0, 0, 0, 0.1);
-  --color-light: #ffffff;
-  --color-gray: #ccc;
-  --color-text: #333;
-  --border-radius: 6px;
-  --color-info: #e0f0ff;
-  --button-hover: #1F487E;
-}
 
 
 /* 以下搜尋列 */
@@ -689,19 +614,6 @@ body {
   color: #376996;
   border: 2px solid #376996;
 }
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.wireframe {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #FEFCF0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
 .section {
   background-color: #ffffff;
@@ -721,98 +633,6 @@ body {
   margin-bottom: 20px;
 }
 
-.photo-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-top: 10px;
-  padding-top: 10px;
-}
-
-.photo-placeholder {
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
-}
-
-.photo-placeholder img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.photo-placeholder img:hover {
-  transform: scale(1.02);
-}
-
-.main-photo {
-  grid-row: span 2;
-}
-
-.room-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.room-card {
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 20px;
-  background: #f8f9fa;
-  display: grid;
-  grid-template-columns: 150px 1fr 200px;
-  gap: 20px;
-  align-items: center;
-}
-
-.room-image {
-  background: #e9ecef;
-  border: 2px dashed #adb5bd;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6c757d;
-  font-size: 12px;
-}
-
-.room-info h3 {
-  color: #2c3e50;
-  margin-bottom: 8px;
-}
-
-.room-features {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 8px 0;
-}
-
-.feature-tag {
-  background: #17a2b8;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-}
-
-.room-booking {
-  text-align: right;
-}
-
-.price {
-  font-size: 24px;
-  font-weight: bold;
-  color: #dc3545;
-  margin-bottom: 8px;
-}
-
 .booking-btn {
   background: #007bff;
   color: white;
@@ -822,18 +642,14 @@ body {
   cursor: pointer;
   font-weight: bold;
   width: 100%;
+  font-size: 14px;
+  
 }
 
 .booking-btn:hover {
   background: #376996;
 }
 
-.main-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 30px;
-  margin-top: 20px;
-}
 
 /* 響應式設計 */
 @media (max-width: 768px) {
@@ -842,23 +658,12 @@ body {
     flex-direction: column;
   }
 
-  .photo-gallery {
-    display: flex;
-    flex-direction: column;
-  }
+  
 
   .main-photo {
     grid-row: auto;
   }
 
-  .room-card {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
-
-  .room-booking {
-    text-align: left;
-  }
 
   .right-content {
     width: 100%;
@@ -868,18 +673,10 @@ body {
     margin-top: 16px;
   }
 
-  .section-title {
-    font-size: 16px;
-  }
-
   .hotel-title {
     font-size: 20px;
   }
 
-  .booking-btn {
-    font-size: 14px;
-    padding: 10px;
-  }
 }
 .review-card {
   display: flex;
@@ -935,20 +732,6 @@ body {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-.review-label {
-  font-weight: bold;
-  font-size: 14px;
-  color: #333;
-}
-
-.review-score {
-  background-color: #003580;
-  color: white;
-  font-weight: bold;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 14px;
-}
 
 /* 隱藏彈出層預設 */
 .review-popup {
