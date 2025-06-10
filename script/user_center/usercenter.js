@@ -89,14 +89,12 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
             hotelName: "Hotel Name",
             date: "2025年5月26日",
             score: "8.0",
-            scoreDesc: "非常好",
             text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           },
           {
             hotelName: "Another Hotel",
             date: "2025年5月20日",
             score: "9.2",
-            scoreDesc: "超棒",
             text: "這間真的很乾淨，交通方便。",
           },
         ];
@@ -428,23 +426,20 @@ document.querySelectorAll(".chat-list-item").forEach((item) => {
 //=======住宿評論渲染=============
 function renderReviews(reviews) {
   const reviewsContainer = document.getElementById("reviews");
-  reviewsContainer.innerHTML = ""; // 清空舊資料
+  // 移除現有的非 template 卡片
+  reviewsContainer
+    .querySelectorAll(".review-card:not(.template)")
+    .forEach((el) => el.remove());
 
+  const template = document.querySelector(".review-card.template");
   reviews.forEach((review) => {
-    const card = document.createElement("div");
-    card.className = "review-card";
-    card.innerHTML = `
-      <div class="review-img"></div>
-      <div class="review-content">
-        <h5>${review.hotelName}</h5>
-        <p class="review-date">${review.date}</p>
-        <div class="review-score">
-          <span class="score">${review.score}</span>
-          <span class="desc">${review.scoreDesc}</span>
-        </div>
-        <p class="review-text">${review.text}</p>
-      </div>
-    `;
+    const card = template.cloneNode(true);
+    card.classList.remove("template");
+    card.style.display = "";
+    card.querySelector(".review-hotel-name").textContent = review.hotelName;
+    card.querySelector(".review-date").textContent = review.date;
+    card.querySelector(".score").textContent = review.score;
+    card.querySelector(".review-text").textContent = review.text;
     reviewsContainer.appendChild(card);
   });
 }

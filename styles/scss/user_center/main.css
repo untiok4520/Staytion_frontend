@@ -12549,6 +12549,8 @@ input.choose-date:focus {
 }
 #reviews .review-card {
   display: flex;
+  flex-direction: row;
+  justify-content: start;
   border: 1px solid #ccc;
   border-radius: 16px;
   padding: 20px;
@@ -12564,6 +12566,8 @@ input.choose-date:focus {
 }
 #reviews .review-card .review-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 #reviews .review-card .review-content h5 {
   font-weight: bold;
@@ -12585,9 +12589,6 @@ input.choose-date:focus {
   padding: 6px 12px;
   border-radius: 10px;
   color: white;
-}
-#reviews .review-card .review-content .review-score .desc {
-  font-size: 16px;
 }
 #reviews .review-card .review-content .review-text {
   font-size: 14px;
