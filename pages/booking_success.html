@@ -322,13 +322,17 @@
 
       <div class="card p-4 mb-4 card-hover">
         <div class="section-title">📷 房型圖片</div>
-        <img
-          src="../image/room.png"
-          class="img-fluid rounded border"
-          alt="豪華雙人房"
-          style="max-width: 600px; width: 100%; height: auto;"
-        />
+        <div class="text-center">
+          <img
+            src="../image/room.png"
+            class="img-fluid rounded border"
+            alt="豪華雙人房"
+            style="max-width: 600px; width: 100%; height: auto;"
+          />
+          <p class="text-muted mt-2">房型含特大床、落地窗、沙發座椅與高樓層景觀。</p>
+        </div>
       </div>
+      
 
       <div class="card p-4 mb-4 card-hover">
         <div class="section-title">📄 訂單資訊</div>
@@ -344,7 +348,15 @@
       <div class="card p-4 mb-4 card-hover">
         <div class="section-title">✏️ 如需修改訂單</div>
         <div class="d-flex flex-column flex-md-row gap-3">
-          <a href="#" class="btn btn-outline-primary w-100">修改日期</a>
+          <a
+  href="#"
+  class="btn btn-outline-primary w-100"
+  data-bs-toggle="modal"
+  data-bs-target="#changeDateModal"
+>
+  修改日期
+</a>
+
           <a href="#" class="btn btn-outline-primary w-100">修改信用卡資料</a>
           <a href="#" class="btn btn-outline-primary w-100">更換房型</a>
         </div>
@@ -436,6 +448,111 @@
       setTimeout(createFirework, i * 200);
     }
   </script>
-  
+  <!-- ✅ Bootstrap Modal：修改日期 -->
+<div
+class="modal fade"
+id="changeDateModal"
+tabindex="-1"
+aria-labelledby="changeDateModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="changeDateModalLabel">更改入住日期</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <label for="checkinDate" class="form-label">入住日期</label>
+      <input type="date" id="checkinDate" class="form-control mb-3" />
+
+      <label for="checkoutDate" class="form-label">退房日期</label>
+      <input type="date" id="checkoutDate" class="form-control" />
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        data-bs-dismiss="modal"
+      >
+        關閉
+      </button>
+      <button type="button" class="btn btn-primary" onclick="confirmDateChange()">
+        確認
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function confirmDateChange() {
+  const checkin = document.getElementById("checkinDate").value;
+  const checkout = document.getElementById("checkoutDate").value;
+
+  if (!checkin || !checkout) {
+    alert("請選擇完整日期！");
+    return;
+  }
+
+  alert(`您選擇的日期為：\n入住：${checkin}\n退房：${checkout}`);
+
+  const modal = bootstrap.Modal.getInstance(document.getElementById("changeDateModal"));
+  modal.hide();
+}
+// 設定預設值與禁止選過去日期
+window.addEventListener("DOMContentLoaded", () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+
+    const yyyy2 = tomorrow.getFullYear();
+    const mm2 = String(tomorrow.getMonth() + 1).padStart(2, "0");
+    const dd2 = String(tomorrow.getDate()).padStart(2, "0");
+
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+    const tomorrowStr = `${yyyy2}-${mm2}-${dd2}`;
+
+    const checkinInput = document.getElementById("checkinDate");
+    const checkoutInput = document.getElementById("checkoutDate");
+
+    checkinInput.min = todayStr;
+    checkoutInput.min = todayStr;
+
+    checkinInput.value = todayStr;
+    checkoutInput.value = tomorrowStr;
+  });
+
+  // 點確認按鈕
+  function confirmDateChange() {
+    const checkin = document.getElementById("checkinDate").value;
+    const checkout = document.getElementById("checkoutDate").value;
+
+    if (!checkin || !checkout) {
+      alert("請選擇完整日期！");
+      return;
+    }
+
+    if (checkout <= checkin) {
+      alert("退房日期必須晚於入住日期！");
+      return;
+    }
+
+    alert(`您選擇的日期為：\n入住：${checkin}\n退房：${checkout}`);
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById("changeDateModal"));
+    modal.hide();
+  }
+</script>
+
 </body>
 </html>
