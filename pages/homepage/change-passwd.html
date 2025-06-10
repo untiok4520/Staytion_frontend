@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登入或建立帳戶</title>
+    <title>變更密碼</title>
 
     <!-- bs -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
 
@@ -120,35 +121,18 @@
 
     <div class="container login">
         <div class="register">
-            <h4>登入或建立帳戶</h4>
-            <label for="email" class="my-1">電子信箱</label><br>
-            <input type="email" id="email" class="mb-2" placeholder="請填寫您的電子信箱"><br>
-            <button id="emailContinue" class="btn my-3">繼續</button>
-
-            <div class="hr-with-text">
-                <span>或使用以下選項</span>
-            </div>
-
-            <div class="social-icon container">
-                <div class=row>
-                    <div class="col-sm-6 col-12 text-center my-1">
-                        <a href="#"><img src="../../assets/homepage/img/google.svg" alt="google"></a>
-                    </div>
-                    <div class="col-sm-6 col-12 text-center my-1">
-                        <a href="#"><img src="../../assets/homepage/img/facebook.svg" alt="facebook"></a>
-                    </div>
-                </div>
-            </div>
-
-
-            <hr>
-            <p class="terms text-center">
-                註冊或登入即表示您了解並同意出趣玩 <a href="#">服務條款</a> 與 <a href="#">隱私權政策</a>
-            </p>
+            <h4>變更密碼</h4>
+            <p class="m-0">為此帳號設定一組新密碼：</p>
+            <p>xxxxxxx@email.com</p>
+            <label for="password" class="my-1">新密碼</label><br>
+            <input type="password" id="password" class="mb-2" placeholder="新密碼"><br>
+            <label for="repasswd" class="my-1">請再次輸入新密碼</label><br>
+            <input type="password" id="repasswd" class="mb-2" placeholder="請再次輸入新密碼"><br>
+            <button id="primaryBtn" class="btn mt-4 mb-3">變更密碼</button>
         </div>
 
     </div>
-    
+
     <!-- JS Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../script/homepage/_js/login.js"></script>
