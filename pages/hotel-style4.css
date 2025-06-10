@@ -452,7 +452,6 @@ body {
   display: none;
 }
 
-
 #guest-popup .guest-row {
   display: flex;
   justify-content: space-between;
@@ -511,6 +510,7 @@ body {
   .hotel-info-row {
     flex-direction: column;
     align-items: flex-start;
+    
   }
 }
 /* 收藏功能 */
