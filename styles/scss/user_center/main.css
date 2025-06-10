@@ -12353,6 +12353,19 @@ footer a:hover {
   z-index: 999;
 }
 
+input.choose-date {
+  border-radius: 1rem;
+  width: 300px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+  text-align: center;
+}
+input.choose-date:focus {
+  border-color: #376996;
+  outline: none;
+  box-shadow: 0 0 8px rgba(55, 105, 150, 0.4);
+}
+
 .cancel-modal {
   background: white;
   padding: 24px;

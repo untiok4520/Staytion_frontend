@@ -12,6 +12,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
 
     <title>Staytion</title>
   </head>
@@ -414,14 +418,27 @@
         <button id="closeChangeDateModal" class="close-btn">✕</button>
         <h2>更改入住日期</h2>
         <div class="date">
-          <div class="checkinDate">
+          <div>
+            <div class="input-group">
+              <span class="input-group-text"
+                ><i class="bi bi-calendar-event"></i
+              ></span>
+              <input
+                type="text"
+                id="daterange"
+                class="choose-date"
+                placeholder="選擇日期範圍"
+              />
+            </div>
+          </div>
+          <!-- <div class="checkinDate">
             <label for="newCheckin">入住日期</label>
             <input type="date" id="newCheckin" />
           </div>
           <div class="checkoutDate">
             <label for="newCheckout">退房日期</label>
             <input type="date" id="newCheckout" />
-          </div>
+          </div> -->
         </div>
 
         <div class="modal-actions">
@@ -481,5 +498,17 @@
     </footer>
     <script src="../script/user_center/usercenter.js"></script>
     <script src="../script/user_center/bootstrap.bundle.min.js"></script>
+    <!-- 更改日期選擇欄位 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
+    <script>
+      flatpickr("#daterange", {
+        locale: "zh_tw",
+        mode: "range",
+        minDate: "today",
+        dateFormat: "Y-m-d",
+        showMonths: 2,
+      });
+    </script>
   </body>
 </html>
