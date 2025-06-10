@@ -2,12 +2,12 @@
 const orderData = [
     {
         id: '#ORD123', guest: '王小明', hotel: '台北民宿一館', type: '雙人房', date: '2025/06/10',
-        staydate:"2025/06/10-2025/06/11", status: '已付款', method: '信用卡', amount: '$3,200',
+        staydate:"2025/06/10 - 2025/06/11", status: '已付款', method: '信用卡', amount: '$3,200',
          guestId: 'guest001'
     },
     {
         id: '#ORD124', guest: '李小華', hotel: '花蓮海景套房', type: '豪華房', date: '2025/06/12',
-        staydate:"2025/06/12-2025/06/13", status: '未付款', method: '現金', amount: '$2,000',
+        staydate:"2025/06/12 - 2025/06/13", status: '未付款', method: '現金', amount: '$2,000',
          guestId: 'guest002'
     }
 ];
@@ -28,8 +28,8 @@ function showOrderDetail(orderId) {
     if (!order) return;
     document.getElementById('modalOrderCode').textContent = order.id;
     document.getElementById('modalOrderDate').textContent = order.date;
-    document.getElementById('modalStayDate').textContent = order.staydate;
     document.getElementById('modalGuestName').textContent = order.guest;
+    document.getElementById('modalStayDate').textContent = order.staydate;
     document.getElementById('modalHotelName').textContent = order.hotel;
     document.getElementById('modalRoomType').textContent = order.type;
     const badge = document.getElementById('modalPaymentStatus');
@@ -60,7 +60,7 @@ orderData.forEach(o => {
         <td>${o.hotel}</td>
         <td>${o.type}</td>
         <td>${o.date}</td>
-        <td>${o.staydate}</td>
+        <!-- <td>${o.staydate}</td> -->
         <td><span class="text-${o.status === '已付款' ? 'success' : 'danger'}">${o.status}</span></td>
         <td>${o.method}</td>
         <td>${o.amount}</td>
