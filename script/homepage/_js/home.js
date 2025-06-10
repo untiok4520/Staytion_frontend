@@ -188,11 +188,30 @@ const historyCarousel = document.getElementById('history-carousel');
 const nexthistoryBtn = document.getElementById('scroll-next-history');
 const prevhistoryBtn = document.getElementById('scroll-prev-history');
 
+// 預設隱藏箭頭按鈕
+nexthistoryBtn.style.display = 'none';
+prevhistoryBtn.style.display = 'none';
+
 // 使用實際卡片寬度加 margin 做為滾動距離
 const getScrollAmount = () => {
     const card = document.querySelector('.city-carousel .card');
     return card ? card.offsetWidth + 16 : 260;
 };
+
+// 根據卡片數量來顯示箭頭按鈕
+function updateArrowsVisibility() {
+    const totalCards = historyCarousel.children.length;
+
+    // 超過 5 張卡片時顯示箭頭按鈕
+    if (totalCards > 5) {
+        nexthistoryBtn.style.display = 'block';
+        prevhistoryBtn.style.display = 'block';
+    } else {
+        nexthistoryBtn.style.display = 'none';
+        prevhistoryBtn.style.display = 'none';
+    }
+}
+
 nexthistoryBtn.addEventListener('click', () => {
     historyCarousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
 });
@@ -207,36 +226,31 @@ const historyData = [
         img: "../../assets/homepage/img/changhua.jpg",
         date: "2025-06-11 至 2025-06-19",
         people: "2位"
-    },
-    {
-        city: "台中",
-        img: "../../assets/homepage/img/taichung.jpg",
-        date: "2025-06-05 至 2025-06-10",
-        people: "3位"
-    },
-    {
+    },{
         city: "彰化",
         img: "../../assets/homepage/img/changhua.jpg",
         date: "2025-06-11 至 2025-06-19",
         people: "2位"
-    },
-    {
-        city: "台中",
-        img: "../../assets/homepage/img/taichung.jpg",
-        date: "2025-06-05 至 2025-06-10",
-        people: "3位"
-    },
-    {
+    },{
         city: "彰化",
         img: "../../assets/homepage/img/changhua.jpg",
         date: "2025-06-11 至 2025-06-19",
         people: "2位"
-    },
-    {
-        city: "台中",
-        img: "../../assets/homepage/img/taichung.jpg",
-        date: "2025-06-05 至 2025-06-10",
-        people: "3位"
+    },{
+        city: "彰化",
+        img: "../../assets/homepage/img/changhua.jpg",
+        date: "2025-06-11 至 2025-06-19",
+        people: "2位"
+    },{
+        city: "彰化",
+        img: "../../assets/homepage/img/changhua.jpg",
+        date: "2025-06-11 至 2025-06-19",
+        people: "2位"
+    },{
+        city: "彰化",
+        img: "../../assets/homepage/img/changhua.jpg",
+        date: "2025-06-11 至 2025-06-19",
+        people: "2位"
     }
     // 可繼續加入更多紀錄
 ];
@@ -258,6 +272,8 @@ historyData.forEach(item => {
     historyCarousel.appendChild(card);
 });
 
+// 更新箭頭顯示狀態
+updateArrowsVisibility();
 
 // 熱門城市 -------------------------------------------------
 
