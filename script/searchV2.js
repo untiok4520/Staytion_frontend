@@ -61,7 +61,6 @@ const filterState = {
   child: '',
   room: '',
   price: [],
-  star: [],
   facility: [],
   score: [],
   recommend: [],
@@ -201,54 +200,6 @@ function updateAreaDropdown(areaList) {
       .appendTo($ul);
   });
 }
-
-
-
-// let guestData = { adult: 2, child: 0, room: 1 };
-
-// $('#guest').on('click', function (e) {
-//   e.stopPropagation();
-//   closeAllDropdowns();
-//   $('#guestDropdownMenu').toggleClass('active');
-//   updateGuestPanel();
-// });
-// $(document).on('click', function (e) {
-//   if (!$(e.target).closest('#guest, #guestDropdownMenu').length) {
-//     $('#guestDropdownMenu').removeClass('active');
-//   }
-// });
-// function updateGuestPanel() {
-//   $('#adultCount').text(guestData.adult);
-//   $('#childCount').text(guestData.child);
-//   $('#roomCount').text(guestData.room);
-//   $('.btn-minus[data-type="adult"]').prop('disabled', guestData.adult <= 1);
-//   $('.btn-minus[data-type="child"]').prop('disabled', guestData.child <= 0);
-//   $('.btn-minus[data-type="room"]').prop('disabled', guestData.room <= 1);
-// }
-// $('.dropdown-guest-menu').on('click', '.btn-plus', function () {
-//   let type = $(this).data('type');
-//   if (type === 'adult' && guestData.adult < 10) guestData.adult++;
-//   if (type === 'child' && guestData.child < 5) guestData.child++;
-//   if (type === 'room' && guestData.room < 5) guestData.room++;
-//   updateGuestPanel();
-// });
-// $('.dropdown-guest-menu').on('click', '.btn-minus', function () {
-//   let type = $(this).data('type');
-//   if (type === 'adult' && guestData.adult > 1) guestData.adult--;
-//   if (type === 'child' && guestData.child > 0) guestData.child--;
-//   if (type === 'room' && guestData.room > 1) guestData.room--;
-//   updateGuestPanel();
-// });
-// $('.dropdown-guest-menu').on('click', '.btn-guest-done', function () {
-//   let txt = `${guestData.adult}Adult`;
-//   if (guestData.child > 0) txt += `${guestData.child}Child`;
-//   txt += `・${guestData.room}Room`;
-//   $('#guest').val(txt);
-//   $('#guestDropdownMenu').removeClass('active');
-// });
-// updateGuestPanel();
-
-
 
 //觸發搜尋
 $('#search-btn').on('click', function (e) {
@@ -416,21 +367,7 @@ setupDropdown({
   placeholder: 'Select Price',
   onSelect: createOnSelect('price')
 });
-const starOptions = [
-  { label: '1 星級', value: 1 },
-  { label: '2 星級', value: 2 },
-  { label: '3 星級', value: 3 },
-  { label: '4 星級', value: 4 },
-  { label: '5 星級', value: 5 }
-];
-setupDropdown({
-  buttonId: 'star',
-  dropdownId: 'starDropdown',
-  spanSelector: 'span',
-  options: starOptions,
-  placeholder: 'Select Star',
-  onSelect: createOnSelect('star')
-});
+
 const facilityOptions = [
   { label: '免費Wi-Fi', value: 'wifi' },
   { label: '停車場', value: 'parking' },
@@ -470,10 +407,8 @@ setupDropdown({
 });
 
 const sortOptions = [
-  { label: '為你精選', value: 'top_pick' },
   { label: '價格(高價優先)', value: 'price_highest' },
   { label: '評分(由高到低)', value: 'rating_highest' },
-  { label: '最佳評分', value: 'top_rated' }
 ];
 setupDropdown({
   buttonId: 'sort',
@@ -532,6 +467,77 @@ function renderHotelList(hotels) {
     $list.append($card);
   });
 }
+
+const $hotelList = $('#hotelList');
+let page = 1;
+let loading = false;
+let finished = false;
+
+async function fetchHotels() {
+  if (loading || finished) return;
+  loading = true;
+  try {
+    // 你自己的 API 路徑
+    const res = await fetch(`/api/hotels?page=${page}&size=10`);
+    const data = await res.json();
+
+    // 假設 data.hotels 是飯店陣列, data.hasNextPage 判斷還有沒有下一頁
+    if (!data.hotels || data.hotels.length === 0) {
+      finished = true;
+      return;
+    }
+
+    data.hotels.forEach(hotel => {
+      const $card = $(`
+        <article class="hotel-card">
+          <div class="hotel-image">
+            <img src="${hotel.imageUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="Picture">
+          </div>
+          <div class="hotel-info">
+            <h2 class="hotel-name">${hotel.name}</h2>
+            <div class="hotel-location">${hotel.location}</div>
+            <div class="hotel-type">${hotel.roomType}</div>
+          </div>
+          <div class="hotel-extra">
+            <div class="hotel-rating">
+              <span class="rating-text">${hotel.ratingText || ''}</span>
+              <span class="rating-score">${hotel.rating || ''}</span>
+            </div>
+            <div class="hotel-date">
+              1 晚上, 2 成人<br>
+              <strong>${hotel.price}</strong><br>
+              含稅及其他費用
+            </div>
+            <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
+              查詢客房詳情
+            </button>
+          </div>
+        </article>
+      `);
+      $hotelList.append($card);
+    });
+
+    // 判斷有沒有資料，沒資料就不再繼續 fetch
+    if (!data.hasNextPage) {
+      finished = true;
+    } else {
+      page += 1;
+    }
+  } finally {
+    loading = false;
+  }
+}
+
+// 第一次自動載入
+fetchHotels();
+
+// 無限滾動事件
+$(window).on('scroll', function () {
+  if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200) {
+    fetchHotels();
+  }
+});
+
 //測試有無跑版(假資料)
 renderHotelList([
   {
@@ -551,97 +557,7 @@ renderHotelList([
   }
 ]);
 
-//modal(不會寫,已經不知道在幹嘛了)
-function openFilterModal() {
-  $('#filterModal').addClass('active');
-}
-function closeFilterModal() {
-  $('#filterModal').removeClass('active');
-}
-// ✅ 多選綁定函式
-function bindMultiSelect(selector, key) {
-  $(selector).on('click', function () {
-    $(this).toggleClass('active');
-    const val = $(this).data('value');
-    const arr = filterState[key];
-    const idx = arr.indexOf(val);
 
-    if ($(this).hasClass('active')) {
-      if (idx === -1) arr.push(val);
-    } else {
-      if (idx !== -1) arr.splice(idx, 1);
-    }
-  });
-}
-
-// 🔶 綁定所有多選按鈕
-bindMultiSelect('.facility-btn', 'facilities');
-bindMultiSelect('.recommend-btn', 'recommend');
-bindMultiSelect('.star-btn', 'star');
-bindMultiSelect('.score-btn', 'score');
-bindMultiSelect('.price-btn', 'price');
-
-// 🔶 顯示住宿（查詢資料 + 顯示筆數）
-$('.btn-check').on('click', function () {
-  fetchHotels(filterState);
-});
-
-// 🔶 清除全部條件
-$('#clearAllBtn').on('click', function () {
-  $('.facility-btn, .recommend-btn, .star-btn, .score-btn, .price-btn').removeClass('active');
-
-  filterState.facilities = [];
-  filterState.recommend = [];
-  filterState.price = [];
-  filterState.star = [];
-  filterState.score = [];
-  filterState.priceMin = 0;
-  filterState.priceMax = 10000;
-
-  // 重設價格條
-  priceSlider.noUiSlider.set([500, 3000]);
-  $('#minPrice').text('最低價格');
-  $('#maxPrice').text('最高價格');
-
-  // 顯示文字歸零
-  $('.btn-check').text('顯示 1000+ 間住宿');
-});
-
-// 🔶 價格範圍拖曳條
-const priceSlider = document.getElementById('priceSlider');
-noUiSlider.create(priceSlider, {
-  start: [500, 3000],
-  connect: true,
-  step: 100,
-  range: {
-    min: 0,
-    max: 10000
-  },
-  format: {
-    to: value => Math.round(value),
-    from: value => Number(value)
-  }
-});
-
-const $min = document.getElementById('minPrice');
-const $max = document.getElementById('maxPrice');
-
-priceSlider.noUiSlider.on('update', function (values) {
-  $min.textContent = values[0];
-  $max.textContent = values[1];
-  filterState.priceMin = values[0];
-  filterState.priceMax = values[1];
-
-  //拖拉時就查詢
-  fetchHotels(filterState);
-
-});
-function applyFilter() {
-  fetchHotelsModal(filterState);
-}
-function updateHotelCount(count) {
-  $('.btn-check').text(`顯示 ${count} 間住宿`);
-}
 
 //取後端的通用
 function fetchHotelsMain(filters) {
@@ -673,111 +589,11 @@ function createOnSelect(key) {
   };
 }
 
-//modal獨立出來連接後端
-function fetchHotelsModal(filters) {
-  const params = new URLSearchParams();
 
-  Object.entries(filters).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach(v => params.append(key, v));
-    } else if (value !== '') {
-      params.append(key, value);
-    }
-  });
-
-  fetch(`/api/hotels?${params.toString()}`)
-    .then(res => res.json())
-    .then(data => {
-      renderHotelList(data.hotels);
-      $('.btn-check').text(`顯示 ${data.hotels.length} 間住宿`);
-    })
-    .catch(err => {
-      console.error('查詢失敗：', err);
-    });
-  updateHotelCount(data.hotels.length);
-}
 
 function openMapMode() {
-  document.getElementById('mapMode').style.display = 'flex';
+  document.getElementById('mapMode').classList.add('active');
 }
-
 function closeMapMode() {
-  document.getElementById('mapMode').style.display = 'none';
+  document.getElementById('mapMode').classList.remove('active');
 }
-
-// function renderAreaDropdown() {
-//   const $ul = $('#areaDropdown');
-//   $ul.empty();
-//   areaOptions.forEach(area => {
-//     $('<li>')
-//       .text(area)
-//       .on('click', function() {
-//         $('#area span').text(area);
-//         $ul.removeClass('active');
-//       })
-//       .appendTo($ul);
-//   });
-// }
-// $('#area').on('click', function(e) {
-//   e.stopPropagation();
-//   closeAllDropdowns();
-//   renderAreaDropdown();
-//   $('#areaDropdown').toggleClass('active');
-// });
-// $(document).on('click', function(e) {
-//   if (!$(e.target).closest('#area, #areaDropdown').length) {
-//     $('#areaDropdown').removeClass('active');
-//   }
-// });
-
-
-// function renderPriceDropdown() {
-//   const $ul = $('#priceDropdown');
-//   $ul.empty();
-//   priceOptions.forEach(price => {
-//     $('<li>')
-//       .text(`${price.label}`)
-//       .on('click', function() {
-//         $('#price').text(price.label);
-//         $ul.removeClass('active');
-//       })
-//       .appendTo($ul);
-//   });
-// }
-// $('#price').on('click', function(e) {
-//   e.stopPropagation();
-//   closeAllDropdowns();
-//   renderPriceDropdown();
-//   $('#priceDropdown').toggleClass('active');
-// });
-// $(document).on('click', function(e) {
-//   if (!$(e.target).closest('#price, #priceDropdown').length) {
-//     $('#priceDropdown').removeClass('active');
-//   }
-// });
-
-
-// function renderStarDropdown() {
-//   const $ul = $('#starDropdown');
-//   $ul.empty();
-//   starOptions.forEach(star => {
-//     $('<li>')
-//       .text(star)
-//       .on('click', function() {
-//         $('#star span').text(star);
-//         $ul.removeClass('active');
-//       })
-//       .appendTo($ul);
-//   });
-// }
-// $('#star').on('click', function(e) {
-//   e.stopPropagation();
-//   closeAllDropdowns();
-//   renderStarDropdown();
-//   $('#starDropdown').toggleClass('active');
-// });
-// $(document).on('click', function(e) {
-//   if (!$(e.target).closest('#star, #starDropdown').length) {
-//     $('#starDropdown').removeClass('active');
-//   }
-// });
