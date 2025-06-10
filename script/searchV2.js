@@ -549,7 +549,6 @@ renderHotelList([
     mapUrl: '#',
     distance: 2.5,
     roomType: '標準雙人房',
-    ratingText: '非常好',
     rating: 8.2,
     nights: 1,
     adults: 2,
