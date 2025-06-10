@@ -244,7 +244,62 @@
           </div>
 
           <div class="location"></div>
-          <div class="order-detail-panel" style="display: none"></div>
+          <div class="order-detail-panel" style="display: none">
+            <button class="btn btn-outline-secondary" id="backToList">
+              返回訂單列表
+            </button>
+            <div class="order-header">
+              <div class="left-section">
+                <h2 id="detail-hotelName"></h2>
+                <div class="dates">
+                  <div class="checkin">
+                    <span>入住日期</span><br />
+                    <span id="detail-checkinDate"></span>
+                  </div>
+                  <div class="checkout">
+                    <span>退房日期</span><br />
+                    <span id="detail-checkoutDate"></span>
+                  </div>
+                </div>
+                <div class="room-info">
+                  地址：<span id="detail-location"></span>
+                </div>
+                <div class="contact">
+                  聯絡電話：<span id="detail-phone"></span>
+                </div>
+              </div>
+              <div class="right-section">
+                <p>訂單編號：<span id="detail-orderNumber"></span></p>
+                <a href="#" class="cancel-order-btn">取消訂單</a>
+                <a href="#" class="change-date-btn">更改日期</a>
+                <a href="#">更改房型</a>
+                <a href="#">查看住宿規定</a>
+              </div>
+            </div>
+            <div class="payment-info">
+              <h3>付款資訊</h3>
+              <div class="line-item">
+                <span>房費：</span>
+                <span id="detail-price"></span>
+              </div>
+              <div class="line-item">
+                <span>稅金及其他費用：</span>
+                <span id="detail-tax"></span>
+              </div>
+              <div class="total">
+                <span>總金額：</span>
+                <span id="detail-total"></span>
+              </div>
+              <div class="card_info">
+                <div class="card-type">
+                  付款方式：<span id="detail-cardType"></span>
+                </div>
+                <div class="card-mask">
+                  卡號：<span id="detail-cardMasked"></span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="order-list"></div>
         </div>
         <div id="messages" class="content-page" style="display: none">
@@ -431,14 +486,6 @@
               />
             </div>
           </div>
-          <!-- <div class="checkinDate">
-            <label for="newCheckin">入住日期</label>
-            <input type="date" id="newCheckin" />
-          </div>
-          <div class="checkoutDate">
-            <label for="newCheckout">退房日期</label>
-            <input type="date" id="newCheckout" />
-          </div> -->
         </div>
 
         <div class="modal-actions">

@@ -235,6 +235,12 @@ const mockOrders = {
 // 切換 tab 時更新內容
 document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => {
+    const detailPanel = document.querySelector(".order-detail-panel");
+    if (detailPanel.style.display !== "none") {
+      detailPanel.style.display = "none";
+      document.querySelector(".location").style.display = "block";
+      document.querySelector(".order-list").style.display = "block";
+    }
     // tab 樣式切換
     document
       .querySelectorAll(".tab")
@@ -281,52 +287,28 @@ function showOrderDetail(detail) {
   locationEl.style.display = "none";
   orderListEl.style.display = "none";
 
-  detailPanel.innerHTML = `
-    <button class="btn btn-outline-secondary" id="backToList">返回訂單列表</button>
-    <div class="order-header">
-      <div class="left-section">
-        <h2>${detail.hotelName}</h2>
-        <div class="dates">
-          <div class="checkin">
-            <span>入住日期</span><br/>
-            <span>${detail.checkinDate}</span>
-          </div>
-          <div class="checkout">
-            <span>退房日期</span><br/>
-            <span>${detail.checkoutDate}</span>
-          </div>
-        </div>
-        <div class="room-info">地址：${detail.location}</div>
-        <div class="contact">聯絡電話：${detail.phone}</div>
-      </div>
-      <div class="right-section">
-        <p>訂單編號：${detail.orderNumber}</p>
-        <a href="#" class="cancel-order-btn">取消訂單</a>
-        <a href="#" class="change-date-btn">更改日期</a>
-        <a href="#">更改房型</a>
-        <a href="#">查看住宿規定</a>
-     </div>
-    </div>
-    <div class="payment-info">
-      <h3>付款資訊</h3>
-      <div class="line-item">
-        <span>房費：</span>
-        <span>TWD ${detail.price.toFixed(2)}</span>
-      </div>
-      <div class="line-item">
-        <span>稅金及其他費用：</span>
-        <span>TWD ${detail.tax.toFixed(2)}</span>
-      </div>
-      <div class="total">
-        <span>總金額：</span>
-        <span>TWD ${detail.total.toFixed(2)}</span>
-      </div>
-      <div class="card_info">
-        <div class="card-type">付款方式：${detail.cardType}</div>
-        <div class="card-mask">卡號：${detail.cardMasked}</div>
-      </div>
-    </div>
-  `;
+  // 填入資料到 detailPanel 的各欄位
+  document.getElementById("detail-hotelName").textContent = detail.hotelName;
+  document.getElementById("detail-checkinDate").textContent =
+    detail.checkinDate;
+  document.getElementById("detail-checkoutDate").textContent =
+    detail.checkoutDate;
+  document.getElementById("detail-location").textContent = detail.location;
+  document.getElementById("detail-phone").textContent = detail.phone;
+  document.getElementById("detail-orderNumber").textContent =
+    detail.orderNumber;
+  document.getElementById(
+    "detail-price"
+  ).textContent = `TWD ${detail.price.toFixed(2)}`;
+  document.getElementById("detail-tax").textContent = `TWD ${detail.tax.toFixed(
+    2
+  )}`;
+  document.getElementById(
+    "detail-total"
+  ).textContent = `TWD ${detail.total.toFixed(2)}`;
+  document.getElementById("detail-cardType").textContent = detail.cardType;
+  document.getElementById("detail-cardMasked").textContent = detail.cardMasked;
+
   detailPanel.style.display = "block";
 
   document.getElementById("backToList").addEventListener("click", () => {
