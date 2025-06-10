@@ -820,8 +820,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const modal = bootstrap.Modal.getInstance(document.getElementById("changeDateModal"));
     modal.hide();
   }
-</script>
-<script>
+
   function submitCreditCardChange() {
     const cardNumber = document.getElementById("cardNumber").value.trim();
     const expiry = document.getElementById("expiry").value;
@@ -856,7 +855,7 @@ window.addEventListener("DOMContentLoaded", () => {
     document.execCommand("copy");
     alert("已複製訂房連結！");
   }
-  >
+  
   let selectedRoom = null;
 
   function selectRoom(roomName) {
