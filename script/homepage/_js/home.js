@@ -353,7 +353,7 @@ allRecommendations.forEach(recommendation => {
                  </button>
                 <div class="card-body">
                     <h5 class="card-title fw-bold">${recommendation.name}</h5>
-                    <p class="card-text text-muted small"><i class="bi bi-geo-alt me-1"></i> ${recommendation.city}, ${recommendation.district}</p>                 <p class="mb-1">
+                    <p class="card-text text-muted small"><i class="bi bi-geo-alt me-1"></i> ${recommendation.district}, ${recommendation.city}, </p>                 <p class="mb-1">
                         <span class="badge rate">${recommendation.rating}</span>
                         <small class="text-muted ms-1">120 則評價</small>
                     </p>
