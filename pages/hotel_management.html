@@ -23,7 +23,7 @@
         body {
             margin: 0;
             background-color: white;
-            /* overflow: hidden; */
+            overflow: hidden;
         }
 
         .navbar {
@@ -208,24 +208,28 @@
                         <thead>
                             <tr>
                                 <th>飯店名稱</th>
-                                <th>總房型</th>
+                                <th>地址</th>
+                                <th>電話</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>台北民宿一館</td>
-                                <td>5</td>
+                                <td>台北市中正區民生北路一段26號</td>
+                                <td>0912-345-566</td>
                                 <td><button class="btn btn-sm btn-primary">編輯</button></td>
                             </tr>
                             <tr>
                                 <td>台中青年旅店</td>
-                                <td>8</td>
+                                <td>台中市中正區民生北路一段26號</td>
+                                <td>0912-345-566</td>
                                 <td><button class="btn btn-sm btn-primary">編輯</button></td>
                             </tr>
                             <tr>
                                 <td>花蓮海景套房</td>
-                                <td>2</td>
+                                <td>花蓮縣中正區民生北路一段26號</td>
+                                <td>0912-345-566</td>
                                 <td><button class="btn btn-sm btn-primary">編輯</button></td>
                             </tr>
                         </tbody>
@@ -362,7 +366,7 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addHotelModalLabel">新增飯店</h5>
+                        <h5 class="modal-title" id="addHotelModalLabel">飯店設定</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
                     </div>
                     <div class="modal-body">
@@ -373,6 +377,10 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">地址 *</label>
+                                <input type="text" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">電話 *</label>
                                 <input type="text" class="form-control" required />
                             </div>
                             <div class="mb-3">
