@@ -97,28 +97,28 @@ new Chart(occupancyRateCtx, {
 });
 
 // 平均房價雷達圖
-const adrCtx = document.getElementById('adrChart').getContext('2d');
-new Chart(adrCtx, {
-  type: 'radar',
-  data: {
-    labels: ['單人房', '雙人房', '家庭房', '背包床位'],
-    datasets: [{
-      label: '平均房價（ADR）',
-      data: [1800, 2800, 4000, 900],
-      backgroundColor: 'rgba(55, 105, 150, 0.2)',
-      borderColor: themeColor,
-      pointBackgroundColor: themeColor
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      r: {
-        beginAtZero: true
-      }
-    }
-  }
-});
+// const adrCtx = document.getElementById('adrChart').getContext('2d');
+// new Chart(adrCtx, {
+//   type: 'radar',
+//   data: {
+//     labels: ['單人房', '雙人房', '家庭房', '背包床位'],
+//     datasets: [{
+//       label: '平均房價（ADR）',
+//       data: [1800, 2800, 4000, 900],
+//       backgroundColor: 'rgba(55, 105, 150, 0.2)',
+//       borderColor: themeColor,
+//       pointBackgroundColor: themeColor
+//     }]
+//   },
+//   options: {
+//     responsive: true,
+//     scales: {
+//       r: {
+//         beginAtZero: true
+//       }
+//     }
+//   }
+// });
 
 // 各飯店營收排行
 new Chart(document.getElementById('hotelRevenueChart'), {
@@ -138,17 +138,17 @@ new Chart(document.getElementById('hotelRevenueChart'), {
 });
 
 // 顧客來源地
-new Chart(document.getElementById('customerOriginChart'), {
-  type: 'bar',
-  data: {
-    labels: ['台灣', '日本', '美國', '香港', '新加坡'],
-    datasets: [{
-      label: '訪客人數',
-      data: [200, 85, 70, 60, 55],
-      backgroundColor: '#376996'
-    }]
-  },
-  options: {
-    responsive: true
-  }
-});
+// new Chart(document.getElementById('customerOriginChart'), {
+//   type: 'bar',
+//   data: {
+//     labels: ['台灣', '日本', '美國', '香港', '新加坡'],
+//     datasets: [{
+//       label: '訪客人數',
+//       data: [200, 85, 70, 60, 55],
+//       backgroundColor: '#376996'
+//     }]
+//   },
+//   options: {
+//     responsive: true
+//   }
+// });

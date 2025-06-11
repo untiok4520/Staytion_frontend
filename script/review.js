@@ -50,7 +50,7 @@ function renderReviews() {
                   <small class="text-muted">留言時間：${r.time}</small>
                 </div>
                 <div>
-                  <span class="badge bg-${r.score >= 8 ? "success" : r.score >= 6 ? "warning text-dark" : "danger"} fs-6">${r.score} / 10</span>
+                  <span class="badge bg-${r.score >= 8 ? "success" : r.score >= 6 ? "warning text-dark" : "danger"} fs-6">${r.score}</span>
                 </div>
               </div>
               <p>${r.content}</p>
@@ -73,7 +73,7 @@ function renderReviews() {
         `;
     reviewList.appendChild(card);
   });
-  avgRating.textContent = (total / reviews.length).toFixed(1) + " / 10";
+  avgRating.textContent = (total / reviews.length).toFixed(1);
 }
 
 function sendReply(id) {
