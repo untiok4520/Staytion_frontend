@@ -440,16 +440,16 @@ body {
 
 /* popup 視窗 */
 #guest-popup {
-  width: 96%;
-  position: absolute;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  padding: 1rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  /*width: 230px;*/
-  z-index: 1000;
-  display: none;
+    position: absolute;
+    left: 48px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    width: 85%;
+    z-index: 1000;
+    display: none;
 }
 
 
@@ -627,7 +627,8 @@ body {
 
 
 .section-title {
-  font-size: 14px;
+  font-size: 20px;
+  font-weight: bold;
   padding: 4px 10px;
   background-color: #376996;
   color: white;
