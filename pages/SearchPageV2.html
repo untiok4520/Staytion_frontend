@@ -9,107 +9,31 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="/JAVA-Hotel/styles/searchV2.css" />
+  <link rel="stylesheet" href="/styles/V3.css" />
 </head>
-<!--所有下拉式選單,所有動態及選項都寫在JS,保持html的乾淨度-->
-
 <body>
   <nav class="my-navbar navbar navbar-expand-lg">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <img src="/JAVA-Hotel/assets/logo.png" class="logo_img" alt="logo" />
+        <img src="/assets/logo.png" class="logo_img" alt="logo" />
       </a>
       <ul class="navbar-nav">
         <li class="nav-item">
           <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#currencyModal">
             TWD
           </button>
-          <div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-xl">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="currencyModalLabel">
-                    選擇您使用的貨幣
-                  </h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body modal-grid">
-                  <a href="#">新台幣<br />TWD</a>
-                  <a href="#">日元<br />JPY</a>
-                  <a href="#">美元<br />USD</a>
-                  <a href="#">歐元<br />EUR</a>
-                  <a href="#">港幣<br />HKD</a>
-                  <a href="#">人民幣<br />CNY</a>
-                  <a href="#">英鎊<br />GBP</a>
-                  <a href="#">丹麥克朗<br />DKK</a>
-                  <a href="#">亞賽拜然新馬納特<br />AZN</a>
-                  <a href="#">以色列新謝克爾<br />ILS</a>
-                  <a href="#">俄羅斯盧布<br />RUB</a>
-                  <a href="#">保加利亞列弗<br />BGN</a>
-                  <a href="#">冰島克朗<br />ISK</a>
-                  <a href="#">加幣<br />CAD</a>
-                  <a href="#">匈牙利福林<br />HUF</a>
-                  <a href="#">南非鍰<br />ZAR</a>
-                  <a href="#">卡達里亞爾<br />QAR</a>
-                  <a href="#">印尼盾<br />IDR</a>
-                  <a href="#">印度盧比 <br />INR</a>
-                  <a href="#">哈薩克坦吉<br />KZT</a>
-                </div>
-              </div>
-            </div>
-          </div>
         </li>
         <li class="nav-item">
           <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#languageModal">
             <span class="fi fi-tw fis"></span>
           </button>
-          <div class="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-xl">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="languageModalLabel">
-                    選擇您使用的語言
-                  </h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body modal-grid">
-                  <div><span class="fi fi-tw fis"></span>繁體中文</div>
-                  <div><span class="fi fi-gb fis"></span>English(UK)</div>
-                  <div><span class="fi fi-us fis"></span>English(UA)</div>
-                  <div><span class="fi fi-jp fis"></span>日本語</div>
-                  <div><span class="fi fi-fr fis"></span>Français</div>
-                  <div><span class="fi fi-de fis"></span>Deutsch</div>
-                  <div><span class="fi fi-it fis"></span>Italiano</div>
-                  <div><span class="fi fi-es fis"></span>Español</div>
-                  <div><span class="fi fi-kr fis"></span>한국어</div>
-                  <div><span class="fi fi-cn fis"></span>简体中文</div>
-                  <div><span class="fi fi-hk fis"></span>粵語</div>
-                  <div><span class="fi fi-ru fis"></span>Русский</div>
-                  <div><span class="fi fi-th fis"></span>ไทย</div>
-                  <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
-                  <div>
-                    <span class="fi fi-id fis"></span>Bahasa Indonesia
-                  </div>
-                  <div>
-                    <span class="fi fi-my fis"></span>Bahasa Melayu
-                  </div>
-                  <div><span class="fi fi-ph fis"></span>Filipino</div>
-                  <div><span class="fi fi-in fis"></span>हिन्दी</div>
-                  <div><span class="fi fi-tr fis"></span>Türkçe</div>
-                  <div><span class="fi fi-sa fis"></span>العربية</div>
-                </div>
-              </div>
-            </div>
-          </div>
         </li>
         <li class="nav-item">
           <button class="btn btn-primary">登入</button>
@@ -117,62 +41,64 @@
       </ul>
     </div>
   </nav>
-<!--search bar待修改,拉出main,不要跟sort bar放在同一區塊,避免跑版-->
-  <main class="main-content container">
-    <section class="search-bar sticky-top position-relative">
-      <form class="search-form" autocomplete="off">
-        <div class="dropdown-group dropdown-city">
-          <span class="input-icon">
-            <i class="bi bi-geo-alt"></i>
-          </span>
-          <input class="search-item" id="city" placeholder="請選擇目的地" autocomplete="off">
-          <ul class="dropdown-menu dropdown-city-menu" id="cityList"></ul>
-        </div>
-        <div class="dropdown-group">
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
-            <input type="text" id="daterange" class="form-control" placeholder="選擇日期範圍" />
-          </div>
-        </div>
-        <div class="dropdown-group position-relative">
-          <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-people"></i></span>
-            <input type="text" class="form-control" id="guest-btn" readonly />
-          </div>
-          <div id="guest-popup" aria-label="房客選擇視窗">
-            <div class="guest-row">
-              <span class="guest-label">成人</span>
-              <div class="qty-control">
-                <button type="button" class="qty-btn" data-action="decrease" data-type="adults">−</button>
-                <span class="count" id="adults-count">2</span>
-                <button type="button" class="qty-btn" data-action="increase" data-type="adults">+</button>
-              </div>
+  <section class="search-bar sticky-top">
+    <div class="container">
+    <form class="row g-3 align-items-end" autocomplete="off">
+        <div class="col-12 col-md-3-5">
+            <div class="input-group destination-group position-relative ">
+                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                <input type="text" id="destinationInput" class="form-control" placeholder="請搜尋目的地" />
+                <ul id="suggestions" class="list-group suggestion-list"></ul>
             </div>
-            <div class="guest-row">
-              <span class="guest-label">孩童</span>
-              <div class="qty-control">
-                <button type="button" class="qty-btn" data-action="decrease" data-type="children">−</button>
-                <span class="count" id="children-count">0</span>
-                <button type="button" class="qty-btn" data-action="increase" data-type="children">+</button>
-              </div>
-            </div>
-            <div class="guest-row">
-              <span class="guest-label">房間</span>
-              <div class="qty-control">
-                <button type="button" class="qty-btn" data-action="decrease" data-type="rooms">−</button>
-                <span class="count" id="rooms-count">1</span>
-                <button type="button" class="qty-btn" data-action="increase" data-type="rooms">+</button>
-              </div>
-            </div>
-            <button type="button" class="btn btn-search btn-guest-done">完成</button>
-          </div>
         </div>
-        <button type="submit" class="btn" id="search-btn">
-          <i class="bi bi-search pe-2"></i> 搜尋
-        </button>
-      </form>
-    </section>
+        <div class="col-12 col-md-3-5">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                <input type="text" id="daterange" class="form-control" placeholder="選擇日期範圍" />
+            </div>
+        </div>
+        <div class="col-8 col-md-3-5 position-relative">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-people"></i></span>
+                <input type="text" class="form-control" id="guest-btn" readonly />
+            </div>
+            <div id="guest-popup" aria-label="房客選擇視窗">
+                <div class="guest-row">
+                    <span class="guest-label">成人</span>
+                    <div class="qty-control">
+                        <button type="button" class="qty-btn" data-action="decrease" data-type="adults">−</button>
+                        <span class="count" id="adults-count">2</span>
+                        <button type="button" class="qty-btn" data-action="increase" data-type="adults">+</button>
+                    </div>
+                </div>
+                <div class="guest-row">
+                    <span class="guest-label">孩童</span>
+                    <div class="qty-control">
+                        <button type="button" class="qty-btn" data-action="decrease" data-type="children">−</button>
+                        <span class="count" id="children-count">0</span>
+                        <button type="button" class="qty-btn" data-action="increase" data-type="children">+</button>
+                    </div>
+                </div>
+                <div class="guest-row">
+                    <span class="guest-label">房間</span>
+                    <div class="qty-control">
+                        <button type="button" class="qty-btn" data-action="decrease" data-type="rooms">−</button>
+                        <span class="count" id="rooms-count">1</span>
+                        <button type="button" class="qty-btn" data-action="increase" data-type="rooms">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-4 col-md-1-5 d-grid">
+            <button type="submit" class="btn" id="search-btn">
+                <i class="bi bi-search pe-2"></i> 搜尋
+            </button>
+        </div>
+    </form>
+    </div>
+</section>
+  <main class="main-content container">
     <section class="filter-bar">
       <div class="filter-group">
         <button class="btn filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">篩選條件</button>
@@ -226,14 +152,12 @@
           <div class="hotel-card">CityInn Hotel Plus - Taichung</div>
           <div class="hotel-card">Norden Ruder Hostel</div>
           <div class="hotel-card">Norway Forest Travel Hotel</div>
-          <!-- 依API動態生成 -->
-        </div>
+          </div>
         <div class="map-view">
           <button class="close-map" onclick="closeMapMode()">
             Close map
             <i class="bi bi-x-lg"></i>
           </button>
-          <!-- 模擬地圖，正式可嵌入 Google Maps -->
           <div class="fake-map">地圖區塊（可放 Google Maps）</div>
 
         </div>
@@ -241,13 +165,85 @@
     </div>
 
     <section class="hotel-list" id="hotelList">
-      <!--JS插入hotel list 無限滾動-->
-    </section>
+      </section>
   </main>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
-  <script src="/JAVA-Hotel/script/searchV2.js"></script>
+  <script src="/script/searchV2.js"></script>
 </body>
+<div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="currencyModalLabel">
+                    選擇您使用的貨幣
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-grid">
+                  <a href="#">新台幣<br />TWD</a>
+                  <a href="#">日元<br />JPY</a>
+                  <a href="#">美元<br />USD</a>
+                  <a href="#">歐元<br />EUR</a>
+                  <a href="#">港幣<br />HKD</a>
+                  <a href="#">人民幣<br />CNY</a>
+                  <a href="#">英鎊<br />GBP</a>
+                  <a href="#">丹麥克朗<br />DKK</a>
+                  <a href="#">亞賽拜然新馬納特<br />AZN</a>
+                  <a href="#">以色列新謝克爾<br />ILS</a>
+                  <a href="#">俄羅斯盧布<br />RUB</a>
+                  <a href="#">保加利亞列弗<br />BGN</a>
+                  <a href="#">冰島克朗<br />ISK</a>
+                  <a href="#">加幣<br />CAD</a>
+                  <a href="#">匈牙利福林<br />HUF</a>
+                  <a href="#">南非鍰<br />ZAR</a>
+                  <a href="#">卡達里亞爾<br />QAR</a>
+                  <a href="#">印尼盾<br />IDR</a>
+                  <a href="#">印度盧比 <br />INR</a>
+                  <a href="#">哈薩克坦吉<br />KZT</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="languageModalLabel">
+                    選擇您使用的語言
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-grid">
+                  <div><span class="fi fi-tw fis"></span>繁體中文</div>
+                  <div><span class="fi fi-gb fis"></span>English(UK)</div>
+                  <div><span class="fi fi-us fis"></span>English(UA)</div>
+                  <div><span class="fi fi-jp fis"></span>日本語</div>
+                  <div><span class="fi fi-fr fis"></span>Français</div>
+                  <div><span class="fi fi-de fis"></span>Deutsch</div>
+                  <div><span class="fi fi-it fis"></span>Italiano</div>
+                  <div><span class="fi fi-es fis"></span>Español</div>
+                  <div><span class="fi fi-kr fis"></span>한국어</div>
+                  <div><span class="fi fi-cn fis"></span>简体中文</div>
+                  <div><span class="fi fi-hk fis"></span>粵語</div>
+                  <div><span class="fi fi-ru fis"></span>Русский</div>
+                  <div><span class="fi fi-th fis"></span>ไทย</div>
+                  <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
+                  <div>
+                    <span class="fi fi-id fis"></span>Bahasa Indonesia
+                  </div>
+                  <div>
+                    <span class="fi fi-my fis"></span>Bahasa Melayu
+                  </div>
+                  <div><span class="fi fi-ph fis"></span>Filipino</div>
+                  <div><span class="fi fi-in fis"></span>हिन्दी</div>
+                  <div><span class="fi fi-tr fis"></span>Türkçe</div>
+                  <div><span class="fi fi-sa fis"></span>العربية</div>
+                </div>
+              </div>
+            </div>
+          </div>
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content filter-modal-content">
@@ -257,18 +253,18 @@
       </div>
       <div class="modal-body filter-modal-body">
         <div class="modal-section recommend-section">
-          <div class="section-title">為您推薦</div>
+          <div class="section-title">為你推薦</div>
           <div class="recommend-options">
-            <button class="recommend-btn" data-value="rating">最高評價</button>
-            <button class="recommend-btn" data-value="price">最低價格</button>
-            <button class="recommend-btn" data-value="facility">熱門設施</button>
+            <button class="recommend-btn" data-recommend="rating">最高評價</button>
+            <button class="recommend-btn" data-recommend="price">最低價格</button>
+            <button class="recommend-btn" data-recommend="facility">熱門設施</button>
           </div>
         </div>
         <hr class="modal-divider">
         <div class="modal-section price-section">
           <div class="section-title">價格範圍</div>
           <div class="price-slider-wrap">
-            <div id="priceSlider" style="width:100%;"></div>
+            <div id="priceSlider"></div>
             <div class="price-range">
               <span id="minPrice">500</span> - <span id="maxPrice">3000</span>
             </div>
@@ -278,19 +274,19 @@
         <div class="modal-section facility-section">
           <div class="section-title">設施</div>
           <div class="facility-options">
-            <button type="button" class="facility-btn" data-value="wifi">免費無線網路</button>
-            <button type="button" class="facility-btn" data-value="parking">停車場</button>
-            <button type="button" class="facility-btn" data-value="hotspring">溫泉</button>
-            <button type="button" class="facility-btn" data-value="restaurant">餐廳</button>
-            <button type="button" class="facility-btn" data-value="gym">健身房</button>
-            <button type="button" class="facility-btn" data-value="laundry">自助洗衣</button>
-            <button type="button" class="facility-btn" data-value="petfriendly">寵物友善</button>
-            <button type="button" class="facility-btn" data-value="bikefriendly">自行車友善</button>
-            <button type="button" class="facility-btn" data-value="meetingroom">會議室</button>
-            <button type="button" class="facility-btn" data-value="bar">酒吧</button>
-            <button type="button" class="facility-btn" data-value="shop">商店</button>
-            <button type="button" class="facility-btn" data-value="shuttle">接送服務</button>
-            <button type="button" class="facility-btn" data-value="accessible">無障礙設施</button>
+            <button type="button" class="facility-btn">免費wifi</button>
+            <button type="button" class="facility-btn">停車場</button>
+            <button type="button" class="facility-btn">溫泉</button>
+            <button type="button" class="facility-btn">餐廳</button>
+            <button type="button" class="facility-btn">健身房</button>
+            <button type="button" class="facility-btn">自助洗衣</button>
+            <button type="button" class="facility-btn">寵物友善</button>
+            <button type="button" class="facility-btn">自行車友善</button>
+            <button type="button" class="facility-btn">會議室</button>
+            <button type="button" class="facility-btn">酒吧</button>
+            <button type="button" class="facility-btn">商店</button>
+            <button type="button" class="facility-btn">接送服務</button>
+            <button type="button" class="facility-btn">無障礙設施</button>
           </div>
         </div>
       </div>
