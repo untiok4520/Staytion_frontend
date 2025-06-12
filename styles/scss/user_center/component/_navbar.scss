@@ -1,0 +1,92 @@
+@use "../abstract/custom-variables" as v;
+@use "../bootstrap/bootstrap" as bs;
+
+.my-navbar {
+  background-color: #fff;
+  padding-top: 0;
+  padding-bottom: 0;
+
+  .container-fluid {
+    display: flex;
+    align-items: center;
+  }
+  .logo_img {
+    width: v.$logo-width;
+    height: v.$logo-height;
+  }
+  .nav_img-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .navbar-nav {
+    display: flex;
+    justify-content: end;
+    flex-direction: row;
+    gap: map-get(bs.$spacers, 2);
+    margin-right: 1rem;
+
+    .nav-item {
+      .modal-dialog {
+        .modal-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 3rem;
+          div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 200px;
+            height: 50px;
+            border-radius: 1rem;
+            transition: all 0.2s ease-in-out;
+            text-align: center;
+            &:hover {
+              background-color: #376a964e;
+              cursor: pointer;
+            }
+            a {
+              // width: 200px;
+              color: black;
+              text-decoration: none;
+            }
+            .fi {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .btn {
+    padding: bs.$spacer * 0.375 bs.$spacer;
+    min-width: 80px;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      background-color: white;
+      color: v.$primary;
+    }
+  }
+  .navbar-toggler {
+    outline: none;
+    box-shadow: none;
+    transition: all 0.2s ease-in;
+    &:hover {
+      border: 2px solid v.$primary;
+    }
+
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+  .btn-outline-primary {
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      background-color: transparent;
+      color: v.$primary;
+      border: 2px solid v.$primary;
+    }
+  }
+}
