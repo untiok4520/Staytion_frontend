@@ -12117,6 +12117,10 @@ footer a:hover {
 .usercenter_container .sidebar .sidebar-item:hover {
   background-color: rgba(55, 106, 150, 0.3058823529);
 }
+.usercenter_container .sidebar .sidebar-item i {
+  margin-right: 1rem;
+  font-size: 16px;
+}
 .usercenter_container .sidebar .active {
   background-color: rgba(55, 106, 150, 0.3058823529);
 }

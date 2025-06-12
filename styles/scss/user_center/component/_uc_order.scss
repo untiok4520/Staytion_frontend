@@ -34,6 +34,10 @@ $uc-hover: #376a964e;
       &:hover {
         background-color: $uc-hover;
       }
+      i {
+        margin-right: 1rem;
+        font-size: 16px;
+      }
     }
     .active {
       background-color: $uc-hover;
