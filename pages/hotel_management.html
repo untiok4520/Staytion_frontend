@@ -204,7 +204,7 @@
                             class="bi bi-plus-circle me-2"></i>新增飯店</button>
                 </div>
                 <div class="card-body table-responsive">
-                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;">
+                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;" id="hotelTable">
                         <thead>
                             <tr>
                                 <th>飯店名稱</th>
@@ -213,7 +213,8 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody></tbody>
+                        <!-- <tbody>
                             <tr>
                                 <td>台北民宿一館</td>
                                 <td>台北市中正區民生北路一段26號</td>
@@ -235,7 +236,8 @@
                                 <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#addHotelModal">編輯</button></td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
+                        
                     </table>
 
                 </div>
@@ -249,16 +251,16 @@
                         <label for="hotelFilter" class="mb-0" style="color: #c6c6c6;">選擇飯店：</label>
                         <select id="hotelFilter" class="form-select form-select-sm" style="width: auto;">
                             <option value="all">全部飯店</option>
-                            <option value="taipei">台北民宿一館</option>
+                            <!-- <option value="taipei">台北民宿一館</option>
                             <option value="taichung">台中青年旅店</option>
-                            <option value="hualien">花蓮海景套房</option>
+                            <option value="hualien">花蓮海景套房</option> -->
                         </select>
                     </div>
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRoomModal"><i
                             class="bi bi-plus-circle me-2"></i>新增房型</button>
                 </div>
                 <div class="card-body table-responsive">
-                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;">
+                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;" id="roomTable">
                         <thead>
                             <tr>
                                 <th>房型名稱</th>
@@ -269,9 +271,9 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-
+                        <tbody id="roomTableBody"></tbody>
                         <!-- 台北民宿一館 -->
-                        <tbody class="hotel-rooms d-none" data-hotel="taipei">
+                        <!-- <tbody class="hotel-rooms d-none" data-hotel="taipei">
                             <tr>
                                 <td>雙人房</td>
                                 <td>10</td>
@@ -305,10 +307,10 @@
                                     <button class="btn btn-sm btn-outline-danger">下架</button>
                                 </td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
 
                         <!-- 台中青年旅店 -->
-                        <tbody class="hotel-rooms d-none" data-hotel="taichung">
+                        <!-- <tbody class="hotel-rooms d-none" data-hotel="taichung">
                             <tr>
                                 <td>背包床位</td>
                                 <td>20</td>
@@ -331,10 +333,11 @@
                                     <button class="btn btn-sm btn-outline-danger">下架</button>
                                 </td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
+
 
                         <!-- 花蓮海景套房 -->
-                        <tbody class="hotel-rooms d-none" data-hotel="hualien">
+                        <!-- <tbody class="hotel-rooms d-none" data-hotel="hualien">
                             <tr>
                                 <td>海景豪華房</td>
                                 <td>4</td>
@@ -345,7 +348,7 @@
                                     <button class="btn btn-sm btn-primary">查看報表</button>
                                 </td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
 
                         <!-- 新增：統計結果用 -->
                         <tbody id="summary-rooms" class="d-none"></tbody>
