@@ -140,14 +140,14 @@ h4 {
 
 /* 繼續按鈕、驗證電子信箱按鈕樣式 */
 .register button,
-.verify button {
+.otp-container+button {
     width: 100%;
     background-color: #1a81ff;
     color: #fff;
 }
 
 .register button:hover,
-.verify button:hover {
+.otp-container+button:hover {
     background-color: #569ff7;
     color: #fff;
 }
@@ -180,6 +180,17 @@ h4 {
     color: #1a81ff;
     border: 0;
 }
+
+.verifiy-options a {
+    text-decoration: none;
+    color: black;
+}
+
+.verifiy-options a:hover {
+    text-decoration: none;
+    color: #1a81ff;
+}
+
 
 
 /* 或 */
@@ -241,9 +252,7 @@ h4 {
 
 .otp-input {
     flex: 1;
-    max-width: 50px;
-    min-width: 50px;
-    height: 50px;
+    max-width: 40px;
     font-size: 1.5rem;
     text-align: center;
     border: 1px solid black;

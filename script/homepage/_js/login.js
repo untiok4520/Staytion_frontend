@@ -59,34 +59,29 @@ document
 
 const otpInputs = document.querySelectorAll('.otp-input');
 
-otpInputs.forEach((input) => {
-    // 只允許輸入英文和數字
-    input.addEventListener('input', function (e) {
-        const value = input.value;
-        // 正則表達式：只允許英文字母和數字
-        const regex = /^[a-zA-Z0-9]*$/;
-
-        if (!regex.test(value)) {
-            // 如果輸入的字符不符合英文字母和數字的要求，則清除該輸入框的內容
-            input.value = value.slice(0, -1);
-        }
-    });
-});
-
 otpInputs.forEach((input, index) => {
-    // 自動跳到下一個輸入框
     input.addEventListener('input', function () {
-        if (input.value.length === 1 && index < otpInputs.length - 1) {
+        // 1. 確保只包含英數字元
+        // 移除所有非英數字元
+        this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+
+        // 2. 限制每個輸入框只能有一個字元
+        if (this.value.length > 1) {
+            this.value = this.value.slice(0, 1); // 只保留第一個字元
+        }
+
+        // 3. 自動跳到下一個輸入框 (如果當前輸入框有值且不是最後一個)
+        if (this.value.length === 1 && index < otpInputs.length - 1) {
             otpInputs[index + 1].focus();
         }
     });
 
-    // 處理 Backspace 事件
+    // 處理 Backspace 事件：
+    // 如果當前框為空，將焦點移動到前一個框並清空其內容
     input.addEventListener('keydown', function (e) {
-        if (e.key === 'Backspace' && input.value === '') {
-            // 如果當前框為空，將焦點移動到前一個框
+        if (e.key === 'Backspace' && this.value === '') {
             if (index > 0) {
-                otpInputs[index - 1].focus(); // 移動焦點
+                otpInputs[index - 1].focus();
                 otpInputs[index - 1].value = ''; // 清除前一個框的內容
             }
         }
