@@ -1,0 +1,799 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.wireframe {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+
+.hotel-info-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem; /* 元素之間的間距 */
+}
+
+.hotel-info-row h1,
+.hotel-info-row .hotel-rating,
+.hotel-info-row .hotel-address {
+  white-space: nowrap; /* 避免自動換行 */
+}
+
+.hotel-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #f39c12;
+}
+
+
+.hotel-address {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* 主色與按鈕 */
+:root {
+  --primary-color: #376996;
+  --bg-color: #FEFCF0;
+  --button-color: #1F487E;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.counter button {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.counter .count {
+  min-width: 24px;
+  text-align: center;
+  font-size: 16px;
+}
+
+
+/* 頁尾 */
+footer {
+  background-color: #376996;
+}
+
+footer h5 {
+  font-weight: bold;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.social-icons a {
+  font-size: 1.5rem;
+  color: white;
+  transition: color 0.2s;
+}
+
+.social-icons a:hover {
+  color: #fcfef0;
+}
+
+
+/* 按鈕 */
+
+body {
+  font-family: 'Microsoft JhengHei', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #376996;
+}
+
+
+.rating-badge {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  color: #333;
+  white-space: nowrap;
+}
+
+
+.hotel-header {
+  background: #e9ecef;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.hotel-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+
+
+.stars {
+  color: #ffc107;
+  font-size: 18px;
+}
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px; /* 增加與標題的間距 */
+  
+}
+
+.photo-placeholder {
+  background: none; /* 移除灰色底 */
+  border: none;     /* 拿掉虛線框 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.photo-placeholder img {
+  transform: scale(1.02);
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.3s ease;
+}
+
+
+
+.main-photo {
+  grid-row: span 2;
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.room-card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f8f9fa;
+  display: grid;
+  grid-template-columns: 150px 1fr 200px;
+  gap: 20px;
+  align-items: center;
+  flex-direction: column;
+  text-align: left;
+}
+
+.room-image {
+  background: #e9ecef;
+  border: 2px dashed #adb5bd;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.room-info h3 {
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.room-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.feature-tag {
+  background: #17a2b8;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.room-booking {
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .room-booking {
+    text-align: left;
+  }
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #dc3545;
+  margin-bottom: 8px;
+}
+
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+}
+
+.rating-summary {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.rating-score {
+  font-size: 48px;
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.review-item {
+  border-bottom: 1px solid #dee2e6;
+  padding: 15px 0;
+}
+
+.reviewer-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.map-container {
+  background: #e9ecef;
+  border: 2px dashed #adb5bd;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.calendar-container {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  background: white;
+}
+
+.day-price {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.booking-panel {
+  position: sticky;
+  top: 6px;
+  background: white;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+
+
+
+  .guest-select {
+    flex-direction: column;
+  }
+
+  .calendar-grid {
+    font-size: 11px;
+    gap: 2px;
+  }
+
+  .calendar-day {
+    padding: 4px;
+  }
+
+  .right-content {
+    width: 100%;
+  }
+
+  .booking-panel {
+    margin-top: 16px;
+  }
+
+  .price-summary div,
+  .total {
+    font-size: 14px;
+  }
+
+  .form-control {
+    font-size: 13px;
+  }
+
+  .hotel-title {
+    font-size: 22px;
+  }
+
+
+
+
+/* 以下搜尋列 */
+.search-bar {
+            background: #1f487e;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            /* 滿版的話也要關掉這個 */
+            padding: 1rem;
+
+        }
+
+        /* 自訂 col-md-3.5 */
+        @media (min-width: 768px) {
+            .col-md-3-5 {
+                flex: 0 0 calc(100% * 3.5 / 12);
+                max-width: calc(100% * 3.5 / 12);
+            }
+
+            .col-md-1-5 {
+                flex: 0 0 calc(100% * 1.5 / 12);
+                max-width: calc(100% * 1.5 / 12);
+            }
+        }
+
+        .search-bar input {
+            border-radius: 0.25rem;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            border-color: #376996;
+            outline: none;
+            box-shadow: 0 0 8px rgba(55, 105, 150, 0.4);
+        }
+
+        .search-bar button {
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar #search-btn {
+            background-color: #1a81ff;
+            color: #fff;
+        }
+
+        .search-bar #search-btn:hover {
+            background-color: #569ff7;
+        }
+
+        .input-group-text {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-right: none;
+        }
+
+        #guest-btn {
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        /* popup 視窗 */
+        #guest-popup {
+            position: absolute;
+            left: 48px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            width: 85%;
+            z-index: 1000;
+            display: none;
+        }
+
+        #guest-popup .guest-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        #guest-popup .guest-row:last-child {
+            margin-bottom: 0;
+        }
+
+        #guest-popup .guest-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        #guest-popup .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #guest-popup button.qty-btn {
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #guest-popup span.count {
+            min-width: 20px;
+            text-align: center;
+            font-weight: 600;
+            user-select: none;
+            display: inline-block;
+        }
+
+        .suggestion-list {
+            position: absolute;
+            z-index: 1050;
+            top: 100%;
+            left: 41px;
+            width: 89%;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 0.25rem;
+            max-height: 250px;
+            overflow-y: auto;
+            margin: 0;
+            padding: 0;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            list-style: none;
+            display: none;
+
+        }
+
+        .suggestion-list li {
+            padding: 0.5rem;
+            cursor: pointer;
+
+        }
+
+        .suggestion-list li:hover {
+            background-color: #f1f1f1;
+        }
+
+/* 以上搜尋列  */
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  height: auto;
+}
+@media (max-width: 768px) {
+  .hotel-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+/* 收藏功能 */
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 1.5rem;
+  color: #dc3545;
+}
+
+.favorite-btn .bi-heart-fill {
+  color: #dc3545;
+}
+
+
+
+/* 導覽列 */
+.my-navbar {
+  background-color: #fff;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.my-navbar .container-fluid {
+  display: flex;
+  align-items: center;
+}
+.my-navbar .logo_img {
+  width: 250px;
+  height: auto;
+}
+.my-navbar .nav_img-icon {
+  width: 20px;
+  height: 20px;
+}
+.my-navbar .navbar-nav {
+  display: flex;
+  justify-content: end;
+  flex-direction: row;
+  gap: 1rem;
+  margin-right: 1rem;
+}
+.my-navbar .navbar-nav .nav-item .modal-body.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+}
+.my-navbar .navbar-nav .nav-item .modal-body.modal-grid > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 50px;
+  border-radius: 1rem;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+}
+.my-navbar .navbar-nav .nav-item .modal-body.modal-grid > a:hover {
+  background-color: rgba(55, 106, 150, 0.31);
+  cursor: pointer;
+}
+.my-navbar .modal-body.modal-grid > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 50px;
+  border-radius: 1rem;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+}
+.my-navbar .modal-body.modal-grid > div:hover {
+  background-color: rgba(55, 106, 150, 0.3);
+  cursor: pointer;
+}
+.my-navbar .modal-body.modal-grid > a .fi {
+  margin-right: 10px;
+}
+.my-navbar .btn {
+  padding: 0.375rem 1rem;
+  min-width: 80px;
+  transition: all 0.3s ease-in-out;
+  border-radius: 1rem;
+}
+.my-navbar .btn:hover {
+  background-color: white;
+  color: #376996;
+}
+.my-navbar .btn-primary {
+  background-color: #376996;
+  border: 1px solid #376996;
+}
+.my-navbar .btn-outline-primary {
+  transition: all 0.1s ease-in-out;
+  border: 1px solid #376996;
+  color: #376996;
+}
+.my-navbar .btn-outline-primary:hover {
+  background-color: transparent;
+  color: #376996;
+  border: 2px solid #376996;
+}
+
+.section {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  border: none; 
+}
+
+
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 4px 10px;
+  background-color: #376996;
+  color: white;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.booking-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  font-size: 14px;
+  
+}
+
+.booking-btn:hover {
+  background: #376996;
+}
+
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .main-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  
+
+  .main-photo {
+    grid-row: auto;
+  }
+
+
+  .right-content {
+    width: 100%;
+  }
+
+  .booking-panel {
+    margin-top: 16px;
+  }
+
+  .hotel-title {
+    font-size: 20px;
+  }
+
+}
+.review-card {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px 12px;
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-width: 150px;
+}
+
+.review-text {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.review-label {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.review-count {
+  font-size: 12px;
+  color: #666;
+}
+
+.review-score {
+  background-color: #003580;
+  color: white;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+.review-popup-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+
+/* 隱藏彈出層預設 */
+.review-popup {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  width: 250px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+
+/* 滑鼠懸浮時顯示 */
+.review-popup-wrapper:hover .review-popup {
+  display: block;
+}
