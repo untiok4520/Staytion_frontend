@@ -244,6 +244,8 @@
           </div>
 
           <div class="location"></div>
+
+          <!-- 訂單內容詳情 -->
           <div class="order-detail-panel" style="display: none">
             <button class="btn btn-outline-secondary" id="backToList">
               返回訂單列表
@@ -302,6 +304,8 @@
           </div>
           <div class="order-list"></div>
         </div>
+
+        <!-- 住宿訊息 -->
         <div id="messages" class="content-page" style="display: none">
           <div class="chat-container">
             <div class="chat-list">
@@ -325,19 +329,91 @@
             </div>
           </div>
         </div>
+        <!-- 住宿評論 -->
         <div id="reviews" class="content-page" style="display: none">
-          <div class="review-card template" style="display: none">
-            <div class="review-img"></div>
-            <div class="review-content">
-              <h5 class="review-hotel-name"></h5>
-              <p class="review-date"></p>
-              <div class="review-score">
-                <span class="score"></span>
+          <h2>尚未評論</h2>
+          <div class="unreview-section">
+            <div class="unreview-card template" style="display: none">
+              <div class="review-img"></div>
+              <div class="review-content">
+                <div class="left-info">
+                  <h5 class="review-hotel-name"></h5>
+                  <div class="review-dates">
+                    <div class="checkin">
+                      <p>入住日期</p>
+                      <span class="checkin-date"></span>
+                    </div>
+                    <div class="checkout">
+                      <p>退房日期</p>
+                      <span class="checkout-date"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="right-info">
+                  <div class="rating-options">
+                    <label>請為這間住宿評分：</label>
+                    <div class="radio-group">
+                      <label
+                        ><input type="radio" name="score" value="1" />1</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="2" />2</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="3" />3</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="4" />4</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="5" />5</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="6" />6</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="7" />7</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="8" />8</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="9" />9</label
+                      >
+                      <label
+                        ><input type="radio" name="score" value="10" />10</label
+                      >
+                    </div>
+                    <div class="review-text">
+                      <textarea
+                        class="review-comment"
+                        placeholder="留下您的評論..."
+                      ></textarea>
+                      <button class="btn btn-secondary" type="submit">
+                        送出
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p class="review-text"></p>
+            </div>
+          </div>
+          <h2>過去評論</h2>
+          <div class="review-section">
+            <div class="review-card template" style="display: none">
+              <div class="review-img"></div>
+              <div class="review-content">
+                <h5 class="review-hotel-name"></h5>
+                <p class="review-date"></p>
+                <div class="review-score">
+                  <span class="score"></span>
+                </div>
+                <p class="review-text"></p>
+              </div>
             </div>
           </div>
         </div>
+        <!-- 收藏清單 -->
         <div id="favorites" class="content-page" style="display: none">
           <div class="favlist-filter">
             <label for="fav-location">選擇清單：</label>

@@ -84,22 +84,59 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
 
       //========住宿評論資料=============
       if (targetPage === "reviews") {
+        const mockUnreviewedCards = [
+          {
+            hotelName: "Hotel Name",
+            checkinDate: "2025/06/01",
+            checkoutDate: "2025/06/03",
+          },
+          {
+            hotelName: "Hotel Name",
+            checkinDate: "2025/06/10",
+            checkoutDate: "2025/06/12",
+          },
+        ];
+        renderUnreviewedCards(mockUnreviewedCards);
+
         const mockReviews = [
           {
             hotelName: "Hotel Name",
             date: "2025年5月26日",
-            score: "8.0",
+            score: "8",
             text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           },
           {
             hotelName: "Another Hotel",
             date: "2025年5月20日",
-            score: "9.2",
+            score: "9",
             text: "這間真的很乾淨，交通方便。",
           },
         ];
         renderReviews(mockReviews);
       }
+    }
+    //=======尚未評論卡片渲染=============
+    function renderUnreviewedCards(data) {
+      const reviewsContainer = document.getElementById("reviews");
+      const template = reviewsContainer.querySelector(
+        ".unreview-card.template"
+      );
+      if (!template) return;
+
+      reviewsContainer
+        .querySelectorAll(".unreview-card:not(.template)")
+        .forEach((el) => el.remove());
+
+      data.forEach((review) => {
+        const card = template.cloneNode(true);
+        card.classList.remove("template");
+        card.style.display = "";
+        card.querySelector(".review-hotel-name").textContent = review.hotelName;
+        card.querySelector(".checkin-date").textContent = review.checkinDate;
+        card.querySelector(".checkout-date").textContent = review.checkoutDate;
+        const section = document.querySelector(".unreview-section");
+        section.appendChild(card);
+      });
     }
   });
 });
@@ -440,7 +477,8 @@ function renderReviews(reviews) {
     card.querySelector(".review-date").textContent = review.date;
     card.querySelector(".score").textContent = review.score;
     card.querySelector(".review-text").textContent = review.text;
-    reviewsContainer.appendChild(card);
+    const reviewSection = document.querySelector(".review-section");
+    reviewSection.appendChild(card);
   });
 }
 

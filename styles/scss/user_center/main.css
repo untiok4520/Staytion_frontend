@@ -12547,10 +12547,14 @@ input.choose-date:focus {
   flex-direction: column;
   gap: 20px;
 }
+#reviews h2 {
+  margin-bottom: 1rem;
+}
 #reviews .review-card {
   display: flex;
   flex-direction: row;
   justify-content: start;
+  align-items: center;
   border: 1px solid #ccc;
   border-radius: 16px;
   padding: 20px;
@@ -12558,8 +12562,8 @@ input.choose-date:focus {
   margin-bottom: 1rem;
 }
 #reviews .review-card .review-img {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   background-color: #ccc;
   border-radius: 8px;
   margin-right: 20px;
@@ -12594,6 +12598,127 @@ input.choose-date:focus {
   font-size: 14px;
   line-height: 1.4;
   white-space: pre-line;
+}
+#reviews .unreview-section .unreview-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 20px;
+  background-color: #fff;
+  margin-bottom: 1rem;
+}
+#reviews .unreview-section .unreview-card .review-img {
+  width: 150px;
+  height: 150px;
+  background-color: #ccc;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+#reviews .unreview-section .unreview-card .review-content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 80px;
+}
+#reviews .unreview-section .unreview-card .review-content .left-info h5 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+#reviews .unreview-section .unreview-card .review-content .left-info .review-dates {
+  display: flex;
+  gap: 2.5rem;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options {
+  margin-top: 8px;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group label:hover {
+  background-color: #f0f0f0;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group input[type=radio] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #888;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group input[type=radio]:checked {
+  border-color: #376996;
+  background-color: #376996;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group input[type=radio]:checked::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  background-color: white;
+  border-radius: 50%;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .review-text {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .review-text textarea {
+  margin-top: 10px;
+  width: 450px;
+  height: 100px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .review-text textarea:focus {
+  border: 2px solid #376996;
+}
+#reviews .unreview-section .unreview-card .review-content .right-info .rating-options .review-text .btn {
+  font-size: 14px;
+  height: 40px;
+  width: 60px;
 }
 
 #favorites .favlist-filter {
@@ -12649,7 +12774,8 @@ input.choose-date:focus {
   margin-bottom: 8px;
 }
 #favorites .fav-card .fav-content .fav-score-line .score {
-  border: 1px solid #000;
+  background-color: #1f487e;
+  color: white;
   padding: 4px 8px;
   border-radius: 8px;
 }
