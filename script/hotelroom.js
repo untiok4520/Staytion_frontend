@@ -168,7 +168,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${hotel.phone}</td>
                 <td>
                     <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addHotelModal">編輯</button>
-                    <button class="btn btn-sm btn-info" onclick="displayRoomsForHotel('${hotel.id}')">查看房型</button>
                 </td>
             </tr>
         `;
