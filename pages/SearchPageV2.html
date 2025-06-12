@@ -101,12 +101,16 @@
   <main class="main-content container">
     <section class="filter-bar">
       <div class="filter-group">
-        <button class="btn filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">篩選條件</button>
+        <button class="btn filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+          篩選條件
+          <i class="bi bi-sliders"></i>
+        </button>
       </div>
       <div class="filter-drop">
         <div class="dropdown">
           <button id="area" class="dropdown-btn" type="button">
             <span>區域</span>
+            <i class="bi bi-chevron-down"></i>
           </button>
           <ul class="dropdown-menu dropdown-area-menu" id="areaDropdown">
           </ul>
@@ -114,18 +118,21 @@
         <div class="dropdown">
           <button id="price" class="dropdown-btn" type="button">
             <span>價格</span>
+            <i class="bi bi-chevron-down"></i>
           </button>
           <ul class="dropdown-menu dropdown-price-menu" id="priceDropdown"></ul>
         </div>
         <div class="dropdown">
           <button id="facility" class="dropdown-btn" type="button">
             <span>熱門設施</span>
+            <i class="bi bi-chevron-down"></i>
           </button>
           <ul class="dropdown-menu dropdown-facility-menu" id="facilityDropdown"></ul>
         </div>
         <div class="dropdown">
           <button id="score" class="dropdown-btn" type="button">
             <span>評分</span>
+            <i class="bi bi-chevron-down"></i>
           </button>
           <ul class="dropdown-menu dropdown-score-menu" id="scoreDropdown"></ul>
         </div>
@@ -142,11 +149,14 @@
     <div class="sort-bar">
       <div class="dropdown">
         <button id="sort" class="dropdown-btn" type="button">
-          排序依: <span></span>
+          排序依<i class="bi bi-sort-down"></i><span></span>
         </button>
         <ul class="dropdown-menu dropdown-sort-menu" id="sortDropdown"></ul>
       </div>
-      <button class="btn btn-map" onclick="openMapMode()">地圖顯示搜尋</button>
+      <button class="btn btn-map" onclick="openMapMode()">
+        地圖顯示搜尋
+        <i class="bi bi-map"></i>
+      </button>
       <div id="mapMode" class="map-mode-container">
         <div class="hotel-list">
           <div class="hotel-card">CityInn Hotel Plus - Taichung</div>

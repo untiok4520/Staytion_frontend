@@ -128,7 +128,7 @@ textarea {
 }
 
 .search-bar {
-    background: #1f487e;
+    background: var(--button-hover);
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     padding: 1rem;
 }
@@ -152,7 +152,7 @@ textarea {
 }
 
 .search-bar input:focus {
-    border-color: #376996;
+    border-color: var(--color-primary);
     outline: none;
     box-shadow: 0 0 8px rgba(55, 105, 150, 0.4);
 }
@@ -164,7 +164,7 @@ textarea {
 
 .search-bar #search-btn {
     background-color: #1a81ff;
-    color: #fff;
+    color: var(--color-light);
 }
 
 .search-bar #search-btn:hover {
@@ -172,7 +172,7 @@ textarea {
 }
 
 .input-group-text {
-    background-color: #fff;
+    background-color: var(--color-light);
     border: 1px solid #ccc;
     border-right: none;
 }
