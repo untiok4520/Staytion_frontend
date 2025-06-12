@@ -187,7 +187,7 @@ $(function () {
   });
 
   const priceOptions = [ { label: '500+', value: '500up' }, { label: '500~1000', value: '500-1000' }, { label: '1000~3000', value: '1000-3000' }, { label: '3000~6000', value: '3000-6000' }, { label: '6000~9000', value: '6000-9000' }, { label: '9000+', value: '9000up' } ];
-  const facilityOptions = [ { label: '免費Wi-Fi', value: 'wifi' }, { label: '停車場', value: 'parking' }, { label: '餐廳', value: 'restaurant' }, { label: '洗衣設備', value: 'laundry' }, { label: '可攜帶寵物', value: 'pet' }, { label: '商店', value: 'store' }, { label: '無障礙設施', value: 'accessible' } ];
+  const facilityOptions = [ { label: 'Wi-Fi', value: 'wifi' }, { label: '停車場', value: 'parking' }, { label: '餐廳', value: 'restaurant' }, { label: '洗衣設備', value: 'laundry' }, { label: '可攜帶寵物', value: 'pet' }, { label: '商店', value: 'store' }, { label: '無障礙設施', value: 'accessible' } ];
   const scoreOptions = [ { label: '1 分以上', value: '1' }, { label: '2 分以上', value: '2' }, { label: '3 分以上', value: '3' }, { label: '4 分以上', value: '4' }, { label: '5 分以上', value: '5' }, { label: '6 分以上', value: '6' }, { label: '7 分以上', value: '7' }, { label: '8 分以上', value: '8' }, { label: '9 分以上', value: '9' }, { label: '10 分', value: '10' } ];
   const sortOptions = [ { label: '價格(高價優先)', value: 'price_highest' }, { label: '評分(由高到低)', value: 'rating_highest' } ];
 
