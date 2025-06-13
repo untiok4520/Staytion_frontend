@@ -12,6 +12,11 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+
     <style>
       /* ✅ navbar 樣式：命名為 navbar-shared 避免污染 */
       .navbar-shared {
@@ -246,7 +251,9 @@
                     <div><span class="fi fi-ru fis"></span>Русский</div>
                     <div><span class="fi fi-th fis"></span>ไทย</div>
                     <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
-                    <div><span class="fi fi-id fis"></span>Bahasa Indonesia</div>
+                    <div>
+                      <span class="fi fi-id fis"></span>Bahasa Indonesia
+                    </div>
                     <div><span class="fi fi-my fis"></span>Bahasa Melayu</div>
                     <div><span class="fi fi-ph fis"></span>Filipino</div>
                     <div><span class="fi fi-in fis"></span>हिन्दी</div>
@@ -267,13 +274,15 @@
     <!-- ✅ 你的頁面內容 -->
     <div class="container my-4">
       <div class="step-indicator">
-        <span>✅ 選擇房型與日期</span>
+        <span><i class="bi bi-check-circle-fill me-1"></i>選擇房型與日期</span>
         <span>② 新增入住資訊</span>
         <span>③ 完成預訂</span>
       </div>
 
       <div class="card p-4 mb-4 card-hover">
-        <div class="section-title">📅 訂房資訊</div>
+        <div class="section-title">
+          <i class="bi bi-calendar-event me-1"></i>訂房資訊
+        </div>
         <div class="row">
           <div class="col-md-6">Check-in：年/月/日</div>
           <div class="col-md-6">Check-out：年/月/日</div>
@@ -284,7 +293,9 @@
       </div>
 
       <div class="card p-4 mb-4 card-hover">
-        <div class="section-title">👤 輸入個人資料</div>
+        <div class="section-title">
+          <i class="bi bi-person-fill me-1"></i>輸入個人資料
+        </div>
         <form>
           <div class="row g-3">
             <div class="col-md-6">
@@ -324,7 +335,9 @@
       </div>
 
       <div class="card p-4 mb-4 card-hover">
-        <div class="section-title">💳 付款方式</div>
+        <div class="section-title">
+          <i class="bi bi-credit-card-fill me-1"></i>付款方式
+        </div>
         <div class="mb-3">
           <label class="form-check-label me-3">
             <input
@@ -397,10 +410,14 @@
       </p>
 
       <div class="alert alert-info">
-        <div class="fw-bold mb-1">⏱️ 您的預留時間</div>
-        <p>✅ 房間目前已保留給您</p>
+        <div class="fw-bold mb-1">
+          <i class="bi bi-clock-history me-1"></i>您的預留時間
+        </div>
+        <p>
+          <i class="bi bi-check-circle-fill me-1 text-success"></i
+          >房間目前已保留給您</p>
         <p>退房時間：隔日12:00前</p>
-        <p>🧑‍💻 24hr 線上櫃檯隨時提供服務</p>
+        <p><i class="bi bi-headset me-1"></i>24hr 線上櫃檯隨時提供服務</p>
         <p><strong>建議儘快填完以完成預訂</strong></p>
       </div>
 
