@@ -341,52 +341,46 @@
   </div>
 
   <!-- 預訂面板 -->
-  <div class="right-content">
-    <div class="booking-panel">
-      <h3 style="margin-bottom: 20px; color: #007bff;">立即預訂</h3>
-
-      <div class="form-group">
-        <label>入住日期</label>
-        <input type="date" class="form-control" value="2024-06-15">
-      </div>
-
-      <div class="form-group">
-        <label>退房日期</label>
-        <input type="date" class="form-control" value="2024-06-17">
-      </div>
-
-
-      <hr style="margin: 20px 0;">
-
-      <div style="margin-bottom: 15px;">
-        <div style="display: flex; justify-content: space-between;" id="priceDetails">
-          <span>2晚 × NT$ 6,200</span>
-          <span>NT$ 12,400</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; color: #6c757d; font-size: 14px;">
-          <span>稅金與服務費</span>
-          <span>稅金 NT$ <span id="tax">640</span></span>
-        </div>
-      </div>
-
-      <hr style="margin: 15px 0;">
-
-      <div
-        style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 20px;">
-        <span><strong>總計 NT$ <span id="total">13,040</span></strong></span>
-        <span style="color: #dc3545;">NT$ 13,040</span>
-      </div>
-
-      <button class="booking-btn" style="font-size: 16px; padding: 15px;">
-        開始預訂流程
-      </button>
-
-      <p style="font-size: 12px; color: #6c757d; text-align: center; margin-top: 10px;">
-        現在預訂，稍後付款
-      </p>
+  <div class="booking-panel">
+    <h3 style="margin-bottom: 20px; color: #007bff;">立即預訂</h3>
+  
+    <div class="form-group">
+      <label>入住日期</label>
+      <input type="date" id="checkin-date" class="form-control">
     </div>
+  
+    <div class="form-group">
+      <label>退房日期</label>
+      <input type="date" id="checkout-date" class="form-control">
+    </div>
+  
+    <hr style="margin: 20px 0;">
+  
+    <!-- ✅ 加回這個：已選房型清單 -->
+    <div id="selected-room-list" style="margin-bottom: 10px;"></div>
+  
+    <div id="priceDetails" style="margin-bottom: 10px;">
+      <span>請選擇房型</span>
+    </div>
+  
+    <hr style="margin: 15px 0;">
+  
+    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 20px;">
+      <span><strong>總計 NT$ <span id="total">0</span></strong></span>
+      <span style="color: #dc3545;">NT$ <span id="total">0</span></span>
+    </div>
+  
+    <button class="booking-btn" style="font-size: 16px; padding: 15px;">
+      開始預訂流程
+    </button>
+  
+    <p style="font-size: 12px; color: #6c757d; text-align: center; margin-top: 10px;">
+      現在預訂，稍後付款
+    </p>
   </div>
-
+  
+  
+  
 
 
 </div>

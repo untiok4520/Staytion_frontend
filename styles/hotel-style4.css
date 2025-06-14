@@ -167,7 +167,7 @@ body {
   width: 100%;
   height: auto;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
   transition: transform 0.3s ease;
 }
 
@@ -393,13 +393,13 @@ body {
 
 
 /* 以下搜尋列 */
+
 .search-bar {
             background: #1f487e;
             border-radius: 0.5rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            box-shadow: none;
             /* 滿版的話也要關掉這個 */
             padding: 1rem;
-
         }
 
         /* 自訂 col-md-3.5 */
@@ -424,7 +424,7 @@ body {
         .search-bar input:focus {
             border-color: #376996;
             outline: none;
-            box-shadow: 0 0 8px rgba(55, 105, 150, 0.4);
+            box-shadow:none;
         }
 
         .search-bar button {
