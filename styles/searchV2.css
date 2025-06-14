@@ -959,7 +959,7 @@ main .hotel-card {
     color: var(--color-primary);
 }
 
-.map-mode-container {
+/* .map-mode-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -1029,7 +1029,91 @@ main .hotel-card {
     pointer-events: none;
 }
 
-/* Consolidated the duplicate .btn-map entry */
+Consolidated the duplicate .btn-map entry
+.btn-map {
+    padding: 10px 20px;
+    background-color: var(--color-primary);
+    color: var(--color-light);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+} */
+
+#mapMode {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    background: #fff;
+}
+
+#mapMode.active {
+    display: flex;
+}
+
+#mapMode .map-hotel-list {
+    width: 38vw;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid #eee;
+    background: #fafbfc;
+    padding: 2rem 1rem;
+}
+
+#mapMode .hotel-list {
+    padding: 0;
+}
+
+#mapMode .map-view {
+    flex: 1 1 0;
+    position: relative;
+    background: #f5f7fa;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.fake-map {
+    flex: 1 1 0;
+    margin: 24px;
+    background: #dde3ed;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #888;
+}
+
+.close-map {
+    color: var(--color-primary);
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--color-light);
+    border: 1px solid var(--color-primary);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 10;
+    font-weight: bold;
+}
+
+.close-map:hover {
+    background: var(--button-hover);
+    border-color: var(--color-primary);
+    color: var(--color-light);
+}
+
+.close-map i {
+    pointer-events: none;
+}
+
 .btn-map {
     padding: 10px 20px;
     background-color: var(--color-primary);

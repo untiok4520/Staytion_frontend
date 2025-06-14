@@ -18,6 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="/styles/searchV2.css" />
 </head>
+
 <body>
   <nav class="my-navbar navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -115,64 +116,64 @@
       </ul>
     </div>
   </nav>
- 
+
   <section class="search-bar sticky-top">
     <div class="container">
-    <form class="row g-3 align-items-end" autocomplete="off">
+      <form class="row g-3 align-items-end" autocomplete="off">
         <div class="col-12 col-md-3-5">
-            <div class="input-group destination-group position-relative ">
-                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                <input type="text" id="destinationInput" class="form-control" placeholder="請搜尋目的地" />
-                <ul id="suggestions" class="list-group suggestion-list"></ul>
-            </div>
+          <div class="input-group destination-group position-relative ">
+            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+            <input type="text" id="destinationInput" class="form-control" placeholder="請搜尋目的地" />
+            <ul id="suggestions" class="list-group suggestion-list"></ul>
+          </div>
         </div>
         <div class="col-12 col-md-3-5">
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
-                <input type="text" id="daterange" class="form-control" placeholder="選擇日期範圍" />
-            </div>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+            <input type="text" id="daterange" class="form-control" placeholder="選擇日期範圍" />
+          </div>
         </div>
         <div class="col-8 col-md-3-5 position-relative">
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-people"></i></span>
-                <input type="text" class="form-control" id="guest-btn" readonly />
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-people"></i></span>
+            <input type="text" class="form-control" id="guest-btn" readonly />
+          </div>
+          <div id="guest-popup" aria-label="房客選擇視窗">
+            <div class="guest-row">
+              <span class="guest-label">成人</span>
+              <div class="qty-control">
+                <button type="button" class="qty-btn" data-action="decrease" data-type="adults">−</button>
+                <span class="count" id="adults-count">2</span>
+                <button type="button" class="qty-btn" data-action="increase" data-type="adults">+</button>
+              </div>
             </div>
-            <div id="guest-popup" aria-label="房客選擇視窗">
-                <div class="guest-row">
-                    <span class="guest-label">成人</span>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" data-action="decrease" data-type="adults">−</button>
-                        <span class="count" id="adults-count">2</span>
-                        <button type="button" class="qty-btn" data-action="increase" data-type="adults">+</button>
-                    </div>
-                </div>
-                <div class="guest-row">
-                    <span class="guest-label">孩童</span>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" data-action="decrease" data-type="children">−</button>
-                        <span class="count" id="children-count">0</span>
-                        <button type="button" class="qty-btn" data-action="increase" data-type="children">+</button>
-                    </div>
-                </div>
-                <div class="guest-row">
-                    <span class="guest-label">房間</span>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" data-action="decrease" data-type="rooms">−</button>
-                        <span class="count" id="rooms-count">1</span>
-                        <button type="button" class="qty-btn" data-action="increase" data-type="rooms">+</button>
-                    </div>
-                </div>
+            <div class="guest-row">
+              <span class="guest-label">孩童</span>
+              <div class="qty-control">
+                <button type="button" class="qty-btn" data-action="decrease" data-type="children">−</button>
+                <span class="count" id="children-count">0</span>
+                <button type="button" class="qty-btn" data-action="increase" data-type="children">+</button>
+              </div>
             </div>
+            <div class="guest-row">
+              <span class="guest-label">房間</span>
+              <div class="qty-control">
+                <button type="button" class="qty-btn" data-action="decrease" data-type="rooms">−</button>
+                <span class="count" id="rooms-count">1</span>
+                <button type="button" class="qty-btn" data-action="increase" data-type="rooms">+</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="col-4 col-md-1-5 d-grid">
-            <button type="submit" class="btn" id="search-btn">
-                <i class="bi bi-search pe-2"></i> 搜尋
-            </button>
+          <button type="submit" class="btn" id="search-btn">
+            <i class="bi bi-search pe-2"></i> 搜尋
+          </button>
         </div>
-    </form>
+      </form>
     </div>
-</section>
+  </section>
   <main class="main-content container">
     <section class="filter-bar">
       <div class="filter-group">
@@ -233,28 +234,27 @@
         <i class="bi bi-map"></i>
       </button>
       <div id="mapMode" class="map-mode-container">
-        <div class="hotel-list">
-          <div class="hotel-card">CityInn Hotel Plus - Taichung</div>
-          <div class="hotel-card">Norden Ruder Hostel</div>
-          <div class="hotel-card">Norway Forest Travel Hotel</div>
-          </div>
+        <div class="map-hotel-list">
+          <section class="hotel-list" id="mapHotelList">
+            <!-- JS 動態產生飯店列表 -->
+          </section>
+        </div>
         <div class="map-view">
           <button class="close-map" onclick="closeMapMode()">
             Close map
             <i class="bi bi-x-lg"></i>
           </button>
           <div class="fake-map">地圖區塊（可放 Google Maps）</div>
-
         </div>
       </div>
     </div>
 
     <section class="hotel-list" id="hotelList">
-      </section>
+    </section>
   </main>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="/script/searchV2.js"></script>
-</body>          
+</body>
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content filter-modal-content">
