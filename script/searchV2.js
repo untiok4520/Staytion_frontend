@@ -1,6 +1,59 @@
 //V3.js
 $(function () {
-  'use strict'; // 建議使用嚴格模式
+  'use strict';
+
+  //貨幣切換按鈕
+document
+.querySelectorAll("#currencyModal .modal-body.modal-grid a")
+.forEach(function (item) {
+  item.addEventListener("click", function (e) {
+    e.preventDefault();
+    const html = this.innerHTML.trim();
+    const parts = html.split("<br>");
+    const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
+    const btn = document.querySelector(
+      'button[data-bs-target="#currencyModal"]'
+    );
+    if (btn) {
+      btn.textContent = code;
+    }
+    //關閉modal
+    const modalEl = document.getElementById("currencyModal");
+    const modalInstance =
+      window.bootstrap && window.bootstrap.Modal
+        ? window.bootstrap.Modal.getInstance(modalEl)
+        : typeof bootstrap !== "undefined" && bootstrap.Modal
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
+    if (modalInstance) modalInstance.hide();
+  });
+});
+
+//語言切換按鈕
+document
+.querySelectorAll("#languageModal .modal-body.modal-grid > div")
+.forEach(function (item) {
+  item.addEventListener("click", function (e) {
+    e.preventDefault();
+    const span = this.querySelector("span.fi");
+    const btn = document.querySelector(
+      'button[data-bs-target="#languageModal"]'
+    );
+    if (span && btn) {
+      // 將button的內容換成<span>
+      btn.innerHTML = span.outerHTML;
+    }
+    // 關閉 modal
+    const modalEl = document.getElementById("languageModal");
+    const modalInstance =
+      window.bootstrap && window.bootstrap.Modal
+        ? window.bootstrap.Modal.getInstance(modalEl)
+        : typeof bootstrap !== "undefined" && bootstrap.Modal
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
+    if (modalInstance) modalInstance.hide();
+  });
+});
 
   //狀態區
   const filterState = {
@@ -224,7 +277,7 @@ $(function () {
       const $card = $(`
         <article class="hotel-card">
           <div class="hotel-image">
-            <img src="${hotel.imageUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
+            <img src="${hotel.imgUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
           </div>
           <div class="hotel-info">
             <h2 class="hotel-name">
@@ -267,7 +320,7 @@ $(function () {
       else if (value !== '' && value !== null && typeof value !== 'undefined') params.append(key, value);
     });
 
-    fetch(`/api/hotels?${params.toString()}`)
+    fetch('http://localhost:8080/api/hotels?' + params.toString())
       .then(res => res.json())
       .then(data => {
         renderHotelList(data.hotels || []);
@@ -295,7 +348,7 @@ $(function () {
       else if (value !== '' && value !== null && typeof value !== 'undefined') params.append(key, value);
     });
 
-    fetch(`/api/hotels?${params.toString()}`)
+    fetch('http://localhost:8080/api/hotels?' + params.toString())
       .then(res => res.json())
       .then(data => {
         const $list = $('#mapHotelList');
