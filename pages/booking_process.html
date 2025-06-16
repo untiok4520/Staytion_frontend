@@ -16,6 +16,11 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
 
     <style>
       /* ✅ navbar 樣式：命名為 navbar-shared 避免污染 */
@@ -279,17 +284,33 @@
         <span>③ 完成預訂</span>
       </div>
 
-      <div class="card p-4 mb-4 card-hover">
-        <div class="section-title">
-          <i class="bi bi-calendar-event me-1"></i>訂房資訊
+      <div class="card p-4 mb-4 shadow-sm card-hover">
+        <div class="section-title h5 mb-3 text-primary">
+          <i class="bi bi-calendar-event me-2"></i>訂房資訊
         </div>
-        <div class="row">
-          <div class="col-md-6">Check-in：年/月/日</div>
-          <div class="col-md-6">Check-out：年/月/日</div>
+      
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <span class="text-muted small">Check-in：</span>
+            <span class="fw-semibold">2025/07/18</span>
+          </div>
+          <div class="col-md-6">
+            <span class="text-muted small">Check-out：</span>
+            <span class="fw-semibold">2025/07/20</span>
+          </div>
         </div>
-        <p>共入住：X 天</p>
-        <p>已選擇房型：XX 房型</p>
-        <p class="fw-bold">總金額：TWD 2,500</p>
+      
+        <p class="mb-1">
+          <span class="text-muted small">共入住：</span>
+          <span class="fw-semibold">2 天</span>
+        </p>
+        <p class="mb-1">
+          <span class="text-muted small">已選擇房型：</span>
+          <span class="fw-semibold">豪華雙人房</span>
+        </p>
+        <p class="fw-bold fs-5 text-success">
+          總金額：TWD 2,500
+        </p>
       </div>
 
       <div class="card p-4 mb-4 card-hover">
@@ -348,7 +369,7 @@
               checked
             />信用卡付款
           </label>
-          <label class="form-check-label">
+          <label class="form-check-label me-3">
             <input
               type="radio"
               name="paymentMethod"
@@ -356,8 +377,17 @@
               class="form-check-input"
             />現金付款
           </label>
+          <label class="form-check-label">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="ecpay"
+              class="form-check-input"
+            />綠界支付
+          </label>
         </div>
 
+        <!-- ✅ 信用卡區塊 -->
         <div id="creditCardForm">
           <div class="mb-3">
             <label for="cardholder" class="form-label">持卡人姓名</label>
@@ -398,12 +428,28 @@
           </div>
         </div>
 
+        <!-- ✅ 現金說明 -->
         <div id="cashPaymentInfo" style="display: none">
           <p>
             請於入住時以新台幣現金付款，現場人員將協助您完成付款與入住手續。
           </p>
         </div>
+
+        <!-- ✅ 綠界說明 -->
+        <div id="ecpayInfo" class="animate__animated" style="display: none">
+          <p>
+            您將在提交後被導向至「綠界科技
+            ECPay」進行第三方付款，請依畫面指示操作。
+          </p>
+        </div>
       </div>
+      <!-- ✅ 綠界付款按鈕 -->
+<div id="ecpayButtonWrapper" class="text-center" style="display: none;">
+  <button id="goToEcpayBtn" class="btn btn-success mt-3">
+    前往綠界付款
+  </button>
+</div>
+
 
       <p class="text-muted text-center mt-2" style="font-size: 0.9rem">
         登入帳號：Kevin@gmail.com <a href="#">登出</a>
@@ -415,7 +461,8 @@
         </div>
         <p>
           <i class="bi bi-check-circle-fill me-1 text-success"></i
-          >房間目前已保留給您</p>
+          >房間目前已保留給您
+        </p>
         <p>退房時間：隔日12:00前</p>
         <p><i class="bi bi-headset me-1"></i>24hr 線上櫃檯隨時提供服務</p>
         <p><strong>建議儘快填完以完成預訂</strong></p>
@@ -432,21 +479,40 @@
     <script>
       // 付款方式切換
       const creditCardForm = document.getElementById("creditCardForm");
-      const cashPaymentInfo = document.getElementById("cashPaymentInfo");
-      const paymentRadios = document.querySelectorAll(
-        'input[name="paymentMethod"]'
-      );
-      paymentRadios.forEach((radio) => {
-        radio.addEventListener("change", function () {
-          if (this.value === "credit") {
-            creditCardForm.style.display = "block";
-            cashPaymentInfo.style.display = "none";
-          } else {
-            creditCardForm.style.display = "none";
-            cashPaymentInfo.style.display = "block";
-          }
-        });
-      });
+const cashPaymentInfo = document.getElementById("cashPaymentInfo");
+const ecpayInfo = document.getElementById("ecpayInfo");
+const ecpayButtonWrapper = document.getElementById("ecpayButtonWrapper");
+const goToEcpayBtn = document.getElementById("goToEcpayBtn");
+
+const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+
+paymentRadios.forEach((radio) => {
+  radio.addEventListener("change", function () {
+    if (this.value === "credit") {
+      creditCardForm.style.display = "block";
+      cashPaymentInfo.style.display = "none";
+      ecpayInfo.style.display = "none";
+      ecpayButtonWrapper.style.display = "none";
+    } else if (this.value === "cash") {
+      creditCardForm.style.display = "none";
+      cashPaymentInfo.style.display = "block";
+      ecpayInfo.style.display = "none";
+      ecpayButtonWrapper.style.display = "none";
+    } else if (this.value === "ecpay") {
+      creditCardForm.style.display = "none";
+      cashPaymentInfo.style.display = "none";
+      ecpayInfo.style.display = "block";
+      ecpayButtonWrapper.style.display = "block"; // ✅ 顯示按鈕
+    }
+  });
+});
+
+// ✅ 綠界付款按鈕觸發跳轉
+goToEcpayBtn.addEventListener("click", () => {
+  // 這裡你可以改成真正的綠界網址
+  window.location.href = "ecpay_processing.html";
+});
+
 
       function formatCardNumber(input) {
         let value = input.value.replace(/\D/g, "").substring(0, 16);
