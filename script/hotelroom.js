@@ -176,3 +176,193 @@ document.addEventListener("DOMContentLoaded", function () {
     // Default: Display summary on page load
     displayAllRoomsSummary();
 });
+
+
+
+
+// ============================================================
+
+// // Data for hotels (now will be fetched from backend)
+// let hotelData = [];
+
+// // Data for rooms, categorized by hotel ID (now will be fetched from backend)
+// // This will still be populated on the fly when fetching rooms for a specific hotel.
+// let roomData = {};
+
+// $(document).ready(function () { // 使用 jQuery 的 ready 方法
+//     const hotelFilter = $("#hotelFilter"); // 使用 jQuery 選擇器
+//     const roomTableBody = $("#roomTableBody");
+//     const summaryTbody = $("#summary-rooms");
+//     const hotelTableBody = $('#hotelTable tbody');
+
+//     // --- Backend Endpoints (Examples) ---
+//     const API_BASE_URL = 'YOUR_BACKEND_API_URL'; // Replace with your actual backend URL
+
+//     const ENDPOINTS = {
+//         hotels: `${API_BASE_URL}/hotels`,
+//         rooms: `${API_BASE_URL}/rooms`,
+//         allRoomsSummary: `${API_BASE_URL}/rooms/summary`
+//     };
+
+//     // --- Function to fetch all hotels and populate the filter/table ---
+//     function fetchHotels() {
+//         // 顯示載入狀態
+//         hotelTableBody.html('<tr><td colspan="4">載入飯店資料中...</td></tr>');
+//         hotelFilter.html('<option value="all">載入中...</option>');
+
+//         $.ajax({
+//             url: ENDPOINTS.hotels,
+//             method: 'GET', // 或 'type': 'GET'
+//             dataType: 'json', // 期望的資料格式是 JSON
+//             success: function (data) {
+//                 hotelData = data; // Assign fetched data to hotelData
+
+//                 // Clear existing options and add "全部" option
+//                 hotelFilter.html('<option value="all">全部</option>');
+
+//                 // Populate the hotel filter dropdown dynamically
+//                 hotelData.forEach(hotel => {
+//                     const option = $('<option></option>') // 使用 jQuery 建立元素
+//                         .val(hotel.id)
+//                         .text(hotel.name);
+//                     hotelFilter.append(option);
+//                 });
+
+//                 // Populate the hotel information table
+//                 hotelTableBody.empty(); // Clear previous hotel data
+//                 hotelData.forEach(hotel => {
+//                     hotelTableBody.append(`
+//                         <tr>
+//                             <td>${hotel.name}</td>
+//                             <td>${hotel.address}</td>
+//                             <td>${hotel.phone}</td>
+//                             <td>
+//                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addHotelModal">編輯</button>
+//                             </td>
+//                         </tr>
+//                     `);
+//                 });
+
+//                 // After fetching hotels, display the initial room summary
+//                 displayAllRoomsSummary();
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 console.error("Error fetching hotels:", textStatus, errorThrown);
+//                 // Optionally display an error message to the user
+//                 hotelTableBody.html(`<tr><td colspan="4">載入飯店資料失敗。</td></tr>`);
+//                 hotelFilter.html('<option value="all">載入失敗</option>');
+//             }
+//         });
+//     }
+
+//     // --- Function to display rooms based on hotelId (fetches from backend) ---
+//     function displayRoomsForHotel(hotelId) {
+//         roomTableBody.html('<tr><td colspan="6">載入中...</td></tr>'); // Loading state
+//         summaryTbody.addClass("d-none"); // Hide summary table
+
+//         $.ajax({
+//             url: `${ENDPOINTS.hotels}/${hotelId}/rooms`,
+//             method: 'GET',
+//             dataType: 'json',
+//             success: function (rooms) {
+//                 roomTableBody.empty(); // Clear loading state
+
+//                 if (rooms && rooms.length > 0) {
+//                     rooms.forEach(room => {
+//                         let actionButtons = '';
+//                         if (room.status === '上架中') {
+//                             actionButtons = `
+//                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addRoomModal">編輯</button>
+//                                 <button class="btn btn-sm btn-outline-danger">下架</button>
+//                             `;
+//                         } else if (room.status === '已售完') {
+//                             actionButtons = `
+//                                 <button class="btn btn-sm btn-primary">查看報表</button>
+//                             `;
+//                         }
+
+//                         roomTableBody.append(`
+//                             <tr>
+//                                 <td>${room.type}</td>
+//                                 <td>${room.total}</td>
+//                                 <td>${room.available}</td>
+//                                 <td>${room.status}</td>
+//                                 <td>$${room.price}</td>
+//                                 <td>${actionButtons}</td>
+//                             </tr>
+//                         `);
+//                     });
+//                 } else {
+//                     roomTableBody.html(`<tr><td colspan="6">無房型資料</td></tr>`);
+//                 }
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 console.error(`Error fetching rooms for hotel ${hotelId}:`, textStatus, errorThrown);
+//                 roomTableBody.html(`<tr><td colspan="6">載入房型資料失敗。</td></tr>`);
+//             }
+//         });
+//     }
+
+//     // --- Function to display the aggregated summary of all rooms (fetches from backend) ---
+//     function displayAllRoomsSummary() {
+//         roomTableBody.empty(); // Clear specific hotel rooms
+//         summaryTbody.removeClass("d-none"); // Show summary table
+//         summaryTbody.html('<tr><td colspan="6">載入中...</td></tr>'); // Loading state
+
+//         $.ajax({
+//             url: ENDPOINTS.allRoomsSummary,
+//             method: 'GET',
+//             dataType: 'json',
+//             success: function (roomSummary) {
+//                 summaryTbody.empty(); // Clear loading state
+
+//                 if (Object.keys(roomSummary).length > 0) {
+//                     for (const [roomType, data] of Object.entries(roomSummary)) {
+//                         let actionButtons = '';
+//                         if (data.status === '上架中') {
+//                             actionButtons = `
+//                                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addRoomModal">編輯</button>
+//                                 <button class="btn btn-sm btn-outline-danger">下架</button>
+//                             `;
+//                         } else if (data.status === '已售完') {
+//                             actionButtons = `
+//                                 <button class="btn btn-sm btn-primary">查看報表</button>
+//                             `;
+//                         }
+
+//                         summaryTbody.append(`
+//                             <tr style="background-color: #f9f9f9;">
+//                                 <td>${roomType} (加總)</td>
+//                                 <td>${data.total}</td>
+//                                 <td>${data.available}</td>
+//                                 <td>${data.status}</td>
+//                                 <td>$${Math.round(data.avgPrice)}</td>
+//                                 <td>${actionButtons}</td>
+//                             </tr>
+//                         `);
+//                     }
+//                 } else {
+//                     summaryTbody.html(`<tr><td colspan="6">無房型加總資料。</td></tr>`);
+//                 }
+//             },
+//             error: function (jqXHR, textStatus, errorThrown) {
+//                 console.error("Error fetching all rooms summary:", textStatus, errorThrown);
+//                 summaryTbody.html(`<tr><td colspan="6">載入房型加總資料失敗。</td></tr>`);
+//             }
+//         });
+//     }
+
+//     // Event listener for the hotel filter dropdown
+//     hotelFilter.on("change", function () { // 使用 jQuery 的 .on() 方法綁定事件
+//         const selected = $(this).val(); // 使用 $(this).val() 取得選中的值
+
+//         if (selected === "all") {
+//             displayAllRoomsSummary();
+//         } else {
+//             displayRoomsForHotel(selected);
+//         }
+//     });
+
+//     // Initial data fetch on page load
+//     fetchHotels(); // This will also trigger the initial displayAllRoomsSummary()
+// });
