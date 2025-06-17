@@ -1,59 +1,64 @@
 //V3.js
+let currentPage = 1;
+const pageSize = 10;
+let loading = false;
+let allLoaded = false;
+
 $(function () {
   'use strict';
 
   //貨幣切換按鈕
-document
-.querySelectorAll("#currencyModal .modal-body.modal-grid a")
-.forEach(function (item) {
-  item.addEventListener("click", function (e) {
-    e.preventDefault();
-    const html = this.innerHTML.trim();
-    const parts = html.split("<br>");
-    const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
-    const btn = document.querySelector(
-      'button[data-bs-target="#currencyModal"]'
-    );
-    if (btn) {
-      btn.textContent = code;
-    }
-    //關閉modal
-    const modalEl = document.getElementById("currencyModal");
-    const modalInstance =
-      window.bootstrap && window.bootstrap.Modal
-        ? window.bootstrap.Modal.getInstance(modalEl)
-        : typeof bootstrap !== "undefined" && bootstrap.Modal
-          ? bootstrap.Modal.getInstance(modalEl)
-          : null;
-    if (modalInstance) modalInstance.hide();
-  });
-});
+  document
+    .querySelectorAll("#currencyModal .modal-body.modal-grid a")
+    .forEach(function (item) {
+      item.addEventListener("click", function (e) {
+        e.preventDefault();
+        const html = this.innerHTML.trim();
+        const parts = html.split("<br>");
+        const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
+        const btn = document.querySelector(
+          'button[data-bs-target="#currencyModal"]'
+        );
+        if (btn) {
+          btn.textContent = code;
+        }
+        //關閉modal
+        const modalEl = document.getElementById("currencyModal");
+        const modalInstance =
+          window.bootstrap && window.bootstrap.Modal
+            ? window.bootstrap.Modal.getInstance(modalEl)
+            : typeof bootstrap !== "undefined" && bootstrap.Modal
+              ? bootstrap.Modal.getInstance(modalEl)
+              : null;
+        if (modalInstance) modalInstance.hide();
+      });
+    });
 
-//語言切換按鈕
-document
-.querySelectorAll("#languageModal .modal-body.modal-grid > div")
-.forEach(function (item) {
-  item.addEventListener("click", function (e) {
-    e.preventDefault();
-    const span = this.querySelector("span.fi");
-    const btn = document.querySelector(
-      'button[data-bs-target="#languageModal"]'
-    );
-    if (span && btn) {
-      // 將button的內容換成<span>
-      btn.innerHTML = span.outerHTML;
-    }
-    // 關閉 modal
-    const modalEl = document.getElementById("languageModal");
-    const modalInstance =
-      window.bootstrap && window.bootstrap.Modal
-        ? window.bootstrap.Modal.getInstance(modalEl)
-        : typeof bootstrap !== "undefined" && bootstrap.Modal
-          ? bootstrap.Modal.getInstance(modalEl)
-          : null;
-    if (modalInstance) modalInstance.hide();
-  });
-});
+  //語言切換按鈕
+  document
+    .querySelectorAll("#languageModal .modal-body.modal-grid > div")
+    .forEach(function (item) {
+      item.addEventListener("click", function (e) {
+        e.preventDefault();
+        const span = this.querySelector("span.fi");
+        const btn = document.querySelector(
+          'button[data-bs-target="#languageModal"]'
+        );
+        if (span && btn) {
+          // 將button的內容換成<span>
+          btn.innerHTML = span.outerHTML;
+        }
+        // 關閉 modal
+        const modalEl = document.getElementById("languageModal");
+        const modalInstance =
+          window.bootstrap && window.bootstrap.Modal
+            ? window.bootstrap.Modal.getInstance(modalEl)
+            : typeof bootstrap !== "undefined" && bootstrap.Modal
+              ? bootstrap.Modal.getInstance(modalEl)
+              : null;
+        if (modalInstance) modalInstance.hide();
+      });
+    });
 
   //狀態區
   const filterState = {
@@ -71,25 +76,39 @@ document
     facilities: []
   };
 
-  const cityOptions = [
-    { label: '台北', value: 'taipei' },
-    { label: '台中', value: 'taichung' },
-    { label: '高雄', value: 'kaohsiung' },
-    { label: '新北', value: 'newtaipei' },
-    { label: '桃園', value: 'taoyuan' },
-    { label: '台南', value: 'tainan' },
-  ];
+  let cityOptions = [];
+  let areaOptionsMap = {};
 
-  const cityToAreas = {
-    taipei: [{ label: '信義區', value: 'xinyi' }, { label: '大安區', value: 'daan' }, { label: '中正區', value: 'zhongzheng' }, { label: '中山區', value: 'zhongshan' }, { label: '松山區', value: 'songshan' }, { label: '萬華區', value: 'wanhua' }, { label: '文山區', value: 'wenshan' }, { label: '內湖區', value: 'neihu' }],
-    taichung: [{ label: '西屯區', value: 'xitun' }, { label: '北區', value: 'north' }, { label: '中區', value: 'central' }, { label: '南屯區', value: 'nantun' }, { label: '南區', value: 'south' }, { label: '北屯區', value: 'beitun' }, { label: '西區', value: 'west' }, { label: '東區', value: 'east' }],
-    kaohsiung: [{ label: '鼓山區', value: 'gushan' }, { label: '苓雅區', value: 'lingya' }, { label: '前鎮區', value: 'qianzhen' }, { label: '新興區', value: 'xinxing' }, { label: '左營區', value: 'zuoying' }, { label: '三民區', value: 'sanmin' }, { label: '鹽埕區', value: 'yancheng' }, { label: '前金區', value: 'qianjin' }],
-    newtaipei: [{ label: '板橋區', value: 'banqiao' }, { label: '中和區', value: 'zhonghe' }, { label: '永和區', value: 'yonghe' }, { label: '新店區', value: 'xindian' }, { label: '三重區', value: 'sanchong' }, { label: '新莊區', value: 'xinzhuang' }, { label: '蘆洲區', value: 'luzhou' }, { label: '汐止區', value: 'xizhi' }],
-    taoyuan: [{ label: '桃園區', value: 'taoyuan' }, { label: '中壢區', value: 'zhongli' }, { label: '平鎮區', value: 'pingzhen' }, { label: '楊梅區', value: 'yangmei' }, { label: '八德區', value: 'bade' }, { label: '蘆竹區', value: 'luzhu' }, { label: '龜山區', value: 'guishan' }, { label: '大園區', value: 'dayuan' }],
-    tainan: [{ label: '中西區', value: 'westcentral' }, { label: '東區', value: 'east' }, { label: '北區', value: 'north' }, { label: '南區', value: 'south' }, { label: '安平區', value: 'anping' }, { label: '永康區', value: 'yongkang' }, { label: '安南區', value: 'annan' }, { label: '新營區', value: 'xinying' }]
-  };
+  // 取得所有城市
+  function fetchCities(callback) {
+    fetch('http://localhost:8080/api/cities')
+      .then(res => res.json())
+      .then(data => {
+        cityOptions = data || [];
+        callback && callback(cityOptions);
+      });
+  }
 
-  //城市建議功能
+
+  function fetchAreas(cityValue, callback) {
+    console.log('fetchAreas cityValue:', cityValue, typeof cityValue);
+    if (!cityValue) {
+      callback && callback([]);
+      return;
+    }
+    if (areaOptionsMap[cityValue]) {
+      callback && callback(areaOptionsMap[cityValue]);
+      return;
+    }
+    fetch('http://localhost:8080/api/areas?city=' + encodeURIComponent(cityValue))
+      .then(res => res.json())
+      .then(data => {
+        console.log('areas fetch response:', data);
+        areaOptionsMap[cityValue] = data || [];
+        callback && callback(data || []);
+      });
+  }
+
   const suggestionsEl = $("#suggestions");
   const destinationInput = $("#destinationInput");
 
@@ -98,6 +117,8 @@ document
     suggestionsEl.html(filtered.map(cityLabel => `<li class="list-group-item">${cityLabel}</li>`).join(""));
     suggestionsEl.css('display', filtered.length ? "block" : "none");
   }
+
+  fetchCities();
 
   destinationInput.on("input", () => { showSuggestions(destinationInput.val().trim()); });
   destinationInput.on("focus", () => { showSuggestions(); });
@@ -108,14 +129,40 @@ document
     const cityObj = cityOptions.find(c => c.label === cityLabel);
     filterState.city = cityObj ? cityObj.value : "";
     filterState.area = '';
-    updateAreaDropdown(cityToAreas[filterState.city] || []);
     $('#area span').text('區域');
     $('#areaDropdown').removeClass('active');
+    fetchAreas(filterState.city, updateAreaDropdown);
   });
   $(document).on("click", (e) => {
     if (!suggestionsEl.is(e.target) && suggestionsEl.has(e.target).length === 0 && !destinationInput.is(e.target)) {
       suggestionsEl.hide();
     }
+  });
+
+  function updateAreaDropdown(areaList) {
+    console.log('updateAreaDropdown:', areaList);
+    const $ul = $('#areaDropdown');
+    $ul.empty();
+    areaList.forEach(area => {
+      $('<li></li>')
+        .text(area.label)
+        .on('click', function () {
+          $('#area span').text(area.label);
+          $ul.removeClass('active');
+          filterState.area = area.value;
+        })
+        .appendTo($ul);
+    });
+    if (!areaList.length) $('#area span').text('區域');
+  }
+
+  $('#area').on('click', function (e) {
+    console.log('區域按鈕有被點到');
+    e.stopPropagation();
+    if (!filterState.city) return alert('請先選擇城市');
+    closeAllDropdownsExcept('areaDropdown');
+    fetchAreas(filterState.city, updateAreaDropdown);
+    $('#areaDropdown').toggleClass('active');
   });
 
   //日期
@@ -176,32 +223,13 @@ document
     $('.dropdown-menu').not('#' + exceptId).removeClass('active');
   }
 
-  function updateAreaDropdown(areaList) {
-    const $ul = $('#areaDropdown');
-    $ul.empty();
-    areaList.forEach(area => {
-      $('<li></li>')
-        .text(area.label)
-        .on('click', function () {
-          $('#area span').text(area.label);
-          $ul.removeClass('active');
-          filterState.area = area.value;
-        })
-        .appendTo($ul);
-    });
-    if (!areaList.length) $('#area span').text('區域');
-  }
-  $('#area').on('click', function (e) {
-    e.stopPropagation();
-    closeAllDropdownsExcept('areaDropdown');
-    $('#areaDropdown').toggleClass('active');
-  });
-
   // 通用 Dropdown 設定
   function setupDropdown({ buttonId, dropdownId, spanSelector, options, onSelect }) {
     const $btn = $(`#${buttonId}`);
     const $dropdown = $(`#${dropdownId}`);
     const $span = $btn.find(spanSelector);
+
+    const defaultText = $span.text();
 
     function renderOptions() {
       $dropdown.empty();
@@ -227,9 +255,19 @@ document
       }
       $dropdown.toggleClass('active');
     });
+
+    $(document).on('click', function (e) {
+      if (!$btn.is(e.target) && $dropdown.hasClass('active')) {
+
+        const key = buttonId;
+        if (!filterState[key] || (Array.isArray(filterState[key]) && !filterState[key].length)) {
+          $span.text(defaultText);
+        }
+        $dropdown.removeClass('active');
+      }
+    })
   }
 
-  // 關閉所有 dropdowns
   $(document).on('click', function (e) {
     if (!$(e.target).closest('.dropdown').length) {
       $('.dropdown-menu').removeClass('active');
@@ -260,8 +298,9 @@ document
       alert("請選擇有效的目的地");
       return;
     }
-    updateAreaDropdown(cityToAreas[filterState.city] || []);
-    fetchHotelsMain(filterState);
+    currentPage = 1;
+    allLoaded = false;
+    fetchHotelsMain(filterState, 1, false);
   });
 
   //飯店渲染 & 查詢
@@ -293,7 +332,7 @@ document
           <div class="hotel-extra">
             <div class="hotel-rating"><span class="rating-score">${hotel.rating ?? ''}</span></div>
             <div class="hotel-date">
-              ${hotel.nights ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
+              ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
               <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
             </div>
             <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
@@ -307,26 +346,78 @@ document
     updateResultTitle(hotels.length);
   }
 
+  function appendHotelList(hotels) {
+    const $list = $('#hotelList');
+    hotels.forEach(hotel => {
+      const $card = $(`
+        <article class="hotel-card">
+          <div class="hotel-image">
+            <img src="${hotel.imgUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
+          </div>
+          <div class="hotel-info">
+            <h2 class="hotel-name">
+              <a href="hotel-detail.html?id=${hotel.id}">${hotel.name}</a>
+            </h2>
+            <div class="hotel-location">
+              ${hotel.district}, ${hotel.city}
+              <a href="${hotel.mapUrl}" target="_blank">在地圖上顯示</a>
+              距市中心${hotel.distance}公里
+            </div>
+            <div class="hotel-type">${hotel.roomType}</div>
+          </div>
+          <div class="hotel-extra">
+            <div class="hotel-rating"><span class="rating-score">${hotel.rating ?? ''}</span></div>
+            <div class="hotel-date">
+              ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
+              <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
+            </div>
+            <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
+              查詢客房詳情
+            </button>
+          </div>
+        </article>
+      `);
+      $list.append($card);
+    });
+  }
+
   function updateResultTitle(count = 0) {
     const cityLabel = cityOptions.find(c => c.value === filterState.city)?.label || '請選擇城市';
     $('#cityText').text(cityLabel);
     $('#hotelCount').text(count);
   }
 
-  function fetchHotelsMain(filters) {
+  function fetchHotelsMain(filters, page = 1, append = false) {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (Array.isArray(value)) value.forEach(v => params.append(key, v));
       else if (value !== '' && value !== null && typeof value !== 'undefined') params.append(key, value);
     });
+    params.append('page', page);
+    params.append('size', pageSize);
+
+    loading = true;
 
     fetch('http://localhost:8080/api/hotels?' + params.toString())
       .then(res => res.json())
       .then(data => {
-        renderHotelList(data.hotels || []);
+        const hotels = data.hotels || [];
+        if (append) {
+          appendHotelList(hotels);
+        } else {
+          renderHotelList(hotels);
+          $('#hotelList').data('total', data.total || 0);
+        }
+        if (hotels.length < pageSize) allLoaded = true;
+        else allLoaded = false;
+        loading = false;
+        // if (!append) currentPage = 1;
       })
       .catch(err => {
-        $('#hotelList').empty().append(`<div class="no-result text-center py-4">資料載入失敗</div>`);
+        if (!append) {
+          $('#hotelList').empty().append(`<div class="no-result text-center py-4">資料載入失敗</div>`);
+        }
+        loading = false;
       });
   }
 
@@ -351,9 +442,11 @@ document
     fetch('http://localhost:8080/api/hotels?' + params.toString())
       .then(res => res.json())
       .then(data => {
+        console.log('地圖模式資料:', data);
         const $list = $('#mapHotelList');
         $list.empty();
         const hotels = data.hotels || [];
+        console.log('hotels:', hotels);
         if (!hotels.length) {
           $list.append(`<div class="no-result text-center py-4">查無資料</div>`);
           return;
@@ -362,7 +455,7 @@ document
           const $card = $(`
             <article class="hotel-card">
               <div class="hotel-image">
-                <img src="${hotel.imageUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
+                <img src="${hotel.imgUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
               </div>
               <div class="hotel-info">
                 <h2 class="hotel-name">
@@ -370,14 +463,14 @@ document
                 </h2>
                 <div class="hotel-location">
                   ${hotel.district}, ${hotel.city}
-                  距市中心${hotel.distance}公里
+                  距市中心${hotel.distance ?? '-'}公里
                 </div>
                 <div class="hotel-type">${hotel.roomType}</div>
               </div>
               <div class="hotel-extra">
                 <div class="hotel-rating"><span class="rating-score">${hotel.rating ?? ''}</span></div>
                 <div class="hotel-date">
-                  ${hotel.nights ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
+                  ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
                   <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
                 </div>
                 <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
@@ -388,10 +481,49 @@ document
           `);
           $list.append($card);
         });
+        initGoogleMap(hotels);
       })
       .catch(err => {
         $('#mapHotelList').empty().append(`<div class="no-result text-center py-4">資料載入失敗</div>`);
       });
+  }
+
+  function initGoogleMap(hotels = []) {
+    if (!hotels.length) return;
+  
+    const center = {
+      lat: parseFloat(hotels[0].lat),
+      lng: parseFloat(hotels[0].lng)
+    };
+  
+    const map = new google.maps.Map(document.getElementById("mapContainer"), {
+      zoom: 13,
+      center: center
+    });
+  
+    // 只建立一個 InfoWindow（注意 I 要大寫！）
+    const infoWindow = new google.maps.InfoWindow();
+  
+    hotels.forEach(hotel => {
+      if (hotel.lat && hotel.lng) {
+        const marker = new google.maps.Marker({
+          position: { lat: hotel.lat, lng: hotel.lng },
+          map: map,
+          title: hotel.name,
+        });
+  
+        marker.addListener('click', function () {
+          infoWindow.setContent(`
+            <div style="min-width: 180px;">
+              <strong>${hotel.name}</strong><br>
+              ${hotel.district ?? ''}, ${hotel.city ?? ''}<br>
+              <a href="hotel-detail.html?id=${hotel.id}" target="_blank">查看詳情</a>
+            </div>
+          `);
+          infoWindow.open(map, marker);
+        });
+      }
+    });
   }
 
   // Modal
@@ -433,8 +565,8 @@ document
 
     if (priceSlider && !priceSlider.noUiSlider) {
       noUiSlider.create(priceSlider, {
-        start: [1000, 80000], 
-        connect: true, 
+        start: [1000, 80000],
+        connect: true,
         range: { min: 500, max: 100000 },
         step: 100,
         format: {
@@ -475,4 +607,14 @@ document
     $('#filterModal').modal('hide');
     fetchHotelsMain(filterState);
   };
+  window.fetchHotelsMain = fetchHotelsMain;
+  window.filterState = filterState;
+});
+
+$(window).on('scroll', function () {
+  if (loading || allLoaded) return;
+  if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300) {
+    currentPage++;
+    fetchHotelsMain(filterState, currentPage, true); // append=true
+  }
 });

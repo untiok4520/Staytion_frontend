@@ -959,86 +959,6 @@ main .hotel-card {
     color: var(--color-primary);
 }
 
-/* .map-mode-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: none;
-    z-index: 9999;
-    background: var(--color-light);
-}
-
-.map-mode-container.active {
-    display: flex;
-}
-
-.map-mode-container .hotel-list {
-    width: 35%;
-    overflow-y: auto;
-    border-right: 1px solid var(--color-dark-gray);
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.map-mode-container .hotel-card {
-    padding: 16px;
-    margin-bottom: 12px;
-    border: 1px solid var(--color-dark-gray);
-    border-radius: 8px;
-    background: var(--color-panel);
-}
-
-.map-view {
-    flex: 1;
-    position: relative;
-}
-
-.fake-map {
-    width: 100%;
-    height: 100%;
-    background: #e2ecf5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-}
-
-.close-map {
-    color: var(--color-primary);
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: var(--color-light);
-    border: 1px solid var(--color-primary);
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    z-index: 10;
-    font-weight: bold;
-}
-
-.close-map:hover {
-    background: var(--button-hover);
-    border-color: var(--color-primary);
-    color: var(--color-light);
-}
-
-.close-map i {
-    pointer-events: none;
-}
-
-Consolidated the duplicate .btn-map entry
-.btn-map {
-    padding: 10px 20px;
-    background-color: var(--color-primary);
-    color: var(--color-light);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-} */
-
 #mapMode {
     display: none;
     position: fixed;
@@ -1078,7 +998,7 @@ Consolidated the duplicate .btn-map entry
     flex-direction: column;
 }
 
-.fake-map {
+/* .fake-map {
     flex: 1 1 0;
     margin: 24px;
     background: #dde3ed;
@@ -1088,7 +1008,7 @@ Consolidated the duplicate .btn-map entry
     justify-content: center;
     font-size: 1.5rem;
     color: #888;
-}
+} */
 
 .close-map {
     color: var(--color-primary);
