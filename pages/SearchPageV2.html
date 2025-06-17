@@ -254,7 +254,8 @@
   </main>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="/script/searchV2.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyYG7ui9nP1G9dR_pwhjopUdcO_hLbHxM&language=zh-TW"></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyYG7ui9nP1G9dR_pwhjopUdcO_hLbHxM&language=zh-TW"></script>
 </body>
 <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -269,7 +270,6 @@
           <div class="recommend-options">
             <button class="recommend-btn" data-recommend="rating">最高評價</button>
             <button class="recommend-btn" data-recommend="price">最低價格</button>
-            <button class="recommend-btn" data-recommend="facility">熱門設施</button>
           </div>
         </div>
         <hr class="modal-divider">
@@ -285,34 +285,7 @@
         <hr class="modal-divider">
         <div class="modal-section facility-section">
           <div class="section-title">設施</div>
-          <div class="facility-options">
-            <button type="button" class="facility-btn">
-              Wi-fi<i class="bi bi-wifi"></i></button>
-            <button type="button" class="facility-btn">
-              停車場<i class="bi bi-p-circle"></i></button>
-            <button type="button" class="facility-btn">
-              溫泉<i class="bi bi-water"></i></button>
-            <button type="button" class="facility-btn">
-              餐廳<i class="bi bi-fork-knife"></i></button>
-            <button type="button" class="facility-btn">
-              健身房<i class="bi bi-person-arms-up"></i></button>
-            <button type="button" class="facility-btn">
-              自助洗衣<i class="bi bi-disc"></i></button>
-            <button type="button" class="facility-btn">
-              寵物友善<i class="bi bi-person-hearts"></i></button>
-            <button type="button" class="facility-btn">
-              自行車友善<i class="bi bi-bicycle"></i></button>
-            <button type="button" class="facility-btn">
-              會議室<i class="bi bi-chat-left-text"></i></button>
-            <button type="button" class="facility-btn">
-              酒吧<i class="bi bi-cup-straw"></i></button>
-            <button type="button" class="facility-btn">
-              商店<i class="bi bi-shop"></i></button>
-            <button type="button" class="facility-btn">
-              接送服務<i class="bi bi-taxi-front"></i></button>
-            <button type="button" class="facility-btn">
-              無障礙設施<i class="bi bi-person-wheelchair"></i></button>
-          </div>
+          <div class="facility-options" id="facilityOptions"></div>
         </div>
       </div>
       <div class="modal-footer filter-modal-footer border-0">

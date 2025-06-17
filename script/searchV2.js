@@ -274,10 +274,31 @@ $(function () {
     }
   });
 
-  const priceOptions = [{ label: '500+', value: '500up' }, { label: '500~1000', value: '500-1000' }, { label: '1000~3000', value: '1000-3000' }, { label: '3000~6000', value: '3000-6000' }, { label: '6000~9000', value: '6000-9000' }, { label: '9000+', value: '9000up' }];
-  const facilityOptions = [{ label: 'Wi-Fi', value: 'wifi' }, { label: '停車場', value: 'parking' }, { label: '餐廳', value: 'restaurant' }, { label: '洗衣設備', value: 'laundry' }, { label: '可攜帶寵物', value: 'pet' }, { label: '商店', value: 'store' }, { label: '無障礙設施', value: 'accessible' }];
-  const scoreOptions = [{ label: '1 分以上', value: '1' }, { label: '2 分以上', value: '2' }, { label: '3 分以上', value: '3' }, { label: '4 分以上', value: '4' }, { label: '5 分以上', value: '5' }, { label: '6 分以上', value: '6' }, { label: '7 分以上', value: '7' }, { label: '8 分以上', value: '8' }, { label: '9 分以上', value: '9' }, { label: '10 分', value: '10' }];
-  const sortOptions = [{ label: '價格(高價優先)', value: 'price_highest' }, { label: '評分(由高到低)', value: 'rating_highest' }];
+  const priceOptions = [
+    { label: '500+', value: '500up' }, { label: '500~1000', value: '500-1000' },
+    { label: '1000~3000', value: '1000-3000' }, { label: '3000~6000', value: '3000-6000' },
+    { label: '6000~9000', value: '6000-9000' }, { label: '9000+', value: '9000up' }
+  ];
+  const facilityOptions = [
+    { id: 1, label: 'Wi-Fi', value: 'wifi' },
+    { id: 2, label: '停車場', value: 'parking' },
+    { id: 4, label: '餐廳', value: 'restaurant' },
+    { id: 6, label: '自助洗衣', value: 'laundry' },
+    { id: 7, label: '寵物友善', value: 'pet' },
+    { id: 11, label: '商店', value: 'store' },
+    { id: 13, label: '無障礙設施', value: 'accessible' }
+  ];
+  const scoreOptions = [
+    { label: '1 分以上', value: '1' }, { label: '2 分以上', value: '2' },
+    { label: '3 分以上', value: '3' }, { label: '4 分以上', value: '4' },
+    { label: '5 分以上', value: '5' }, { label: '6 分以上', value: '6' },
+    { label: '7 分以上', value: '7' }, { label: '8 分以上', value: '8' },
+    { label: '9 分以上', value: '9' }, { label: '10 分', value: '10' }
+  ];
+  const sortOptions = [
+    { label: '價格(高價優先)', value: 'price_highest' },
+    { label: '評分(由高到低)', value: 'rating_highest' }
+  ];
 
   function createOnSelect(key) {
     return (opt) => {
@@ -490,20 +511,20 @@ $(function () {
 
   function initGoogleMap(hotels = []) {
     if (!hotels.length) return;
-  
+
     const center = {
       lat: parseFloat(hotels[0].lat),
       lng: parseFloat(hotels[0].lng)
     };
-  
+
     const map = new google.maps.Map(document.getElementById("mapContainer"), {
       zoom: 13,
       center: center
     });
-  
+
     // 只建立一個 InfoWindow（注意 I 要大寫！）
     const infoWindow = new google.maps.InfoWindow();
-  
+
     hotels.forEach(hotel => {
       if (hotel.lat && hotel.lng) {
         const marker = new google.maps.Marker({
@@ -511,7 +532,7 @@ $(function () {
           map: map,
           title: hotel.name,
         });
-  
+
         marker.addListener('click', function () {
           infoWindow.setContent(`
             <div style="min-width: 180px;">
@@ -527,35 +548,74 @@ $(function () {
   }
 
   // Modal
+  // 設施固定清單
+  const FACILITIES = [
+    { id: 1, name: 'Wi-Fi', icon: 'bi bi-wifi' },
+    { id: 2, name: '停車場', icon: 'bi bi-p-circle' },
+    { id: 3, name: '溫泉', icon: 'bi bi-water' },
+    { id: 4, name: '餐廳', icon: 'bi bi-fork-knife' },
+    { id: 5, name: '健身房', icon: 'bi bi-person-arms-up' },
+    { id: 6, name: '自助洗衣', icon: 'bi bi-disc' },
+    { id: 7, name: '寵物友善', icon: 'bi bi-person-hearts' },
+    { id: 8, name: '自行車友善', icon: 'bi bi-bicycle' },
+    { id: 9, name: '會議室', icon: 'bi bi-chat-left-text' },
+    { id: 10, name: '酒吧', icon: 'bi bi-cup-straw' },
+    { id: 11, name: '商店', icon: 'bi bi-shop' },
+    { id: 12, name: '接送服務', icon: 'bi bi-taxi-front' },
+    { id: 13, name: '無障礙設施', icon: 'bi bi-person-wheelchair' }
+  ];
+
+  function renderFacilityOptions() {
+    const $facilityOptions = $('#facilityOptions');
+    $facilityOptions.empty();
+    FACILITIES.forEach(f => {
+      $facilityOptions.append(`
+      <button type="button" class="facility-btn" data-id="${f.id}">
+        ${f.name} <i class="${f.icon}"></i>
+      </button>
+    `);
+    });
+  }
+  renderFacilityOptions();
 
   let priceSlider, minPriceEl, maxPriceEl, applyBtn;
 
-  function updateHotelCountText() {
-    const recommendBtns = document.querySelectorAll('.recommend-btn.active').length;
-    const facilityBtns = document.querySelectorAll('.facility-btn.active').length;
-    let isPriceChanged = false;
-    if (priceSlider && priceSlider.noUiSlider) {
-      const currentRange = priceSlider.noUiSlider.get(true);
-      if (currentRange[0] !== 1000 || currentRange[1] !== 80000) {
-        isPriceChanged = true;
-      }
-    }
-    const totalSelected = recommendBtns + facilityBtns + (isPriceChanged ? 1 : 0);
-    const count = 1000 + totalSelected * 50; // 僅為示意
-    if (applyBtn) {
-      applyBtn.textContent = `顯示 ${count}+ 住宿`;
-    }
+  function fetchFilteredHotelCount() {
+    const params = new URLSearchParams();
+    Object.entries(filterState).forEach(([key, value]) => {
+      if (Array.isArray(value)) value.forEach(v => params.append(key, v));
+      else if (value !== '' && value !== null && typeof value !== 'undefined') params.append(key, value);
+    });
+    return fetch('http://localhost:8080/api/hotels/count?' + params.toString())
+      .then(res => res.json())
+      .then(data => data.count || 0);
   }
 
-  function toggleButton(selector) {
-    $(document).on('click', selector, function () {
-      $(this).toggleClass('active');
-      updateHotelCountText();
+  function updateHotelCountText() {
+    fetchFilteredHotelCount().then(count => {
+      console.log('Fetched hotel count:', count, 'applyBtn:', applyBtn);
+      if (applyBtn) {
+        applyBtn.textContent = `顯示 ${count}+ 住宿`;
+      }
     });
   }
 
-  toggleButton('.recommend-btn');
-  toggleButton('.facility-btn');
+  $(document).on('click', '.facility-btn', function () {
+    $(this).toggleClass('active');
+    updateFacilityFilterState();
+    updateHotelCountText();
+  });
+
+  function updateFacilityFilterState() {
+    filterState.amenity = [];
+    $('.facility-btn.active').each(function () {
+      filterState.amenity.push($(this).data('id'));
+    });
+  }
+  $(document).on('click', '.recommend-btn', function () {
+    $(this).toggleClass('active');
+    updateHotelCountText();
+  });
 
   $('#filterModal').on('shown.bs.modal', function () {
     priceSlider = document.getElementById('priceSlider');
@@ -574,42 +634,47 @@ $(function () {
           from: value => Number(value)
         }
       });
-
       priceSlider.noUiSlider.on('update', function (values) {
         minPriceEl.textContent = values[0];
         maxPriceEl.textContent = values[1];
         filterState.price = [values[0], values[1]];
       });
-
       priceSlider.noUiSlider.on('change', updateHotelCountText);
     }
     updateHotelCountText();
   });
 
-  $('#clearAllBtn').on('click', function () {
+  $('#filterModal').on('hidden.bs.modal', function () {
     $('.recommend-btn, .facility-btn').removeClass('active');
-    if (priceSlider && priceSlider.noUiSlider) {
-      priceSlider.noUiSlider.set([1000, 80000]);
-    }
     filterState.recommend = [];
     filterState.facilities = [];
     filterState.price = [];
+    if (priceSlider && priceSlider.noUiSlider) {
+      priceSlider.noUiSlider.set([1000, 80000]);
+    }
+  });
 
+  $('#clearAllBtn').on('click', function () {
+    $('.recommend-btn, .facility-btn').removeClass('active');
+    filterState.recommend = [];
+    filterState.facilities = [];
+    filterState.price = [];
+    if (priceSlider && priceSlider.noUiSlider) {
+      priceSlider.noUiSlider.set([1000, 80000]);
+    }
     updateHotelCountText();
   });
 
   window.applyFilter = function () {
-    filterState.facilities = [];
-    $('.facility-btn.active').each(function () {
-      filterState.facilities.push($(this).text());
-    });
-
+    updateFacilityFilterState();
     $('#filterModal').modal('hide');
     fetchHotelsMain(filterState);
   };
+
   window.fetchHotelsMain = fetchHotelsMain;
   window.filterState = filterState;
 });
+
 
 $(window).on('scroll', function () {
   if (loading || allLoaded) return;
