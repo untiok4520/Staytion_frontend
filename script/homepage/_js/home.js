@@ -177,12 +177,6 @@ updateGuestText();
 const searchBtn = document.getElementById('search-btn');
 const searchHistory = document.querySelector('.search-history');
 
-// 點擊搜尋按鈕後顯示搜尋紀錄
-searchBtn.addEventListener('click', (e) => {
-    e.preventDefault();  // 防止表單提交
-    searchHistory.style.display = 'block';  // 顯示搜尋紀錄
-});
-
 // 取得容器和箭頭按鈕
 const historyCarousel = document.getElementById('history-carousel');
 const nexthistoryBtn = document.getElementById('scroll-next-history');
@@ -203,7 +197,7 @@ function updateArrowsVisibility() {
     const totalCards = historyCarousel.children.length;
 
     // 超過 5 張卡片時顯示箭頭按鈕
-    if (totalCards > 5) {
+    if (totalCards >= 5) {
         nexthistoryBtn.style.display = 'block';
         prevhistoryBtn.style.display = 'block';
     } else {
@@ -220,56 +214,88 @@ prevhistoryBtn.addEventListener('click', () => {
     historyCarousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
 });
 
-const historyData = [
-    {
-        city: "彰化",
-        img: "../../assets/homepage/img/changhua.jpg",
-        date: "2025-06-11 至 2025-06-19",
-        people: "2位"
-    },{
-        city: "彰化",
-        img: "../../assets/homepage/img/changhua.jpg",
-        date: "2025-06-11 至 2025-06-19",
-        people: "2位"
-    },{
-        city: "彰化",
-        img: "../../assets/homepage/img/changhua.jpg",
-        date: "2025-06-11 至 2025-06-19",
-        people: "2位"
-    },{
-        city: "彰化",
-        img: "../../assets/homepage/img/changhua.jpg",
-        date: "2025-06-11 至 2025-06-19",
-        people: "2位"
-    },{
-        city: "彰化",
-        img: "../../assets/homepage/img/changhua.jpg",
-        date: "2025-06-11 至 2025-06-19",
-        people: "2位"
-    },{
-        city: "彰化",
-        img: "../../assets/homepage/img/changhua.jpg",
-        date: "2025-06-11 至 2025-06-19",
-        people: "2位"
-    }
-    // 可繼續加入更多紀錄
-];
+// 假設登入使用者 ID 為 1
+const userId = 1;
 
-historyData.forEach(item => {
-    const card = document.createElement("div");
-    card.classList.add("history-card", "d-flex", "border", "rounded", "p-2");
-    card.style.minWidth = "250px"; // 卡片寬度可自訂
-    card.innerHTML = `
+async function fetchSearchHistory(userId) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/histories/${userId}`);
+        if (!response.ok) throw new Error('無法取得歷史紀錄');
+
+        const data = await response.json();
+
+        historyCarousel.innerHTML = ""; // 清空內容
+
+        data.forEach(item => {
+            // 這裡的欄位名稱請根據你的 API 回傳格式調整
+            const city = item.cname || '未知城市';
+            const imgUrl = item.imgUrl || '../../assets/homepage/img/default.jpg';
+            const startDate = item.checkInDate || '未知日期';
+            const endDate = item.checkOutDate || '未知日期';
+            const total = item.total || '未知人數';
+
+            const card = document.createElement("div");
+            card.classList.add("history-card", "d-flex", "border", "rounded", "p-2");
+            card.style.minWidth = "250px";
+
+            card.innerHTML = `
         <div class="history-img me-3">
-        <img src="${item.img}" alt="${item.city}" width="100px" class="rounded">
+          <img src="${imgUrl}" alt="${city}" width="100px" class="rounded">
         </div>
         <div class="history-content">
-        <div class="history-item fw-bold">${item.city}</div>
-        <div class="history-item">${item.date}</div>
-        <div class="history-item">${item.people}</div>
+          <div class="history-item fw-bold">${city}</div>
+          <div class="history-item">${startDate} 至 <br>${endDate}</div>
+          <div class="history-item">${total} 位</div>
         </div>
-          `;
-    historyCarousel.appendChild(card);
+      `;
+
+            historyCarousel.appendChild(card);
+        });
+
+        updateArrowsVisibility();
+
+    } catch (err) {
+        console.error("取得搜尋紀錄失敗:", err);
+    }
+}
+
+
+async function addSearchHistory(userId, city, checkInDate, checkOutDate, adults, kids) {
+    try {
+        await fetch(`http://localhost:8080/api/histories/${userId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                cityName: city,
+                checkInDate,
+                checkOutDate,
+                searchTime: new Date().toISOString(), // 自動產生時間
+                adults,
+                kids
+            })
+        });
+
+        await fetchSearchHistory(userId); // 成功後更新搜尋歷史
+        searchHistory.style.display = 'block';
+    } catch (err) {
+        console.error('新增搜尋紀錄失敗:', err);
+    }
+}
+
+
+searchBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const city = document.getElementById('destinationInput').value || '台北市';
+    const dateInput = document.getElementById('daterange');
+    const dateRange = dateInput.value.split(' 至 ');
+    const startDate = dateRange[0]?.trim() || null;
+    const endDate = dateRange[1]?.trim() || null;
+
+    const adults = guestCounts?.adults ?? 1;
+    const kids = guestCounts?.children ?? 0;
+
+    await addSearchHistory(userId, city, startDate, endDate, adults, kids);
 });
 
 // 更新箭頭顯示狀態
@@ -289,31 +315,54 @@ prevBtn.addEventListener('click', () => {
     carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
 });
 
-// 初始化加入城市卡片
-const allCities = [
-    { name: '台中', img: '../../assets/homepage/img/taichung.jpg' },
-    { name: '台北', img: '../../assets/homepage/img/taichung.jpg' },
-    { name: '高雄', img: '../../assets/homepage/img/taichung.jpg' },
-    { name: '台南', img: '../../assets/homepage/img/taichung.jpg' },
-    { name: '花蓮', img: '../../assets/homepage/img/taichung.jpg' },
-    { name: '澎湖', img: '../../assets/homepage/img/taichung.jpg' },
-    { name: '宜蘭', img: '../../assets/homepage/img/taichung.jpg' },
-    { name: '台東', img: '../../assets/homepage/img/taichung.jpg' }
-];
+// 發送多次請求並渲染城市資料
+const cityIds = [1, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const citiesData = [];  // 存放城市資料
 
-allCities.forEach(city => {
-    const card = document.createElement('div');
-    card.classList.add('card');
-    card.innerHTML = `<a href="#" class="text-decoration-none text-dark d-block position-relative">
-    <img src="${city.img}" class="card-img-top" alt="${city.name}">
-    <div class="card-body text-center">
-    <h5 class="card-title fw-bold">${city.name}</h5>
-    <p class="card-text text-muted small">X間住宿</p>
-    </a>
-    </div>
+// 用 Promise.all 來等所有的請求完成後再渲染
+async function loadCitiesData() {
+    try {
+        const promises = cityIds.map(id =>
+            axios.get(`http://localhost:8080/api/city/${id}/hotel-count`)
+        );
+
+        // 等待所有請求都完成
+        const responses = await Promise.all(promises);
+
+        // 處理每一個回應的數據
+        responses.forEach(response => {
+            const city = response.data;
+
+            // 把城市資料加入到 citiesData 中
+            citiesData.push(city);
+
+            // 渲染城市卡片
+            renderCityCard(city);
+        });
+    } catch (error) {
+        console.error('獲取城市資料出錯:', error);
+    }
+}
+
+// 渲染城市卡片的函數
+function renderCityCard(city) {
+    const cityCarousel = document.getElementById('city-carousel');
+    const cityCard = document.createElement('div');
+    cityCard.classList.add('city-card');
+
+    cityCard.innerHTML = `
+        <div class="card">
+            <a href="#" class="text-decoration-none text-dark d-block position-relative">
+            <img src="${city.img_url}" class="card-img-top" alt="${city.city}">
+            <div class="card-body text-center">
+                <h5 class="ccard-title fw-bold">${city.city}</h5>
+                <p class="card-text text-muted small">${city.hotelCount}間住宿</p>
+            </div>
+            </a>
+        </div>
     `;
-    carousel.appendChild(card);
-});
+    cityCarousel.appendChild(cityCard);
+}
 
 
 // 精選飯店 -------------------------------------------------
@@ -331,38 +380,45 @@ prevRecommendationBtn.addEventListener('click', () => {
     recommendationCarousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
 });
 
-// 初始化加入住宿推薦卡片
-const allRecommendations = [
-    { name: 'XX 飯店', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '台中市', district: 'xx區', rating: '8.7', price: 'NT$2,500 / 晚起' },
-    { name: 'YY 度假村', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '台北市', district: 'xx區', rating: '9.1', price: 'NT$3,000 / 晚起' },
-    { name: 'ZZ 民宿', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '高雄市', district: 'xx區', rating: '8.3', price: 'NT$2,000 / 晚起' },
-    { name: 'AA 酒店', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '台南市', district: 'xx區', rating: '9.2', price: 'NT$2,800 / 晚起' },
-    { name: 'BB 旅館', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '花蓮市', district: 'xx區', rating: '8.5', price: 'NT$2,200 / 晚起' },
-    { name: 'CC 度假村', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '澎湖縣', district: 'xx區', rating: '9.0', price: 'NT$3,200 / 晚起' },
-    { name: 'DD 酒店', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '宜蘭市', district: 'xx區', rating: '8.8', price: 'NT$2,600 / 晚起' },
-    { name: 'EE 旅館', img: 'https://taiwan.taiwanstay.net.tw/twpic/92202.jpg?v=20250529', city: '台東市', district: 'xx區', rating: '8.9', price: 'NT$2,700 / 晚起' }
-];
+async function loadTopHotels() {
+    try {
+        const response = await fetch('http://localhost:8080/api/top-hotels');
+        if (!response.ok) {
+            throw new Error('網路錯誤');
+        }
+        const hotels = await response.json();
 
-allRecommendations.forEach(recommendation => {
-    const card = document.createElement('div');
-    card.classList.add('card');
-    card.innerHTML = ` <a href="#" class="text-decoration-none text-dark d-block position-relative">
-                <img src="${recommendation.img}" class="card-img-top" alt="${recommendation.name}">
-                <button class="btn btn-light heart-btn position-absolute top-0 end-0 m-2 rounded-circle shadow-sm">
-                    <i class="bi bi-heart"></i>
-                 </button>
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">${recommendation.name}</h5>
-                    <p class="card-text text-muted small"><i class="bi bi-geo-alt me-1"></i> ${recommendation.district}, ${recommendation.city}, </p>                 <p class="mb-1">
-                        <span class="badge rate">${recommendation.rating}</span>
-                        <small class="text-muted ms-1">120 則評價</small>
-                    </p>
-                    <p class="fw-bold mt-2">${recommendation.price}</p>
-                    </a>
-                </div>
+        hotels.forEach(hotel => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+
+            const imgSrc = hotel.img_url || 'https://www.taiwan.net.tw/att/1/big_scenic_spots/pic_7927_32.jpg'; // 預設圖
+
+            card.innerHTML = `
+                <a href="#" class="text-decoration-none text-dark d-block position-relative">
+                    <img src="${imgSrc}" class="card-img-top" alt="${hotel.hotelName}">
+                    <button class="btn btn-light heart-btn position-absolute top-0 end-0 m-2 rounded-circle shadow-sm">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">${hotel.hotelName}</h5>
+                        <p class="card-text text-muted small"><i class="bi bi-geo-alt me-1"></i> ${hotel.districtName}, ${hotel.cityName}</p>
+                        <p class="mb-1">
+                            <span class="badge rate">${hotel.averageRating.toFixed(1)}</span>
+                            <small class="text-muted ms-1">${hotel.reviewCount} 則評價</small>
+                        </p>
+                        <p class="fw-bold mt-2">NT$${hotel.lowestPrice} / 晚起</p>
+                    </div>
+                </a>
             `;
-    recommendationCarousel.appendChild(card);
-});
+            recommendationCarousel.appendChild(card);
+        });
+    } catch (error) {
+        console.error('取得精選飯店失敗:', error);
+    }
+}
+
+
 
 // 收藏功能
 document.addEventListener('click', function (e) {
@@ -375,4 +431,10 @@ document.addEventListener('click', function (e) {
         icon.classList.toggle('bi-heart-fill');
         icon.classList.toggle('text-danger');
     }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadCitiesData();
+    loadTopHotels();
+    fetchSearchHistory(1);
 });

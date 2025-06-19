@@ -339,9 +339,11 @@
     padding-bottom: 1rem;
 }
 
+.city-card .card {
+    width: 18rem;
+}
 
 
-.city-carousel .card,
 .recommendations .card {
     flex: 0 0 250px;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
@@ -366,12 +368,16 @@
 @media (max-width: 768px) {
 
     .history-card,
-    .city-carousel .card,
     .recommendations .card {
         flex: 0 0 150px;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
     }
+
+    .city-card .card {
+         width: 9.4rem;
+    }
+
 
     .heart-btn {
         width: 30px;
@@ -387,7 +393,6 @@
         font-size: 0.8rem;
     }
 
-    .city-carousel .card-body,
     .recommendations .card-body {
         padding: 0.5rem
     }
