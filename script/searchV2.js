@@ -178,9 +178,9 @@ $(function () {
         filterState.checkout = "";
         return;
       }
-      const [checkin, checkout] = dateStr.split(' to ');
-      filterState.checkin = checkin;
-      filterState.checkout = checkout || "";
+      // 直接存選到的兩個日期
+      filterState.checkin = selectedDates[0] ? selectedDates[0].toISOString().split('T')[0] : "";
+      filterState.checkout = selectedDates[1] ? selectedDates[1].toISOString().split('T')[0] : "";
     }
   });
 
@@ -217,6 +217,14 @@ $(function () {
     updateGuestText();
   });
   updateGuestText();
+
+  function calculateNights(checkin, checkout) {
+    if (!checkin || !checkout) return '-';
+    const inDate = new Date(checkin);
+    const outDate = new Date(checkout);
+    const diff = (outDate - inDate) / (1000 * 60 * 60 * 24);
+    return diff > 0 ? diff : '-';
+  }
 
   //Dropdowns & 篩選
   function closeAllDropdownsExcept(exceptId) {
@@ -326,6 +334,11 @@ $(function () {
 
   //飯店渲染 & 查詢
   function renderHotelList(hotels) {
+    console.log("DEBUG 渲染房型", {
+      checkin: filterState.checkin,
+      checkout: filterState.checkout,
+      nights: calculateNights(filterState.checkin, filterState.checkout)
+    });
     const $list = $('#hotelList');
     $list.empty();
     if (!hotels || !hotels.length) {
@@ -333,6 +346,12 @@ $(function () {
       updateResultTitle(0);
       return;
     }
+
+    const nights = calculateNights(filterState.checkin, filterState.checkout);
+    const adults = filterState.adult ?? '-';
+    console.log('>>> 渲染房型, night:', nights, 'checkin:', filterState.checkin, 'checkout:', filterState.checkout);
+
+
     hotels.forEach(hotel => {
       const $card = $(`
         <article class="hotel-card">
@@ -353,7 +372,7 @@ $(function () {
           <div class="hotel-extra">
             <div class="hotel-rating"><span class="rating-score">${hotel.rating ?? ''}</span></div>
             <div class="hotel-date">
-              ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
+              ${nights} 晚，${adults} 成人<br>
               <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
             </div>
             <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
@@ -548,7 +567,6 @@ $(function () {
   }
 
   // Modal
-  // 設施固定清單
   const FACILITIES = [
     { id: 1, name: 'Wi-Fi', icon: 'bi bi-wifi' },
     { id: 2, name: '停車場', icon: 'bi bi-p-circle' },
@@ -625,9 +643,9 @@ $(function () {
 
     if (priceSlider && !priceSlider.noUiSlider) {
       noUiSlider.create(priceSlider, {
-        start: [1000, 80000],
+        start: [1000, 8000],
         connect: true,
-        range: { min: 500, max: 100000 },
+        range: { min: 500, max: 20000 },
         step: 100,
         format: {
           to: value => Math.round(value),
@@ -650,7 +668,7 @@ $(function () {
     filterState.facilities = [];
     filterState.price = [];
     if (priceSlider && priceSlider.noUiSlider) {
-      priceSlider.noUiSlider.set([1000, 80000]);
+      priceSlider.noUiSlider.set([1000, 8000]);
     }
   });
 
@@ -660,7 +678,7 @@ $(function () {
     filterState.facilities = [];
     filterState.price = [];
     if (priceSlider && priceSlider.noUiSlider) {
-      priceSlider.noUiSlider.set([1000, 80000]);
+      priceSlider.noUiSlider.set([1000, 8000]);
     }
     updateHotelCountText();
   });
@@ -680,6 +698,6 @@ $(window).on('scroll', function () {
   if (loading || allLoaded) return;
   if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300) {
     currentPage++;
-    fetchHotelsMain(filterState, currentPage, true); // append=true
+    fetchHotelsMain(filterState, currentPage, true);
   }
 });
