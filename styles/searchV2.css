@@ -408,7 +408,7 @@ textarea {
     background: var(--color-light);
     text-align: center;
     cursor: pointer;
-    width: 120px;
+    width: 140px;
     margin-right: 6px;
     transition: background 0.2s, color 0.2s;
     box-sizing: border-box;
@@ -997,18 +997,6 @@ main .hotel-card {
     display: flex;
     flex-direction: column;
 }
-
-/* .fake-map {
-    flex: 1 1 0;
-    margin: 24px;
-    background: #dde3ed;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: #888;
-} */
 
 .close-map {
     color: var(--color-primary);

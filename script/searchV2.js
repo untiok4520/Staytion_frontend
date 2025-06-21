@@ -1,6 +1,6 @@
 //V3.js
 let currentPage = 1;
-const pageSize = 10;
+const pageSize = 5;
 let loading = false;
 let allLoaded = false;
 
@@ -77,6 +77,7 @@ $(function () {
   };
 
   let cityOptions = [];
+  let areaOptions = [];
   let areaOptionsMap = {};
 
   // 取得所有城市
@@ -89,6 +90,18 @@ $(function () {
       });
   }
 
+  // 取得所有區域
+  function fetchAreasAll(callback) {
+    fetch('http://localhost:8080/api/areas/all')
+      .then(res => res.json())
+      .then(data => {
+        areaOptions = data || [];
+        callback && callback(areaOptions);
+      });
+  }
+
+  fetchCities();
+  fetchAreasAll();
 
   function fetchAreas(cityValue, callback) {
     console.log('fetchAreas cityValue:', cityValue, typeof cityValue);
@@ -109,33 +122,104 @@ $(function () {
       });
   }
 
-  const suggestionsEl = $("#suggestions");
-  const destinationInput = $("#destinationInput");
 
-  function showSuggestions(keyword = "") {
-    const filtered = cityOptions.filter(city => city.label.includes(keyword)).map(city => city.label);
-    suggestionsEl.html(filtered.map(cityLabel => `<li class="list-group-item">${cityLabel}</li>`).join(""));
-    suggestionsEl.css('display', filtered.length ? "block" : "none");
+  const destinationInput = $("#destinationInput");
+  const $dropdown = $("#suggestions");
+
+  function showAllCities() {
+    $dropdown.empty();
+    cityOptions.forEach(opt => {
+      $dropdown.append(`<li class="dropdown-item" data-label="${opt.label}" data-value="${opt.value}">${opt.label}</li>`);
+    });
+    $dropdown.show();
   }
 
-  fetchCities();
+  // 依關鍵字即時篩選
+  function filterDropdown(keyword) {
+    if (!keyword) {
+      showAllCities();
+      return;
+    }
+    let cityFiltered = cityOptions.filter(opt => opt.label.includes(keyword));
+    let areaFiltered = areaOptions.filter(opt => opt.label.includes(keyword));
+    let filtered = [...cityFiltered, ...areaFiltered];
 
-  destinationInput.on("input", () => { showSuggestions(destinationInput.val().trim()); });
-  destinationInput.on("focus", () => { showSuggestions(); });
-  suggestionsEl.on("click", "li", function () {
-    const cityLabel = $(this).text();
-    destinationInput.val(cityLabel);
-    suggestionsEl.hide();
-    const cityObj = cityOptions.find(c => c.label === cityLabel);
-    filterState.city = cityObj ? cityObj.value : "";
-    filterState.area = '';
-    $('#area span').text('區域');
-    $('#areaDropdown').removeClass('active');
-    fetchAreas(filterState.city, updateAreaDropdown);
+    $dropdown.empty();
+    if (!filtered.length) {
+      $dropdown.append('<li class="dropdown-item">查無資料</li>');
+      return;
+    }
+    filtered.forEach(opt => {
+      $dropdown.append(`<li class="dropdown-item" data-label="${opt.label}" data-value="${opt.value}">${opt.label}</li>`);
+    });
+    $dropdown.show();
+  }
+
+  destinationInput.on("input", function () {
+    filterDropdown($(this).val().trim());
   });
-  $(document).on("click", (e) => {
-    if (!suggestionsEl.is(e.target) && suggestionsEl.has(e.target).length === 0 && !destinationInput.is(e.target)) {
-      suggestionsEl.hide();
+
+  destinationInput.on("focus", function () {
+    showAllCities();
+  });
+
+  $dropdown.on("click", "li", function () {
+    const label = $(this).data('label');
+    const value = $(this).data('value');
+    if (!value) return; // 防止查無資料
+    destinationInput.val(label);
+    filterState.city = value;
+    filterState.area = "";
+    // fetchHotelsMain(filterState);
+    $dropdown.hide();
+  });
+
+  destinationInput.on("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const inputVal = $(this).val().trim();
+
+      let cityObj = cityOptions.find(opt => opt.label === inputVal);
+
+      let areaObj = areaOptions.find(opt => opt.label === inputVal);
+
+      if (cityObj) {
+        filterState.city = cityObj.value;
+        filterState.area = "";
+        fetchHotelsMain(filterState);
+        $dropdown.hide();
+      } else if (areaObj) {
+        filterState.city = areaObj.city;
+        filterState.area = areaObj.value;
+        fetchHotelsMain(filterState);
+        $dropdown.hide();
+      } else {
+        // 之後考慮多做一層模糊查詢,例如台北市,輸入"台"也會顯示選項
+        // 
+        let fuzzyCities = cityOptions.filter(opt => opt.label.includes(inputVal));
+        let fuzzyAreas = areaOptions.filter(opt => opt.label.includes(inputVal));
+
+        if (fuzzyCities.length === 1) {
+          filterState.city = fuzzyCities[0].value;
+          filterState.area = "";
+          fetchHotelsMain(filterState);
+          $dropdown.hide();
+        } else if (fuzzyAreas.length === 1) {
+          filterState.city = fuzzyAreas[0].city;
+          filterState.area = fuzzyAreas[0].value;
+          // fetchHotelsMain(filterState);
+          $dropdown.hide();
+        } else {
+          alert("請選擇有效的目的地");
+        }
+      }
+    }
+  });
+
+  // 點外面時關閉下拉
+  $(document).on("click", function (e) {
+    if (!$(e.target).is('#destinationInput') && !$(e.target).closest('#suggestions').length) {
+      $dropdown.hide();
     }
   });
 
@@ -143,6 +227,15 @@ $(function () {
     console.log('updateAreaDropdown:', areaList);
     const $ul = $('#areaDropdown');
     $ul.empty();
+    $('<li></li>')
+      .text('全部區域')
+      .on('click', function () {
+        $('#area span').text('區域');
+        $ul.removeClass('active');
+        filterState.area = '';
+        // 可選：fetchHotelsMain(filterState);
+      })
+      .appendTo($ul);
     areaList.forEach(area => {
       $('<li></li>')
         .text(area.label)
@@ -150,10 +243,11 @@ $(function () {
           $('#area span').text(area.label);
           $ul.removeClass('active');
           filterState.area = area.value;
+          fetchHotelsMain(filterState);
         })
         .appendTo($ul);
     });
-    if (!areaList.length) $('#area span').text('區域');
+    if (!areaList.length) $('#area span').text('全部區域');
   }
 
   $('#area').on('click', function (e) {
@@ -275,7 +369,7 @@ $(function () {
       }
     })
   }
-
+  //控制所有下拉選單
   $(document).on('click', function (e) {
     if (!$(e.target).closest('.dropdown').length) {
       $('.dropdown-menu').removeClass('active');
@@ -283,11 +377,12 @@ $(function () {
   });
 
   const priceOptions = [
-    { label: '500+', value: '500up' }, { label: '500~1000', value: '500-1000' },
+    { label: '全部價格', value: '' }, { label: '500~1000', value: '500-1000' },
     { label: '1000~3000', value: '1000-3000' }, { label: '3000~6000', value: '3000-6000' },
     { label: '6000~9000', value: '6000-9000' }, { label: '9000+', value: '9000up' }
   ];
   const facilityOptions = [
+    { label: '熱門設施', value: '' },
     { id: 1, label: 'Wi-Fi', value: 'wifi' },
     { id: 2, label: '停車場', value: 'parking' },
     { id: 4, label: '餐廳', value: 'restaurant' },
@@ -297,11 +392,9 @@ $(function () {
     { id: 13, label: '無障礙設施', value: 'accessible' }
   ];
   const scoreOptions = [
-    { label: '1 分以上', value: '1' }, { label: '2 分以上', value: '2' },
-    { label: '3 分以上', value: '3' }, { label: '4 分以上', value: '4' },
-    { label: '5 分以上', value: '5' }, { label: '6 分以上', value: '6' },
-    { label: '7 分以上', value: '7' }, { label: '8 分以上', value: '8' },
-    { label: '9 分以上', value: '9' }, { label: '10 分', value: '10' }
+    { label: '所有評分', value: '' }, { label: '5 分以上', value: '5' },
+    { label: '6 分以上', value: '6' }, { label: '7 分以上', value: '7' },
+    { label: '8 分以上', value: '8' }, { label: '9 分以上', value: '9' }
   ];
   const sortOptions = [
     { label: '價格(高價優先)', value: 'price_highest' },
@@ -347,10 +440,10 @@ $(function () {
       return;
     }
 
+    //飯店列表幾晚除錯
     const nights = calculateNights(filterState.checkin, filterState.checkout);
     const adults = filterState.adult ?? '-';
     console.log('>>> 渲染房型, night:', nights, 'checkin:', filterState.checkin, 'checkout:', filterState.checkout);
-
 
     hotels.forEach(hotel => {
       const $card = $(`
@@ -370,7 +463,11 @@ $(function () {
             <div class="hotel-type">${hotel.roomType}</div>
           </div>
           <div class="hotel-extra">
-            <div class="hotel-rating"><span class="rating-score">${hotel.rating ?? ''}</span></div>
+            <div class="hotel-rating">
+              <span class="rating-score">
+                ${hotel.rating !== undefined && hotel.rating !== null ? hotel.rating.toFixed(1) : ''}
+                </span>
+              </div>
             <div class="hotel-date">
               ${nights} 晚，${adults} 成人<br>
               <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
@@ -386,6 +483,7 @@ $(function () {
     updateResultTitle(hotels.length);
   }
 
+  //動態新增所有飯店
   function appendHotelList(hotels) {
     const $list = $('#hotelList');
     hotels.forEach(hotel => {
@@ -406,7 +504,11 @@ $(function () {
             <div class="hotel-type">${hotel.roomType}</div>
           </div>
           <div class="hotel-extra">
-            <div class="hotel-rating"><span class="rating-score">${hotel.rating ?? ''}</span></div>
+            <div class="hotel-rating">
+              <span class="rating-score">
+                ${hotel.rating !== undefined && hotel.rating !== null ? hotel.rating.toFixed(1) : ''}
+              </span>
+            </div>
             <div class="hotel-date">
               ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
               <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
@@ -427,6 +529,7 @@ $(function () {
     $('#hotelCount').text(count);
   }
 
+  //無限滾動及分頁處理
   function fetchHotelsMain(filters, page = 1, append = false) {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
@@ -448,6 +551,8 @@ $(function () {
           renderHotelList(hotels);
           $('#hotelList').data('total', data.total || 0);
         }
+        updateResultTitle(data.total || 0);
+
         if (hotels.length < pageSize) allLoaded = true;
         else allLoaded = false;
         loading = false;
@@ -461,10 +566,9 @@ $(function () {
       });
   }
 
-  //地圖模式
   window.openMapMode = function () {
     $('#mapMode').addClass('active');
-    renderMapHotelList(); // 每次打開都重新查詢
+    renderMapHotelList();
   };
 
   window.closeMapMode = function () {
@@ -502,13 +606,17 @@ $(function () {
                   <a href="hotel-detail.html?id=${hotel.id}">${hotel.name}</a>
                 </h2>
                 <div class="hotel-location">
-                  ${hotel.district}, ${hotel.city}
-                  距市中心${hotel.distance ?? '-'}公里
+                   ${hotel.district}, ${hotel.city}
+                   距市中心${hotel.distance ?? '-'}公里
                 </div>
                 <div class="hotel-type">${hotel.roomType}</div>
               </div>
               <div class="hotel-extra">
-                <div class="hotel-rating"><span class="rating-score">${hotel.rating ?? ''}</span></div>
+                <div class="hotel-rating">
+                  <span class="rating-score">
+                  ${hotel.rating !== undefined && hotel.rating !== null ? hotel.rating.toFixed(1) : ''}
+                  </span>
+                </div>
                 <div class="hotel-date">
                   ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
                   <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
@@ -541,7 +649,6 @@ $(function () {
       center: center
     });
 
-    // 只建立一個 InfoWindow（注意 I 要大寫！）
     const infoWindow = new google.maps.InfoWindow();
 
     hotels.forEach(hotel => {
@@ -566,7 +673,7 @@ $(function () {
     });
   }
 
-  // Modal
+  // Modal(選項寫死,讓id跟後端取資料)
   const FACILITIES = [
     { id: 1, name: 'Wi-Fi', icon: 'bi bi-wifi' },
     { id: 2, name: '停車場', icon: 'bi bi-p-circle' },
@@ -598,6 +705,7 @@ $(function () {
 
   let priceSlider, minPriceEl, maxPriceEl, applyBtn;
 
+  //modal右下住宿更新
   function fetchFilteredHotelCount() {
     const params = new URLSearchParams();
     Object.entries(filterState).forEach(([key, value]) => {
@@ -635,6 +743,7 @@ $(function () {
     updateHotelCountText();
   });
 
+  //modal選項及價錢滑桿控制
   $('#filterModal').on('shown.bs.modal', function () {
     priceSlider = document.getElementById('priceSlider');
     minPriceEl = document.getElementById('minPrice');
@@ -643,9 +752,9 @@ $(function () {
 
     if (priceSlider && !priceSlider.noUiSlider) {
       noUiSlider.create(priceSlider, {
-        start: [1000, 8000],
+        start: [1000, 5000],
         connect: true,
-        range: { min: 500, max: 20000 },
+        range: { min: 500, max: 10000 },
         step: 100,
         format: {
           to: value => Math.round(value),
@@ -655,7 +764,7 @@ $(function () {
       priceSlider.noUiSlider.on('update', function (values) {
         minPriceEl.textContent = values[0];
         maxPriceEl.textContent = values[1];
-        filterState.price = [values[0], values[1]];
+        filterState.price = [values[0] + '-' + values[1]];
       });
       priceSlider.noUiSlider.on('change', updateHotelCountText);
     }
@@ -668,7 +777,7 @@ $(function () {
     filterState.facilities = [];
     filterState.price = [];
     if (priceSlider && priceSlider.noUiSlider) {
-      priceSlider.noUiSlider.set([1000, 8000]);
+      priceSlider.noUiSlider.set([1000, 5000]);
     }
   });
 
@@ -693,7 +802,7 @@ $(function () {
   window.filterState = filterState;
 });
 
-
+//無限滾動
 $(window).on('scroll', function () {
   if (loading || allLoaded) return;
   if ($(window).scrollTop() + $(window).height() >= $(document).height() - 300) {
