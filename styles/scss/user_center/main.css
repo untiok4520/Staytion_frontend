@@ -12039,18 +12039,6 @@ textarea.form-control-lg {
   background-color: white;
   color: #376996;
 }
-.my-navbar .navbar-toggler {
-  outline: none;
-  box-shadow: none;
-  transition: all 0.2s ease-in;
-}
-.my-navbar .navbar-toggler:hover {
-  border: 2px solid #376996;
-}
-.my-navbar .navbar-toggler:active {
-  outline: none;
-  box-shadow: none;
-}
 .my-navbar .btn-outline-primary {
   transition: all 0.2s ease-in-out;
 }
@@ -12920,4 +12908,168 @@ input.choose-date:focus {
 #profile .profile-card .payment-box .delete-icon {
   font-size: 18px;
   cursor: pointer;
+}
+
+@media (max-width: 991.98px) {
+  .usercenter_container {
+    flex-direction: column;
+    padding: 0 20px;
+    gap: 30px;
+  }
+  .usercenter_container .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .usercenter_container .sidebar .sidebar-item {
+    width: auto;
+    padding: 10px 15px;
+    margin: 0;
+  }
+  .order-list .order-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .order-list .order-content .hotel-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .order-list .order-content .hotel-info .hotel-dates {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  .order-detail-panel .order-header {
+    flex-direction: column;
+  }
+  .order-detail-panel .order-header .right-section {
+    margin-top: 20px;
+  }
+  .order-detail-panel .payment-info .line-item,
+  .order-detail-panel .payment-info .total {
+    padding-right: 0;
+  }
+  .chat-container {
+    flex-direction: column;
+    height: auto;
+  }
+  .chat-container .chat-list {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .chat-container .chat-box {
+    height: 400px;
+  }
+  #reviews .review-card,
+  #reviews .unreview-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #reviews .review-card .review-img,
+  #reviews .unreview-card .review-img {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  #reviews .review-card .review-content,
+  #reviews .unreview-card .review-content {
+    width: 100%;
+  }
+  #reviews .unreview-section .unreview-card .review-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  #reviews .unreview-section .unreview-card .review-content .left-info,
+  #reviews .unreview-section .unreview-card .review-content .right-info {
+    width: 100%;
+  }
+  #reviews .unreview-section .unreview-card .review-content .right-info .rating-options .review-text {
+    flex-direction: column;
+  }
+  #reviews .unreview-section .unreview-card .review-content .right-info .rating-options .review-text textarea {
+    width: 100%;
+  }
+  #favorites .favlist-grid {
+    justify-content: center;
+  }
+  #profile .profile-card .profile-field.name {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  #profile .profile-card .profile-field.name .avatar {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  #profile .profile-card .profile-field.name button.name {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 767.98px) {
+  .uc-main-content .tabs .tab {
+    padding: 10px 5px;
+    font-size: 14px;
+  }
+  .filter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter .search-box {
+    max-width: 100%;
+  }
+  .cancel-modal,
+  .changedate-modal {
+    width: 90%;
+    padding: 15px;
+  }
+  input.choose-date {
+    width: 100%;
+  }
+  footer .row {
+    row-gap: 1.5rem !important;
+  }
+}
+@media (max-width: 575.98px) {
+  .my-navbar .container-fluid {
+    flex-direction: column;
+    padding: 10px 0;
+  }
+  .my-navbar .navbar-brand {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .my-navbar .navbar-nav {
+    flex-direction: row !important;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    margin-right: 0;
+  }
+  .usercenter_container .sidebar .sidebar-item i {
+    margin-right: 5px;
+    font-size: 14px;
+  }
+  .usercenter_container .sidebar .sidebar-item span {
+    font-size: 14px;
+  }
+  .order-list {
+    padding: 15px;
+  }
+  #reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group {
+    gap: 2px;
+  }
+  #reviews .unreview-section .unreview-card .review-content .right-info .rating-options .radio-group label {
+    padding: 3px 5px;
+    font-size: 12px;
+  }
 }/*# sourceMappingURL=main.css.map */
