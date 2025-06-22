@@ -100,6 +100,52 @@
     border: 2px solid #376996;
 }
 
+/* 自訂下拉選單的外觀 */
+.user-dropdown {
+    background-color: #ffffff; /* 背景色 */
+    border-radius: 8px;        /* 圓角 */
+    min-width: 80px;          /* 最小寬度 */
+    padding: 0;
+}
+
+/* 調整下拉選單內每個選項的樣式 */
+.user-dropdown .dropdown-item {
+    padding: 10px;
+    font-size: 15px;
+    color: #333;
+}
+
+.user-dropdown li:first-child .dropdown-item {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.user-dropdown li:last-child .dropdown-item {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border: none;
+}
+
+.user-dropdown li a {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dropdown-menu {
+  position: absolute !important;
+  z-index: 1050; /* 比 navbar 高即可 */
+}
+
+.dropdown {
+  position: relative;
+}
+
+
+.user-dropdown .dropdown-item:hover {
+    background-color: #376996;
+    color: #fff;
+}
+
+
 /* banner */
 
 .hero-banner {

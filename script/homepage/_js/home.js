@@ -392,11 +392,9 @@ async function loadTopHotels() {
             const card = document.createElement('div');
             card.classList.add('card');
 
-            const imgSrc = hotel.img_url || 'https://www.taiwan.net.tw/att/1/big_scenic_spots/pic_7927_32.jpg'; // 預設圖
-
             card.innerHTML = `
                 <a href="#" class="text-decoration-none text-dark d-block position-relative">
-                    <img src="${imgSrc}" class="card-img-top" alt="${hotel.hotelName}">
+                    <img src="${hotel.coverImageUrl}" class="card-img-top" alt="${hotel.hotelName}">
                     <button class="btn btn-light heart-btn position-absolute top-0 end-0 m-2 rounded-circle shadow-sm">
                         <i class="bi bi-heart"></i>
                     </button>
