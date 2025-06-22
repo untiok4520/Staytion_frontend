@@ -200,11 +200,12 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>飯店總覽</span>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addHotelModal"><i
-                            class="bi bi-plus-circle me-2"></i>新增飯店</button>
+                    <button id="btnAddHotel" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#addHotelModal"><i class="bi bi-plus-circle me-2"></i>新增飯店</button>
                 </div>
                 <div class="card-body table-responsive">
-                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;" id="hotelTable">
+                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;"
+                        id="hotelTable">
                         <thead>
                             <tr>
                                 <th>飯店名稱</th>
@@ -237,7 +238,7 @@
                                         data-bs-target="#addHotelModal">編輯</button></td>
                             </tr>
                         </tbody> -->
-                        
+
                     </table>
 
                 </div>
@@ -256,11 +257,12 @@
                             <option value="hualien">花蓮海景套房</option> -->
                         </select>
                     </div>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addRoomModal"><i
-                            class="bi bi-plus-circle me-2"></i>新增房型</button>
+                    <button id="btnAddRoom" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#addRoomModal"><i class="bi bi-plus-circle me-2"></i>新增房型</button>
                 </div>
                 <div class="card-body table-responsive">
-                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;" id="roomTable">
+                    <table class="table table-bordered table-hover align-middle" style="min-width: 800px;"
+                        id="roomTable">
                         <thead>
                             <tr>
                                 <th>房型名稱</th>
@@ -384,9 +386,18 @@
                                 <label class="form-label">描述 *</label>
                                 <textarea class="form-control" rows="2" required></textarea>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label class="form-label">上傳照片 *</label>
                                 <input type="file" class="form-control" multiple />
+                            </div> -->
+                            <div class="mb-3">
+                                <label class="form-label">圖片網址（可輸入多個，用逗號分隔）*</label>
+                                <input type="text" class="form-control" id="hotelImageUrls"
+                                    placeholder="https://img1.jpg, https://img2.jpg" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">圖片預覽</label>
+                                <div id="hotelImagePreview" style="display:flex; gap:10px; flex-wrap: wrap;"></div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">設施選擇 *</label><br />
@@ -422,9 +433,6 @@
                                 <label class="form-label">所屬飯店 *</label>
                                 <select class="form-select">
                                     <option selected disabled>請選擇</option>
-                                    <option>台北民宿一館</option>
-                                    <option>台中青年旅店</option>
-                                    <option>花蓮海景套房</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -452,9 +460,18 @@
                                     <option>不可退款</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label class="form-label">上傳照片 *</label>
                                 <input type="file" class="form-control" multiple />
+                            </div> -->
+                            <div class="mb-3">
+                                <label class="form-label">圖片網址（可輸入多個，用逗號分隔）*</label>
+                                <input type="text" class="form-control" id="roomImageUrls"
+                                    placeholder="https://img1.jpg, https://img2.jpg" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">圖片預覽</label>
+                                <div id="roomImagePreview" style="display:flex; gap:10px; flex-wrap: wrap;"></div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">取消政策 *</label>
@@ -474,8 +491,10 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../script/navbar.js"></script>
-    <script src="../script/hotelroom.js"></script>
+    <!-- <script src="../script/hotelroom.js"></script> -->
+    <script src="../script/hotelroomv2.js"></script>
 
 </body>
 
