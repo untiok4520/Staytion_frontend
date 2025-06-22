@@ -134,7 +134,7 @@ $(function () {
     $dropdown.show();
   }
 
-  // 依關鍵字即時篩選
+  //依關鍵字篩選
   function filterDropdown(keyword) {
     if (!keyword) {
       showAllCities();
@@ -195,7 +195,6 @@ $(function () {
         $dropdown.hide();
       } else {
         // 之後考慮多做一層模糊查詢,例如台北市,輸入"台"也會顯示選項
-        // 
         let fuzzyCities = cityOptions.filter(opt => opt.label.includes(inputVal));
         let fuzzyAreas = areaOptions.filter(opt => opt.label.includes(inputVal));
 
@@ -216,7 +215,6 @@ $(function () {
     }
   });
 
-  // 點外面時關閉下拉
   $(document).on("click", function (e) {
     if (!$(e.target).is('#destinationInput') && !$(e.target).closest('#suggestions').length) {
       $dropdown.hide();
@@ -230,7 +228,7 @@ $(function () {
     $('<li></li>')
       .text('全部區域')
       .on('click', function () {
-        $('#area span').text('區域');
+        $('#area span').text('所有區域');
         $ul.removeClass('active');
         filterState.area = '';
         // 可選：fetchHotelsMain(filterState);
@@ -272,7 +270,7 @@ $(function () {
         filterState.checkout = "";
         return;
       }
-      // 直接存選到的兩個日期
+      //直接存選到的兩個日期
       filterState.checkin = selectedDates[0] ? selectedDates[0].toISOString().split('T')[0] : "";
       filterState.checkout = selectedDates[1] ? selectedDates[1].toISOString().split('T')[0] : "";
     }
@@ -325,7 +323,7 @@ $(function () {
     $('.dropdown-menu').not('#' + exceptId).removeClass('active');
   }
 
-  // 通用 Dropdown 設定
+  //通用 Dropdown 設定
   function setupDropdown({ buttonId, dropdownId, spanSelector, options, onSelect }) {
     const $btn = $(`#${buttonId}`);
     const $dropdown = $(`#${dropdownId}`);
@@ -673,7 +671,7 @@ $(function () {
     });
   }
 
-  // Modal(選項寫死,讓id跟後端取資料)
+  //Modal(選項寫死,讓id跟後端取資料)
   const FACILITIES = [
     { id: 1, name: 'Wi-Fi', icon: 'bi bi-wifi' },
     { id: 2, name: '停車場', icon: 'bi bi-p-circle' },
