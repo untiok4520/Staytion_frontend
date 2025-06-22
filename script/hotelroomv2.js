@@ -28,30 +28,27 @@ $(function () {
     // ---------- 載入飯店 Modal preview 畫面
     $hotelImageUrlInput.on('input', function () {
         $hotelImagePreview.empty();
-
-        // 取得輸入框的值，切割成陣列並去除空白與空字串
         const urls = $(this).val().split(',').map(u => u.trim()).filter(u => u);
 
         urls.forEach((u, i) => {
             const wrapper = $('<div>').css({ display: 'inline-block', marginRight: '10px', textAlign: 'center' });
-
             const img = $('<img>').attr('src', u).css({
                 width: '100px',
                 height: 'auto',
                 border: '1px solid #ccc',
                 display: 'block'
             });
-
             const radio = $(`
-            <div>
-                <input type="radio" name="mainImg" value="${u}" ${i === 0 ? 'checked' : ''} />
-                <label style="font-size: 12px">主圖</label>
-            </div>
+                <div>
+                    <input type="radio" name="mainImg" value="${u}" ${i === 0 ? 'checked' : ''} />
+                    <label style="font-size: 12px">主圖</label>
+                </div>
             `);
-
             wrapper.append(img).append(radio);
             $hotelImagePreview.append(wrapper);
         });
+
+        console.log("圖片預覽更新", urls);
     });
 
     // ---------- 載入所有飯店
@@ -61,23 +58,24 @@ $(function () {
             method: "GET",
             headers,
             success(hotels) {
+                console.log("載入飯店成功", hotels);
+
                 const $hotelTable = $("#hotelTable tbody").empty();
                 $("#hotelFilter").empty().append(`<option value="all">全部飯店</option>`);
-                // 房型飯店下拉
                 const $roomHotel = $("#addRoomModal form").find("select").eq(0);
                 $roomHotel.empty().append(`<option disabled selected>請選擇飯店</option>`);
 
                 hotels.forEach((h) => {
                     $hotelTable.append(`
-            <tr>
-              <td>${h.hotelname}</td>
-              <td>${h.address}</td>
-              <td>${h.tel}</td>
-              <td>
-                <button class="btn btn-sm btn-primary btn-edit-hotel" data-id="${h.id}">編輯</button>
-                <button class="btn btn-sm btn-outline-danger btn-del-hotel" data-id="${h.id}">刪除</button>
-              </td>
-            </tr>`);
+                        <tr>
+                          <td>${h.hotelname}</td>
+                          <td>${h.address}</td>
+                          <td>${h.tel}</td>
+                          <td>
+                            <button class="btn btn-sm btn-primary btn-edit-hotel" data-id="${h.id}">編輯</button>
+                            <button class="btn btn-sm btn-outline-danger btn-del-hotel" data-id="${h.id}">刪除</button>
+                          </td>
+                        </tr>`);
                     $("#hotelFilter").append(`<option value="${h.id}">${h.hotelname}</option>`);
                     $roomHotel.append(`<option value="${h.id}">${h.hotelname}</option>`);
                 });
@@ -85,7 +83,8 @@ $(function () {
                 attachHotelEvents();
                 loadRooms(); //載入房型
             },
-            error() {
+            error(xhr) {
+                console.error("載入飯店失敗", xhr.responseText);
                 alert("載入飯店失敗");
             },
         });
@@ -105,12 +104,7 @@ $(function () {
     $hotelSave.on("click", () => {
         const urls = $hotelImageUrlInput.val().split(',').map(u => u.trim()).filter(u => u);
         const mainImgUrl = $('input[name="mainImg"]:checked').val();
-
-        // 組成 ImageDTO 陣列
-        const images = urls.map(url => ({
-            imgUrl: url,
-            isCover: url === mainImgUrl
-        }));
+        const images = urls.map(url => ({ imgUrl: url, isCover: url === mainImgUrl }));
 
         const data = {
             hotelname: $hotelName.val(),
@@ -119,7 +113,7 @@ $(function () {
             description: $hotelDesc.val(),
             facilities: { wifi: $wifi.prop("checked"), parking: $parking.prop("checked") },
             images: images,
-            ownerId:ownerId
+            ownerId: ownerId
         };
 
         const method = hotelEditId ? "PUT" : "POST";
@@ -127,17 +121,21 @@ $(function () {
             ? `http://localhost:8080/api/admin/hotels/${hotelEditId}`
             : `http://localhost:8080/api/admin/hotels`;
 
+        console.log("送出飯店資料", data);
+
         $.ajax({
             url,
             method,
             headers,
             contentType: "application/json",
             data: JSON.stringify(data),
-            success() {
+            success(response) {
+                console.log("儲存飯店成功", response);
                 hotelModal.hide();
                 loadHotels();
             },
-            error() {
+            error(xhr) {
+                console.error("儲存飯店失敗", xhr.responseText);
                 alert("儲存飯店失敗");
             },
         });
@@ -145,64 +143,63 @@ $(function () {
 
     // ---------- 綁定飯店按鈕事件
     function attachHotelEvents() {
-        $(".btn-edit-hotel")
-            .off("click")
-            .on("click", function () {
-                hotelEditId = $(this).data("id");
-                $.ajax({
-                    url: `http://localhost:8080/api/admin/hotels/${hotelEditId}`,
-                    method: "GET",
-                    headers,
-                    success(h) {
-                        $hotelName.val(h.hotelname);
-                        $hotelAddr.val(h.address);
-                        $hotelTel.val(h.tel);
-                        $hotelDesc.val(h.description);
-                        $wifi.prop("checked", h.facilities?.wifi);
-                        $parking.prop("checked", h.facilities?.parking);
+        $(".btn-edit-hotel").off("click").on("click", function () {
+            hotelEditId = $(this).data("id");
+            $.ajax({
+                url: `http://localhost:8080/api/admin/hotels/${hotelEditId}`,
+                method: "GET",
+                headers,
+                success(h) {
+                    console.log("編輯飯店資料", h);
+                    $hotelName.val(h.hotelname);
+                    $hotelAddr.val(h.address);
+                    $hotelTel.val(h.tel);
+                    $hotelDesc.val(h.description);
+                    $wifi.prop("checked", h.facilities?.wifi);
+                    $parking.prop("checked", h.facilities?.parking);
 
-                        // images 陣列還原回輸入框與preview
-                        if (h.images && h.images.length) {
-                            const urls = h.images.map(img => img.imgUrl);
-                            $hotelImageUrlInput.val(urls.join(', '));
-                            $hotelImageUrlInput.trigger('input');
-
-                            // 設定主圖 radio
-                            setTimeout(() => {
-                                const coverImg = h.images.find(img => img.isCover);
-                                if (coverImg) {
-                                    $(`input[name="mainImg"][value="${coverImg.imgUrl}"]`).prop('checked', true);
-                                }
-                            }, 100);
-                        } else {
-                            $hotelImageUrlInput.val('');
-                            $hotelImagePreview.empty();
-                        }
-
-                        hotelModal.show();
-                    },
-                    error() {
-                        alert("載入飯店資料失敗");
+                    if (h.images && h.images.length) {
+                        const urls = h.images.map(img => img.imgUrl);
+                        $hotelImageUrlInput.val(urls.join(', '));
+                        $hotelImageUrlInput.trigger('input');
+                        setTimeout(() => {
+                            const coverImg = h.images.find(img => img.isCover);
+                            if (coverImg) {
+                                $(`input[name="mainImg"][value="${coverImg.imgUrl}"]`).prop('checked', true);
+                            }
+                        }, 100);
+                    } else {
+                        $hotelImageUrlInput.val('');
+                        $hotelImagePreview.empty();
                     }
-                });
-            });
 
-        $(".btn-del-hotel")
-            .off("click")
-            .on("click", function () {
-                if (!confirm("刪除此飯店？")) return;
-                $.ajax({
-                    url: `http://localhost:8080/api/admin/hotels/${$(this).data("id")}`,
-                    method: "DELETE",
-                    headers,
-                    success() {
-                        loadHotels();
-                    },
-                });
+                    hotelModal.show();
+                },
+                error(xhr) {
+                    console.error("載入編輯飯店失敗", xhr.responseText);
+                    alert("載入飯店資料失敗");
+                }
             });
+        });
+
+        $(".btn-del-hotel").off("click").on("click", function () {
+            if (!confirm("刪除此飯店？")) return;
+            $.ajax({
+                url: `http://localhost:8080/api/admin/hotels/${$(this).data("id")}`,
+                method: "DELETE",
+                headers,
+                success() {
+                    console.log("飯店刪除成功");
+                    loadHotels();
+                },
+                error(xhr) {
+                    console.error("飯店刪除失敗", xhr.responseText);
+                }
+            });
+        });
     }
 
-    // ---------- 房型欄位與函數維持不變
+    // ---------- 房型欄位與管理
     const $roomForm = $("#addRoomModal form");
     const $roomHotel = $roomForm.find("select").eq(0);
     const $roomName = $roomForm.find("input[type=text]");
@@ -215,6 +212,7 @@ $(function () {
     const $roomSave = $("#addRoomModal .btn-primary");
     let roomEditId = null;
 
+    // ---------- 載入房型 Modal preview 畫面
     $roomImageUrlInput.on('input', function () {
         $roomImagePreview.empty();
         const urls = $(this).val().split(',').map(u => u.trim()).filter(u => u);
@@ -224,81 +222,92 @@ $(function () {
         });
     });
 
+    // ---------- 載入所有房型
     function loadRooms() {
         const hid = $("#hotelFilter").val() || "all";
-        const url =
-            hid === "all"
-                ? `http://localhost:8080/api/admin/roomTypes`
-                : `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`;
+        const url = hid === "all"
+            ? `http://localhost:8080/api/admin/roomTypes`
+            : `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`;
 
         $.ajax({
             url,
             method: "GET",
             headers,
             success(rooms) {
+                console.log("載入房型成功", rooms);
+
                 const $body = $("#roomTableBody").empty();
                 if (!rooms.length) {
                     return $body.append(`<tr><td colspan="6">沒有房型資料</td></tr>`);
                 }
                 rooms.forEach((r) => {
                     $body.append(`
-            <tr>
-              <td>${r.rname}</td>
-              <td>${r.quantity}</td>
-              <td>${r.available ?? 0}</td>
-              <td>${r.status ?? "上架中"}</td>
-              <td>${r.price ?? 0}</td>
-              <td>
-                <button class="btn btn-sm btn-primary btn-edit-room" data-id="${r.id}">編輯</button>
-                <button class="btn btn-sm btn-outline-danger btn-del-room" data-id="${r.id}">刪除</button>
-              </td>
-            </tr>`);
+                        <tr>
+                          <td>${r.rname}</td>
+                          <td>${r.quantity}</td>
+                          <td>${r.available ?? 0}</td>
+                          <td>${r.status ?? "上架中"}</td>
+                          <td>${r.price ?? 0}</td>
+                          <td>
+                            <button class="btn btn-sm btn-primary btn-edit-room" data-id="${r.id}">編輯</button>
+                            <button class="btn btn-sm btn-outline-danger btn-del-room" data-id="${r.id}">刪除</button>
+                          </td>
+                        </tr>`);
                 });
                 attachRoomEvents();
             },
+            error(xhr) {
+                console.error("載入房型失敗", xhr.responseText);
+            }
         });
     }
 
+    // ---------- 綁定房型按鈕事件
     function attachRoomEvents() {
-        $(".btn-edit-room")
-            .off("click")
-            .on("click", function () {
-                roomEditId = $(this).data("id");
-                $.ajax({
-                    url: `http://localhost:8080/api/admin/roomTypes/${roomEditId}`,
-                    method: "GET",
-                    headers,
-                    success(r) {
-                        $roomHotel.val(r.hotelId);
-                        $roomName.val(r.rname);
-                        $roomCount.val(r.quantity);
-                        $roomPrices.eq(0).val(r.price.weekday);
-                        $roomPrices.eq(1).val(r.price.holiday);
-                        $roomPrices.eq(2).val(r.price.specialDay);
-                        $roomRefund.val(r.refundable ? "可退款" : "不可退款");
-                        $roomCancel.val(r.cancelPolicy);
-                        $roomImageUrlInput.val(r.imgUrl || '');
-                        $roomImageUrlInput.trigger('input');
-                        roomModal.show();
-                    },
-                });
+        $(".btn-edit-room").off("click").on("click", function () {
+            roomEditId = $(this).data("id");
+            $.ajax({
+                url: `http://localhost:8080/api/admin/roomTypes/${roomEditId}`,
+                method: "GET",
+                headers,
+                success(r) {
+                    console.log("編輯房型資料", r);
+                    $roomHotel.val(r.hotelId);
+                    $roomName.val(r.rname);
+                    $roomCount.val(r.quantity);
+                    $roomPrices.eq(0).val(r.price.weekday);
+                    $roomPrices.eq(1).val(r.price.holiday);
+                    $roomPrices.eq(2).val(r.price.specialDay);
+                    $roomRefund.val(r.refundable ? "可退款" : "不可退款");
+                    $roomCancel.val(r.cancelPolicy);
+                    $roomImageUrlInput.val(r.imgUrl || '');
+                    $roomImageUrlInput.trigger('input');
+                    roomModal.show();
+                },
+                error(xhr) {
+                    console.error("載入房型資料失敗", xhr.responseText);
+                }
             });
+        });
 
-        $(".btn-del-room")
-            .off("click")
-            .on("click", function () {
-                if (!confirm("刪除此房型？")) return;
-                $.ajax({
-                    url: `http://localhost:8080/api/admin/roomTypes/${$(this).data("id")}`,
-                    method: "DELETE",
-                    headers,
-                    success() {
-                        loadRooms();
-                    },
-                });
+        $(".btn-del-room").off("click").on("click", function () {
+            if (!confirm("刪除此房型？")) return;
+            $.ajax({
+                url: `http://localhost:8080/api/admin/roomTypes/${$(this).data("id")}`,
+                method: "DELETE",
+                headers,
+                success() {
+                    console.log("房型刪除成功");
+                    loadRooms();
+                },
+                error(xhr) {
+                    console.error("房型刪除失敗", xhr.responseText);
+                }
             });
+        });
     }
 
+    // ---------- 新增/編輯 房型
     $("#btnAddRoom").on("click", () => {
         roomEditId = null;
         $roomForm[0].reset();
@@ -319,10 +328,13 @@ $(function () {
             cancelPolicy: $roomCancel.val(),
             imgUrl: $roomImageUrlInput.val().trim()
         };
+
         const method = roomEditId ? "PUT" : "POST";
         const url = roomEditId
             ? `http://localhost:8080/api/admin/roomTypes/${roomEditId}`
             : `http://localhost:8080/api/admin/roomTypes`;
+
+        console.log("送出房型資料", data);
 
         $.ajax({
             url,
@@ -330,11 +342,13 @@ $(function () {
             headers,
             contentType: "application/json",
             data: JSON.stringify(data),
-            success() {
+            success(response) {
+                console.log("房型儲存成功", response);
                 roomModal.hide();
                 loadRooms();
             },
-            error() {
+            error(xhr) {
+                console.error("房型儲存失敗", xhr.responseText);
                 alert("房型儲存失敗");
             },
         });
@@ -343,5 +357,4 @@ $(function () {
     $("#hotelFilter").on("change", loadRooms);
 
     loadHotels();
-
 });
