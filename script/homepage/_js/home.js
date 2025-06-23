@@ -436,3 +436,26 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTopHotels();
     fetchSearchHistory(1);
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const token = localStorage.getItem('jwtToken');
+    const loginBtn = document.getElementById('loginBtn');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (token) {
+        // 使用者已登入，顯示 dropdown
+        loginBtn.classList.add('d-none');
+        userDropdown.classList.remove('d-none');
+    } else {
+        // 使用者未登入，顯示登入按鈕
+        loginBtn.classList.remove('d-none');
+        userDropdown.classList.add('d-none');
+    }
+
+    // 登出邏輯
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn?.addEventListener('click', function () {
+        localStorage.removeItem('jwtToken');
+        location.reload(); // 重新整理頁面回到未登入狀態
+    });
+});

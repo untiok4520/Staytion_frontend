@@ -135,7 +135,6 @@ async function sendTokenToBackend(idToken) {
         console.log("後端回應:", data);
 
         if (data.token) {
-            localStorage.setItem('authToken', data.token);
             console.log("JWT token 已儲存到 localStorage。");
             // 登入成功後，你可能需要導向到其他頁面
             window.location.href = "../../pages/homepage/home.html";
@@ -158,20 +157,7 @@ window.onload = function() {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    // 由於你不需要顯示登出按鈕和用戶資訊，這部分可以移除或調整
-    // const logoutBtn = document.getElementById('logoutBtn');
-    // if (logoutBtn) {
-    //     logoutBtn.addEventListener('click', function() {
-    //         localStorage.removeItem('authToken');
-    //         console.log("用戶已登出，authToken 已移除。");
-    //         if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-    //             google.accounts.id.disableAutoSelect();
-    //             console.log("Google Auto Select 已禁用。");
-    //         }
-    //         showStatus('已登出', 'success');
-    //     });
-    // }
-
+   
     // 判斷email是否存在，決定跳轉的頁面
     const emailContinueButton = document.getElementById("emailContinue");
     if (emailContinueButton) {
@@ -261,27 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-    // OTP 輸入框邏輯
-    const otpInputs = document.querySelectorAll('.otp-input');
-    otpInputs.forEach((input, index) => {
-        input.addEventListener('input', function () {
-            this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
-            if (this.value.length > 1) {
-                this.value = this.value.slice(0, 1);
-            }
-            if (this.value.length === 1 && index < otpInputs.length - 1) {
-                otpInputs[index + 1].focus();
-            }
-        });
-        input.addEventListener('keydown', function (e) {
-            if (e.key === 'Backspace' && this.value === '') {
-                if (index > 0) {
-                    otpInputs[index - 1].focus();
-                    otpInputs[index - 1].value = '';
-                }
-            }
-        });
-    });
+    
 });
 
 
