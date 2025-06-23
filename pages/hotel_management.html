@@ -433,15 +433,30 @@
                                 <input type="text" class="form-control" required />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">房間數 *</label>
-                                <input type="number" class="form-control" />
+                                <label class="form-label">描述 *</label>
+                                <textarea class="form-control" rows="2" required></textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">價格 *</label>
                                 <div class="row g-2">
-                                    <div class="col"><input type="number" class="form-control" placeholder="平日" /></div>
-                                    <div class="col"><input type="number" class="form-control" placeholder="假日" /></div>
-                                    <div class="col"><input type="number" class="form-control" placeholder="特殊日" />
+                                    <div class="col">
+                                        <label class="form-label">房間總數 *</label>
+                                        <input type="number" class="form-control" />
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label">價格 *</label>
+                                        <input type="number" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">房間格局 * 【景觀．大小．床型．床數．容量】</label>
+                                <div class="row g-2">
+                                    <div class="col"><input type="text" class="form-control" placeholder="景觀" /></div>
+                                    <div class="col"><input type="number" class="form-control" placeholder="平方公尺" />
+                                    </div>
+                                    <div class="col"><input type="text" class="form-control" placeholder="床型" /></div>
+                                    <div class="col"><input type="number" class="form-control" placeholder="床數" /></div>
+                                    <div class="col"><input type="number" class="form-control" placeholder="可容納人數" />
                                     </div>
                                 </div>
                             </div>
@@ -458,9 +473,9 @@
                                 <input type="file" class="form-control" multiple />
                             </div> -->
                             <div class="mb-3">
-                                <label class="form-label">圖片網址（可輸入多個，用逗號分隔）*</label>
+                                <label class="form-label">圖片網址*</label>
                                 <input type="text" class="form-control" id="roomImageUrls"
-                                    placeholder="https://img1.jpg, https://img2.jpg" />
+                                    placeholder="https://img.jpg" />
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">圖片預覽</label>
@@ -468,7 +483,16 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">取消政策 *</label>
-                                <textarea class="form-control" rows="2"></textarea>
+                                <select class="form-select">
+                                    <option selected disabled>請選擇</option>
+                                    <option>可取消</option>
+                                    <option>不可取消</option>
+                                </select>
+                                <!-- <textarea class="form-control" rows="2"></textarea> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">設施選擇 *</label><br />
+                                <div id="RoomAmenities"></div>
                             </div>
                         </form>
                     </div>

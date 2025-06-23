@@ -91,7 +91,7 @@ $(function () {
     }
 
     function loadAmenities(selected) {
-        $.get("http://localhost:8080/api/amenities", function(list) {
+        $.get("http://localhost:8080/api/amenities", function (list) {
             const $container = $("#hotelAmenities");
             $container.empty();
             list.forEach(a => {
@@ -121,7 +121,7 @@ $(function () {
         const mainImgUrl = $('input[name="mainImg"]:checked').val();
         const images = urls.map(url => ({ imgUrl: url, isCover: url === mainImgUrl }));
         const amenities = [];
-        $("#hotelAmenities input[type=checkbox]:checked").each(function() {
+        $("#hotelAmenities input[type=checkbox]:checked").each(function () {
             amenities.push(+$(this).val());
         });
 
@@ -220,11 +220,17 @@ $(function () {
     // ---------- 房型欄位與管理
     const $roomForm = $("#addRoomModal form");
     const $roomHotel = $roomForm.find("select").eq(0);
-    const $roomName = $roomForm.find("input[type=text]");
+    const $roomName = $roomForm.find("input[type=text]").eq(0);
+    const $roomDesc = $roomForm.find("textarea")
     const $roomCount = $roomForm.find("input[type=number]").eq(0);
-    const $roomPrices = $roomForm.find("input[type=number]").slice(1);
+    const $roomPrices = $roomForm.find("input[type=number]").eq(1);
+    const $roomView = $roomForm.find("input[type=text]").eq(1);
+    const $roomSize = $roomForm.find("input[type=number]").eq(2);
+    const $roomBedType = $roomForm.find("input[type=text]").eq(2);
+    const $roomBedCount = $roomForm.find("input[type=number]").eq(3);
+    const $roomCapacity = $roomForm.find("input[type=number]").eq(4);
     const $roomRefund = $roomForm.find("select").eq(1);
-    const $roomCancel = $roomForm.find("textarea").eq(0);
+    const $roomCancel = $roomForm.find("select").eq(2);
     const $roomImageUrlInput = $('#roomImageUrls');
     const $roomImagePreview = $('#roomImagePreview');
     const $roomSave = $("#addRoomModal .btn-primary");
@@ -244,8 +250,8 @@ $(function () {
     function loadRooms() {
         const hid = $("#hotelFilter").val() || "all";
         const url = hid === "all"
-            ? `http://localhost:8080/api/admin/roomTypes`
-            : `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`;
+            ? `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`
+            : `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`; // 待處理
 
         $.ajax({
             url,
@@ -292,12 +298,16 @@ $(function () {
                     console.log("編輯房型資料", r);
                     $roomHotel.val(r.hotelId);
                     $roomName.val(r.rname);
+                    $roomDesc.val(r.description);
                     $roomCount.val(r.quantity);
-                    $roomPrices.eq(0).val(r.price.weekday);
-                    $roomPrices.eq(1).val(r.price.holiday);
-                    $roomPrices.eq(2).val(r.price.specialDay);
+                    $roomPrices.val(r.price);
+                    $roomView.val(r.view);
+                    $roomSize.val(r.size);
+                    $roomBedType.val(r.bedType);
+                    $roomBedCount.val(r.bedCount);
+                    $roomCapacity.val(r.capacity);
                     $roomRefund.val(r.refundable ? "可退款" : "不可退款");
-                    $roomCancel.val(r.cancelPolicy);
+                    $roomCancel.val(r.isCanceled ? "可取消" : "不可取消");
                     $roomImageUrlInput.val(r.imgUrl || '');
                     $roomImageUrlInput.trigger('input');
                     roomModal.show();
@@ -336,14 +346,16 @@ $(function () {
         const data = {
             hotelId: $roomHotel.val(),
             rname: $roomName.val(),
+            description: $roomDesc.val(),
             quantity: +$roomCount.val(),
-            price: {
-                weekday: +$roomPrices.eq(0).val(),
-                holiday: +$roomPrices.eq(1).val(),
-                specialDay: +$roomPrices.eq(2).val(),
-            },
+            price: +$roomPrices.val(),
+            view: $roomView.val(),
+            size: $roomSize.val(),
+            bedType: $roomBedType.val(),
+            bedCount: $roomBedCount.val(),
+            capacity: $roomCapacity.val(),    
             refundable: $roomRefund.val() === "可退款",
-            cancelPolicy: $roomCancel.val(),
+            isCanceled: $roomCancel.val() === "不可取消",
             imgUrl: $roomImageUrlInput.val().trim()
         };
 
