@@ -1,9 +1,14 @@
 $(document).ready(function () {
     const ownerId = 1; // 預設 ownerId，可從登入資訊取得
+    // const headers = {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    // };
     let monthlyChart, bookingChart, roomTypeChart, hotelRevenueChart, occupancyRateChart;
 
     // 初始化
     loadYears();
+    loadHotels();
 
     // 查詢按鈕事件
     $('#queryBtn').on('click', function () {
@@ -14,6 +19,24 @@ $(document).ready(function () {
         loadOrderTrend(ownerId, year, month);
         loadOccupancyRate(ownerId, year, month);
     });
+
+    // 載入可用飯店
+    function loadHotels() {
+        $.ajax({
+            url: `http://localhost:8080/api/admin/hotels/owner/${ownerId}`,
+            // data: { ownerId },
+            method: 'GET',
+            // headers,
+            success: function (hotels) {
+                console.log("載入飯店成功", hotels);
+                $('#hotelSelect').empty();
+                hotels.forEach((h) => {
+                    $('#hotelSelect').append(`<option value="${h.id}">${h.hotelname}</option>`)
+                });
+                // loadYears(hotels[0])
+            }
+        });
+    }
 
     // 載入可用年份
     function loadYears() {
@@ -109,8 +132,8 @@ $(document).ready(function () {
     // 每日訂單柱狀圖
     function loadOrderTrend(ownerId, year, month) {
         const start = `${year}-${String(month).padStart(2, '0')}-01`;
-       const lastDay = getLastDayOfMonth(year, month);
-const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+        const lastDay = getLastDayOfMonth(year, month);
+        const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 
         $.ajax({
             url: `http://localhost:8080/api/statistics/summary/order-trend`,
@@ -140,11 +163,12 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
         });
     }
 
+    // 入住率
     function loadOccupancyRate(ownerId, year, month) {
         const start = `${year}-${String(month).padStart(2, '0')}-01`;
         const lastDay = getLastDayOfMonth(year, month);
         const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-    
+
         $.ajax({
             url: `http://localhost:8080/api/statistics/summary/occupancy-rate-trend`,
             data: { ownerId, start, end },
@@ -152,7 +176,7 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
             success: function (data) {
                 const labels = data.map(d => d.date);
                 const values = data.map(d => d.occupancyRate);
-    
+
                 if (occupancyRateChart) occupancyRateChart.destroy();
                 occupancyRateChart = new Chart($('#occupancyRateChart'), {
                     type: 'line',
@@ -195,8 +219,8 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
                 labels: labels,
                 datasets: [{
                     data: values,
-                    backgroundColor: ['#1F487E', '#376996','#4BA3C3', '#78C2AD', '#FFD166'],
-                    hoverOffset:10
+                    backgroundColor: ['#1F487E', '#376996', '#4BA3C3', '#78C2AD', '#FFD166'],
+                    hoverOffset: 10
 
                 }]
             },
@@ -230,7 +254,7 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
     }
 
     function getLastDayOfMonth(year, month) {
-    return new Date(year, month, 0).getDate(); // month 是 1-based
-}
+        return new Date(year, month, 0).getDate(); // month 是 1-based
+    }
 
 });
