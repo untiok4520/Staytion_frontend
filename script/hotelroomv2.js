@@ -90,14 +90,29 @@ $(function () {
         });
     }
 
+    function loadAmenities(selected) {
+        $.get("http://localhost:8080/api/amenities", function(list) {
+            const $container = $("#hotelAmenities");
+            $container.empty();
+            list.forEach(a => {
+                const checked = selected && selected.includes(a.id) ? 'checked' : '';
+                $container.append(`
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="amenity${a.id}" value="${a.id}" ${checked}>
+                        <label class="form-check-label" for="amenity${a.id}">${a.aname}</label>
+                    </div>
+                    `)
+            })
+        })
+    }
+
     // ---------- 新增/編輯 飯店
     $("#btnAddHotel").on("click", () => {
         hotelEditId = null;
         $hotelForm[0].reset();
-        $wifi.prop("checked", false);
-        $parking.prop("checked", false);
         $hotelImageUrlInput.val('');
         $hotelImagePreview.empty();
+        loadAmenities();
         hotelModal.show();
     });
 
@@ -105,15 +120,19 @@ $(function () {
         const urls = $hotelImageUrlInput.val().split(',').map(u => u.trim()).filter(u => u);
         const mainImgUrl = $('input[name="mainImg"]:checked').val();
         const images = urls.map(url => ({ imgUrl: url, isCover: url === mainImgUrl }));
+        const amenities = [];
+        $("#hotelAmenities input[type=checkbox]:checked").each(function() {
+            amenities.push(+$(this).val());
+        });
 
         const data = {
             hotelname: $hotelName.val(),
             address: $hotelAddr.val(),
             tel: $hotelTel.val(),
             description: $hotelDesc.val(),
-            facilities: { wifi: $wifi.prop("checked"), parking: $parking.prop("checked") },
             images: images,
-            ownerId: ownerId
+            ownerId: ownerId,
+            amenities: amenities
         };
 
         const method = hotelEditId ? "PUT" : "POST";
@@ -150,13 +169,12 @@ $(function () {
                 method: "GET",
                 headers,
                 success(h) {
+                    loadAmenities(h.amenityIds);
                     console.log("編輯飯店資料", h);
                     $hotelName.val(h.hotelname);
                     $hotelAddr.val(h.address);
                     $hotelTel.val(h.tel);
                     $hotelDesc.val(h.description);
-                    $wifi.prop("checked", h.facilities?.wifi);
-                    $parking.prop("checked", h.facilities?.parking);
 
                     if (h.images && h.images.length) {
                         const urls = h.images.map(img => img.imgUrl);
