@@ -797,3 +797,10 @@ body {
 .review-popup-wrapper:hover .review-popup {
   display: block;
 }
+/* 地圖 */
+.transport-box {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}

@@ -130,8 +130,9 @@
 </nav>
 
 <div class="sticky-top" style="background-color: #1f487e;">
+  <div class="container mt-4" id="search-results"></div>
   <section class="container search-bar position-relative">
-    <form class="row g-3 align-items-end" autocomplete="off">
+    <form class="row g-3 align-items-end" onsubmit="return false;" autocomplete="off">
 
         <!-- 目的地 -->
             <div class="col-12 col-md-3-5">
@@ -211,9 +212,10 @@
 
 <div class="section">
   <div class="section-title">飯店照片</div>
-  <div class="photo-gallery">
+    <!--  JS 填入 -->
+<div class="photo-gallery" id="hotel-images"></div>
     <!-- 飯店照片 -->
-    <div class="photo-placeholder">
+    <!-- <div class="photo-placeholder">
       <img src="/assets/600x400.png" alt="主要照片" width="300" height="300">
     </div>
     <div class="photo-placeholder">
@@ -228,28 +230,24 @@
     <div class="photo-placeholder">
       <img src="/assets/eat.png" alt="餐廳" width="300" height="200">
     </div>
-  </div>
+  </div> -->
 
   <!-- 飯店標題與資訊 -->
   <div class="hotel-header" style="margin-top: 20px;">
     <div class="hotel-info-row justify-content-between" style="width: 100%;">
       <div>
-        <h1 class="hotel-title d-flex align-items-center gap-2">
-          Brad Hotel
-          <button class="favorite-btn" id="favoriteBtn" aria-label="收藏飯店">
-            <i class="bi bi-heart" id="favoriteIcon"></i>
-          </button>
-          <!-- 評價卡片 -->
-          <div class="review-popup-wrapper">
-            <div class="review-score">7.7</div>
-          </div>
+        <h1 class="hotel-title d-flex align-items-center gap-2" id="hotel-name">
+  <!-- JS 會補上 -->
+  <button class="favorite-btn" id="favoriteBtn" aria-label="收藏飯店">
+    <i class="bi bi-heart" id="favoriteIcon"></i>
+  </button>
+  <div class="review-popup-wrapper">
+    <div class="review-score" id="review-score">0.0</div>
+  </div>
+</h1>
+<p class="hotel-address" id="hotel-address"></p>
+<p id="hotel-description"></p>
 
-        </h1>
-        <p class="hotel-address">台中市西屯區公益路77號</p>
-        <p>Brad Hotel 坐落於台中市最熱鬧的西屯區，步行即可抵達知名商圈與捷運站，無論是購物、美食或交通都極為便利。
-          飯店內部設計融合現代與舒適風格，提供多種房型選擇，無論是商務出差或家庭旅遊，都能找到理想的住宿空間。
-          每間客房皆配有高速 Wi-Fi、舒適床鋪與貼心備品，讓您入住期間感受賓至如歸。
-          此外，飯店也設有健身房、景觀泳池與全天候服務櫃台，滿足旅客的各種需求。</p>
       </div>
 
 
@@ -274,50 +272,13 @@
     </div>
     
      <!-- 評價 -->
-    <div class="section">
-      <div class="section-title">住客評價</div>
-      <div class="reviews-grid">
-        <div class="rating-summary">
-          <div class="rating-score">7.8</div>
-          <p>超棒 (1,234 則評價)</p>
-          <hr style="margin: 15px 0;">
-          <div style="text-align: left;">
-            <div>清潔度: 8.0</div>
-            <div>服務:  7.5</div>
-            <div>設施:  7.0</div>
-            <div>位置:  8.0</div>
-          </div>
-        </div>
-        <div class="reviews-list">
-          <div class="review-item">
-            <div class="reviewer-info">
-              <strong>黃小靜</strong>
-              <div>
-                <small>2024/05/20</small>
-              </div>
-            </div>
-            <p>房間非常乾淨，海景超美！服務人員很親切，早餐選擇豐富。下次還會再來入住。</p>
-          </div>
-          <div class="review-item">
-            <div class="reviewer-info">
-              <strong>戴小淇</strong>
-              <div>
-            
-                <small>2024/05/18</small>
-              </div>
-            </div>
-            <p>地理位置很好，走路就能到捷運站。房間設施新穎，唯一缺點是隔音稍微不夠好。</p>
-          </div>
-          <div class="review-item">
-            <div class="reviewer-info">
-              <strong>趙老大</strong>
-              <div>
-                
-                <small>2024/05/15</small>
-              </div>
-            </div>
-            <p>度假的完美選擇！泳池很棒，SPA服務一流。工作人員英文也很好，推薦給外國朋友。</p>
-          </div>
+  
+      <div class="section">
+  <div class="section-title">住客評價</div>
+  <div id="review-area"></div>
+</div>
+
+
         </div>
       </div>
     </div>
@@ -329,7 +290,7 @@
           style="border:0;" allowfullscreen loading="lazy"></iframe>
 
       </div>
-      <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+      <div class="transport-box">
         <strong>交通資訊：</strong><br>
         • 距離台中101：步行5分鐘<br>
         • 距離市政府捷運站：步行8分鐘<br>
@@ -356,7 +317,7 @@
   
     <hr style="margin: 20px 0;">
   
-    <!-- ✅ 加回這個：已選房型清單 -->
+    <!--已選房型清單 -->
     <div id="selected-room-list" style="margin-bottom: 10px;"></div>
   
     <div id="priceDetails" style="margin-bottom: 10px;">
@@ -442,9 +403,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
 
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="../script/hotel.js"></script>
-<script src="../script/data.js"></script>
-<script src="../script/render.js"></script>
-
 </body>
 </html>
