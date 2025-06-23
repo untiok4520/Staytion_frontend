@@ -1,6 +1,6 @@
 $(document).ready(function () {
     const ownerId = 1; // 預設 ownerId，可從登入資訊取得
-    let monthlyChart, bookingChart, roomTypeChart, hotelRevenueChart;
+    let monthlyChart, bookingChart, roomTypeChart, hotelRevenueChart, occupancyRateChart;
 
     // 初始化
     loadYears();
@@ -12,6 +12,7 @@ $(document).ready(function () {
         loadSummary(ownerId, year, month);
         loadMonthlyRevenue(ownerId, year);
         loadOrderTrend(ownerId, year, month);
+        loadOccupancyRate(ownerId, year, month);
     });
 
     // 載入可用年份
@@ -56,6 +57,8 @@ $(document).ready(function () {
             method: 'GET',
             success: function (data) {
                 console.log("summary data:", data);
+                console.log("occupancyRate =", data.occupancyRate);
+                console.log("averagePrice =", data.averagePrice);
                 $('#yearRevenue').text(`$${(data.yearRevenue || 0).toLocaleString()}`);
                 $('#monthRevenue').text(`$${(data.monthRevenue || 0).toLocaleString()}`);
                 $('#totalRevenue').text(`$${(data.totalRevenue || 0).toLocaleString()}`);
@@ -76,8 +79,10 @@ $(document).ready(function () {
             data: { ownerId, year },
             method: 'GET',
             success: function (data) {
+                console.log('月營收API回傳資料', data);
                 const labels = data.map(d => `${d.month}月`);
-                const values = data.map(d => d.revenue);
+                const values = data.map(d => d.totalRevenue);
+                console.log('labels:', labels, 'values:', values);
 
                 if (monthlyChart) monthlyChart.destroy();
                 monthlyChart = new Chart($('#monthlyIncomeChart'), {
@@ -112,8 +117,9 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
             data: { ownerId, start, end },
             method: 'GET',
             success: function (data) {
-                const labels = data.map(d => d.label);
-                const values = data.map(d => d.value);
+                console.log('每日訂單', data);
+                const labels = data.map(d => d.date);
+                const values = data.map(d => d.orderCount);
 
                 if (bookingChart) bookingChart.destroy();
                 bookingChart = new Chart($('#dailyBookingChart'), {
@@ -134,6 +140,49 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
         });
     }
 
+    function loadOccupancyRate(ownerId, year, month) {
+        const start = `${year}-${String(month).padStart(2, '0')}-01`;
+        const lastDay = getLastDayOfMonth(year, month);
+        const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+    
+        $.ajax({
+            url: `http://localhost:8080/api/statistics/summary/occupancy-rate-trend`,
+            data: { ownerId, start, end },
+            method: 'GET',
+            success: function (data) {
+                const labels = data.map(d => d.date);
+                const values = data.map(d => d.occupancyRate);
+    
+                if (occupancyRateChart) occupancyRateChart.destroy();
+                occupancyRateChart = new Chart($('#occupancyRateChart'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '每日入住率(%)',
+                            data: values,
+                            borderColor: '#4BA3C3',
+                            backgroundColor: 'rgba(75,163,195,0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 100,
+                                ticks: {
+                                    callback: value => value + '%'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }); // <--- 這行很重要！
+    }
     // 房型圓餅圖
     function renderRoomTypeChart(data) {
         const labels = data.map(d => d.label);
@@ -146,7 +195,9 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
                 labels: labels,
                 datasets: [{
                     data: values,
-                    backgroundColor: ['#1F487E', '#376996', '#FEFCF0', '#ffc107']
+                    backgroundColor: ['#1F487E', '#376996','#4BA3C3', '#78C2AD', '#FFD166'],
+                    hoverOffset:10
+
                 }]
             },
             options: {
@@ -157,6 +208,7 @@ const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStar
 
     // 各飯店營收長條圖
     function renderHotelRevenueChart(data) {
+        console.log('各飯店營收', data);
         const labels = data.map(d => d.hotelName);
         const values = data.map(d => d.revenue);
 
