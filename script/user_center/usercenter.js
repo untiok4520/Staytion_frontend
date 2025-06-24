@@ -1,3 +1,16 @@
+import {
+  connectWebSocket,
+  subscribeChatRoom,
+  sendMessage,
+  loadChatHistory,
+  setChatContext,
+} from "./chatService.js";
+import {
+  renderIncomingMessage,
+  renderChatList,
+  renderChatBox,
+} from "./domUtils.js";
+
 //貨幣按鈕
 document
   .querySelectorAll("#currencyModal .modal-body.modal-grid a")
@@ -415,50 +428,88 @@ function showOrderDetail(detail) {
 }
 
 // ===================== 住宿訊息聊天室 =====================
-// 預設載入每個聊天室項目的預覽訊息
-document.querySelectorAll(".chat-list-item").forEach((item) => {
-  const lastHotelMessage = "您好，入住時間為下午 3 點後。"; // 可換成從資料讀取
-  const previewEl = item.querySelector(".chat-preview");
-  if (previewEl) {
-    previewEl.textContent = lastHotelMessage.slice(0, 10);
-  }
-});
-
-document.querySelectorAll(".chat-list-item").forEach((item) => {
-  item.addEventListener("click", () => {
-    document.querySelectorAll(".chat-list-item").forEach((el) => {
-      el.classList.remove("active");
-    });
-    // 為當前點擊項目加上 active
-    item.classList.add("active");
-
-    // 取得飯店名稱
-    const hotelName = item.querySelector(".chat-hotel-name").textContent;
-
-    // 更新右側聊天區塊內容
-    const chatBox = document.querySelector(".chat-box");
-    const lastHotelMessage = "您好，入住時間為下午 3 點後。";
-    chatBox.innerHTML = `
-      <div class="chat-header">
-        <h4>${hotelName}</h4>
-      </div>
-      <div class="chat-messages">
-        <div class="message from-user">請問入住時間是幾點？</div>
-        <div class="message from-hotel">${lastHotelMessage}</div>
-      </div>
-      <div class="chat-input">
-        <input type="text" placeholder="輸入訊息..." />
-        <button class="btn btn-secondary">送出</button>
-      </div>
-    `;
-
-    // 更新對應的 chat-preview 內容
-    item.querySelector(".chat-preview").textContent = lastHotelMessage.slice(
-      0,
-      10
-    );
+connectWebSocket();
+fetch("http://localhost:8080/api/chatrooms/my", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+  },
+})
+  .then((res) => res.json())
+  .then((chatList) => {
+    console.log("後端傳來的chatList：", chatList);
+    renderChatList(chatList, handleChatListItemClick);
   });
-});
+// ===================== 新增 handleChatListItemClick =====================
+
+let sendButtonInitialized = false; // 新增：防止重複綁定
+async function handleChatListItemClick(item) {
+  // 更新全域變數
+  const chatRoomId = Number(item.dataset.chatRoomId);
+  const receiverId = Number(item.dataset.receiverId);
+  const hotelId = Number(item.dataset.hotelId);
+  console.log("chatRoomId:", item.dataset.chatRoomId);
+  console.log("receiverId:", item.dataset.receiverId);
+  console.log("hotelId:", item.dataset.hotelId);
+
+  setChatContext(chatRoomId, receiverId, hotelId);
+
+  // 訂閱該聊天室並載入訊息
+  subscribeChatRoom(chatRoomId);
+  renderChatBox(item.dataset.hotelName);
+  const history = await loadChatHistory(chatRoomId);
+  const container = document.querySelector(".chat-messages");
+  container.innerHTML = "";
+  history.forEach((msg) => renderIncomingMessage(msg));
+
+  // 修改：只綁定一次發送按鈕事件
+  if (!sendButtonInitialized) {
+    document.getElementById("sendBtn").addEventListener("click", () => {
+      const input = document.getElementById("messageInput");
+      const content = input.value.trim();
+      if (content) {
+        sendMessage(content);
+        input.value = "";
+      }
+    });
+    sendButtonInitialized = true;
+  }
+}
+
+// document.querySelectorAll(".chat-list-item").forEach((item) => {
+//   item.addEventListener("click", () => {
+//     document.querySelectorAll(".chat-list-item").forEach((el) => {
+//       el.classList.remove("active");
+//     });
+//     // 為當前點擊項目加上 active
+//     item.classList.add("active");
+
+//     // 取得飯店名稱
+//     const hotelName = item.querySelector(".chat-hotel-name").textContent;
+
+//     // 更新右側聊天區塊內容
+//     const chatBox = document.querySelector(".chat-box");
+//     const lastHotelMessage = "您好，入住時間為下午 3 點後。";
+//     chatBox.innerHTML = `
+//       <div class="chat-header">
+//         <h4>${hotelName}</h4>
+//       </div>
+//       <div class="chat-messages">
+//         <div class="message from-user">請問入住時間是幾點？</div>
+//         <div class="message from-hotel">${lastHotelMessage}</div>
+//       </div>
+//       <div class="chat-input">
+//         <input type="text" placeholder="輸入訊息..." />
+//         <button class="btn btn-secondary">送出</button>
+//       </div>
+//     `;
+
+//     // 更新對應的 chat-preview 內容
+//     item.querySelector(".chat-preview").textContent = lastHotelMessage.slice(
+//       0,
+//       10
+//     );
+//   });
+// });
 
 //=======住宿評論渲染=============
 function renderReviews(reviews) {
