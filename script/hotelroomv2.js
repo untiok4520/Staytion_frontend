@@ -295,29 +295,56 @@ $(function () {
                 method: "GET",
                 headers,
                 success(r) {
-                    console.log("編輯房型資料", r);
-                    $roomHotel.val(r.hotelId);
-                    $roomName.val(r.rname);
-                    $roomDesc.val(r.description);
-                    $roomCount.val(r.quantity);
-                    $roomPrices.val(r.price);
-                    $roomView.val(r.view);
-                    $roomSize.val(r.size);
-                    $roomBedType.val(r.bedType);
-                    $roomBedCount.val(r.bedCount);
-                    $roomCapacity.val(r.capacity);
-                    $roomRefund.val(r.refundable ? "可退款" : "不可退款");
-                    $roomCancel.val(r.isCanceled ? "可取消" : "不可取消");
-                    $roomImageUrlInput.val(r.imgUrl || '');
-                    $roomImageUrlInput.trigger('input');
-                    roomModal.show();
+                    // 取得設施總表
+                    $.get("http://localhost:8080/api/amenities", function (allAmenities) {
+                        // 1. 名稱 -> id 對照表
+                        const nameToId = {};
+                        allAmenities.forEach(a => {
+                            nameToId[a.aname] = a.id;
+                        });
+    
+                        // 2. 將 amenities 名稱陣列轉 id 陣列
+                        let selectedAmenityIds = [];
+                        if (Array.isArray(r.amenities)) {
+                            // 若拿到的是名稱陣列
+                            if (typeof r.amenities[0] === "string") {
+                                selectedAmenityIds = r.amenities.map(aname => nameToId[aname]).filter(Boolean);
+                            }
+                            // 若是 id 陣列
+                            else if (typeof r.amenities[0] === "number") {
+                                selectedAmenityIds = r.amenities;
+                            }
+                            // 若是物件陣列
+                            else if (typeof r.amenities[0] === "object") {
+                                selectedAmenityIds = r.amenities.map(a => a.id);
+                            }
+                        }
+    
+                        // 3. 其它欄位填充
+                        $roomHotel.val(r.hotelId);
+                        $roomName.val(r.rname);
+                        $roomDesc.val(r.description);
+                        $roomCount.val(r.quantity);
+                        $roomPrices.val(r.price);
+                        $roomView.val(r.view);
+                        $roomSize.val(r.size);
+                        $roomBedType.val(r.bedType);
+                        $roomBedCount.val(r.bedCount);
+                        $roomCapacity.val(r.capacity);
+                        $roomRefund.val(r.refundable ? "可退款" : "不可退款");
+                        $roomCancel.val(r.isCanceled ? "可取消" : "不可取消");
+                        $roomImageUrlInput.val(r.imgUrl || '');
+                        $roomImageUrlInput.trigger('input');
+                        loadRoomAmenities(selectedAmenityIds);
+                        roomModal.show();
+                    });
                 },
                 error(xhr) {
                     console.error("載入房型資料失敗", xhr.responseText);
                 }
             });
         });
-
+    
         $(".btn-del-room").off("click").on("click", function () {
             if (!confirm("刪除此房型？")) return;
             $.ajax({
@@ -335,14 +362,36 @@ $(function () {
         });
     }
 
+    function loadRoomAmenities(selected) {
+        $.get("http://localhost:8080/api/amenities", function (list) {
+            const $container = $("#RoomAmenities");
+            $container.empty();
+            // 這裡要注意 selected 必須是 id 陣列
+            list.forEach(a => {
+                const checked = selected && selected.includes(a.id) ? 'checked' : '';
+                $container.append(`
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="roomAmenity${a.id}" value="${a.id}" ${checked}>
+                        <label class="form-check-label" for="roomAmenity${a.id}">${a.aname}</label>
+                    </div>
+                `)
+            });
+        });
+    }
+    
     // ---------- 新增/編輯 房型
     $("#btnAddRoom").on("click", () => {
         roomEditId = null;
         $roomForm[0].reset();
         roomModal.show();
+        loadRoomAmenities();
     });
 
     $roomSave.on("click", () => {
+        const amenities = [];
+        $("#RoomAmenities input[type=checkbox]:checked").each(function () {
+            amenities.push(+$(this).val());
+        });
         const data = {
             hotelId: $roomHotel.val(),
             rname: $roomName.val(),
@@ -356,7 +405,8 @@ $(function () {
             capacity: $roomCapacity.val(),    
             refundable: $roomRefund.val() === "可退款",
             isCanceled: $roomCancel.val() === "不可取消",
-            imgUrl: $roomImageUrlInput.val().trim()
+            imgUrl: $roomImageUrlInput.val().trim(),
+            amenityIds: amenities
         };
 
         const method = roomEditId ? "PUT" : "POST";
