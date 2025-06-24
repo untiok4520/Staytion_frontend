@@ -173,6 +173,82 @@ guestPopup.querySelectorAll("button.qty-btn").forEach(btn => {
 // 初始化文字顯示
 updateGuestText();
 
+// 地點類型API相關函數 -------------------------------------------------
+
+// 獲取地點類型的API調用函數
+async function getLocationTypeFromAPI(locationName) {
+    try {
+        // 替換為您的實際API端點
+        const response = await fetch(`http://localhost:8080/api/locations/search?keyword=${encodeURIComponent(locationName)}`, {
+            method: 'GET', // 根據實際API調整
+            headers: {
+                'Content-Type': 'application/json',
+            },
+           
+        });
+
+        if (!response.ok) {
+            throw new Error(`獲取地點類型失敗: ${response.status}`);
+        }
+
+        const locationData = await response.json();
+        
+        // 根據您提供的API回應格式查找匹配的地點
+        // API回應格式: [{"city": "台中市", "label": "南屯區（台中市）", "type": "district", "value": "南屯區"}]
+        const matchedLocation = locationData.find(location => 
+            location.value === locationName || 
+            location.label.includes(locationName) ||
+            location.city === locationName
+        );
+
+        if (!matchedLocation) {
+            console.warn(`找不到地點類型，使用備用邏輯: ${locationName}`);
+            // 如果找不到，使用備用的本地判斷邏輯
+            return getLocationTypeLocal(locationName);
+        }
+
+        return matchedLocation;
+    } catch (error) {
+        console.error('獲取地點類型時發生錯誤:', error);
+        // 發生錯誤時使用備用邏輯
+        return getLocationTypeLocal(locationName);
+    }
+}
+
+// 備用方案：本地判斷地點類型
+// function getLocationTypeLocal(locationName) {
+//     // 常見的區域名稱
+//     const districts = ['南屯區', '西屯區', '北屯區', '中區', '東區', '南區', '西區', '北區', 
+//                       '信義區', '大安區', '中山區', '松山區', '萬華區', '中正區', '大同區', 
+//                       '士林區', '北投區', '內湖區', '南港區', '文山區'];
+    
+//     // 常見的城市名稱
+//     const cities = ['台北市', '台中市', '台南市', '高雄市', '新北市', '桃園市', '新竹市', 
+//                    '基隆市', '嘉義市', '台北', '台中', '台南', '高雄', '新北', '桃園', 
+//                    '新竹', '基隆', '嘉義'];
+    
+//     // 精確匹配區域
+//     if (districts.some(district => locationName.includes(district))) {
+//         return 'district';
+//     } 
+//     // 精確匹配城市
+//     else if (cities.some(city => locationName.includes(city))) {
+//         return 'city';
+//     } 
+//     // 包含'區'字的判斷為區域
+//     else if (locationName.includes('區')) {
+//         return 'district';
+//     } 
+//     // 包含'市'字的判斷為城市
+//     else if (locationName.includes('市')) {
+//         return 'city';
+//     }
+//     // 預設為城市
+//     else {
+//         return 'city';
+//     }
+// }
+
 // 近期搜尋紀錄 -------------------------------------------------
 const searchBtn = document.getElementById('search-btn');
 const searchHistory = document.querySelector('.search-history');
@@ -285,23 +361,39 @@ async function fetchSearchHistory() {
     }
 }
 
-async function addSearchHistory(city, checkInDate, checkOutDate, adults, kids) {
-    const userId = await getUserIdFromToken(); // 取得 userId
+// 修改後的 addSearchHistory 函數
+async function addSearchHistory(locationName, checkInDate, checkOutDate, adults, kids) {
+    const userId = await getUserIdFromToken();
     if (!userId) return;
 
     try {
-        await fetch(`http://localhost:8080/api/histories/${userId}`, {
+        // 先獲取地點類型
+        const location = await getLocationTypeFromAPI(locationName);
+         if (!location) {
+            throw new Error('無法獲取有效的地點類型');
+        }
+        // 準備符合後端期望格式的請求資料
+        const requestData = {
+            locationName: location.value,    // 後端期望的欄位名稱
+            locationType: location.type,    // 動態獲取的地點類型
+            checkInDate,
+            checkOutDate,
+            searchTime: new Date().toISOString(),
+            adults,
+            kids
+        };
+
+        console.log('發送給後端的資料:', requestData); // 除錯用
+
+        const response = await fetch(`http://localhost:8080/api/histories/${userId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                cityName: city,
-                checkInDate,
-                checkOutDate,
-                searchTime: new Date().toISOString(),
-                adults,
-                kids
-            })
+            body: JSON.stringify(requestData)
         });
+
+        if (!response.ok) {
+            throw new Error(`新增搜尋紀錄失敗: ${response.status}`);
+        }
 
         await fetchSearchHistory(); // 成功後更新搜尋歷史
         searchHistory.style.display = 'block';
@@ -310,10 +402,9 @@ async function addSearchHistory(city, checkInDate, checkOutDate, adults, kids) {
     }
 }
 
-searchBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-
-    const city = document.getElementById('destinationInput').value || '台北市';
+// 搜尋功能 - 整合地點類型API
+async function performSearch() {
+    const locationName = document.getElementById('destinationInput').value || '台北市';
     const dateInput = document.getElementById('daterange');
     const dateRange = dateInput.value.split(' 至 ');
     const startDate = dateRange[0]?.trim() || null;
@@ -322,7 +413,42 @@ searchBtn.addEventListener('click', async (e) => {
     const adults = guestCounts?.adults ?? 1;
     const kids = guestCounts?.children ?? 0;
 
-    await addSearchHistory(city, startDate, endDate, adults, kids);
+    try {
+        // 獲取地點類型
+        const locationType = await getLocationTypeFromAPI(locationName);
+        
+        // 準備主要搜尋API的請求資料
+        const searchRequestData = {
+            locationName: locationName,
+            locationType: locationType,
+            checkInDate: startDate,
+            checkOutDate: endDate,
+            searchTime: new Date().toISOString(),
+            kids: kids,
+            adults: adults
+        };
+
+        console.log('搜尋請求資料:', searchRequestData);
+
+        // 這裡可以調用您的主要搜尋API
+        // const searchResponse = await fetch('YOUR_SEARCH_API_ENDPOINT', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(searchRequestData)
+        // });
+
+        // 同時新增到搜尋歷史
+        await addSearchHistory(locationName, startDate, endDate, adults, kids);
+        
+    } catch (error) {
+        console.error('搜尋過程中發生錯誤:', error);
+    }
+}
+
+// 修改搜尋按鈕事件監聽器
+searchBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await performSearch();
 });
 
 // 更新箭頭顯示狀態
@@ -391,7 +517,6 @@ function renderCityCard(city) {
     cityCarousel.appendChild(cityCard);
 }
 
-
 // 精選飯店 -------------------------------------------------
 
 // 取得容器和箭頭按鈕
@@ -443,8 +568,6 @@ async function loadTopHotels() {
     }
 }
 
-
-
 // 收藏功能
 document.addEventListener('click', function (e) {
     if (e.target.closest('.heart-btn')) {
@@ -458,11 +581,14 @@ document.addEventListener('click', function (e) {
     }
 });
 
+// 頁面載入完成後執行
 document.addEventListener('DOMContentLoaded', () => {
     loadCitiesData();
     loadTopHotels();
+    fetchSearchHistory(); // 載入搜尋歷史
 });
 
+// 使用者登入狀態檢查
 document.addEventListener('DOMContentLoaded', function () {
     const token = localStorage.getItem('jwtToken');
     const loginBtn = document.getElementById('loginBtn');
