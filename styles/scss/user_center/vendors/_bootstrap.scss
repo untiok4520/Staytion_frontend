@@ -1,0 +1,8 @@
+@use "../abstract/custom-variables" as *;
+
+@use "../bootstrap/bootstrap" with (
+  $primary: $primary,
+  $secondary: $secondary,
+  $warning: $warning,
+  $border-radius: $border-radius
+);
