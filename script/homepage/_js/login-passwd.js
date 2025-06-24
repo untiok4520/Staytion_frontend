@@ -33,6 +33,10 @@ if (form) {
       const data = await res.json();
       // 假設後端回傳 { token: '...' }
       localStorage.setItem('jwtToken', data.token);
+      console.log(data);
+
+      // 調用 getUserIdFromToken 來解析 token 並獲取 userId
+      await getUserIdFromToken();
 
       alert('登入成功');
       // 登入成功後導回首頁或會員頁
@@ -44,59 +48,91 @@ if (form) {
   });
 }
 
+// 從 localStorage 取得 token
+async function getUserIdFromToken() {
+  const token = localStorage.getItem('jwtToken'); // 從 localStorage 中取得 jwtToken
+  console.log('JWT Token:', token);  // 確認 token 是否存在
+  if (!token) {
+    console.error("Token 不存在，無法取得使用者資料");
+    return null;
+  }
+
+  try {
+    const response = await fetch('http://localhost:8080/api/user/profile', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`  // 將 token 放在 Authorization header 中
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('無法取得使用者資料');
+    }
+
+    const userData = await response.json();
+    console.log('User Data:', userData);  // 查看回傳的資料
+
+    localStorage.setItem('userId', userData.id);
+    return userData.id; // 假設回應資料中有 'id'
+
+  } catch (err) {
+    console.error("取得使用者資料失敗:", err);
+    return null;
+  }
+}
+
 // 導覽列 -------------------------------------------------
 
 //貨幣切換按鈕
 document
-    .querySelectorAll("#currencyModal .modal-body.modal-grid a")
-    .forEach(function (item) {
-        item.addEventListener("click", function (e) {
-            e.preventDefault();
-            const html = this.innerHTML.trim();
-            const parts = html.split("<br>");
-            const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
-            const btn = document.querySelector(
-                'button[data-bs-target="#currencyModal"]'
-            );
-            if (btn) {
-                btn.textContent = code;
-            }
-            //關閉modal
-            const modalEl = document.getElementById("currencyModal");
-            const modalInstance =
-                window.bootstrap && window.bootstrap.Modal
-                    ? window.bootstrap.Modal.getInstance(modalEl)
-                    : typeof bootstrap !== "undefined" && bootstrap.Modal
-                        ? bootstrap.Modal.getInstance(modalEl)
-                        : null;
-            if (modalInstance) modalInstance.hide();
-        });
+  .querySelectorAll("#currencyModal .modal-body.modal-grid a")
+  .forEach(function (item) {
+    item.addEventListener("click", function (e) {
+      e.preventDefault();
+      const html = this.innerHTML.trim();
+      const parts = html.split("<br>");
+      const code = parts[parts.length - 1].trim(); // 取最後一行的貨幣代碼
+      const btn = document.querySelector(
+        'button[data-bs-target="#currencyModal"]'
+      );
+      if (btn) {
+        btn.textContent = code;
+      }
+      //關閉modal
+      const modalEl = document.getElementById("currencyModal");
+      const modalInstance =
+        window.bootstrap && window.bootstrap.Modal
+          ? window.bootstrap.Modal.getInstance(modalEl)
+          : typeof bootstrap !== "undefined" && bootstrap.Modal
+            ? bootstrap.Modal.getInstance(modalEl)
+            : null;
+      if (modalInstance) modalInstance.hide();
     });
+  });
 
 //語言切換按鈕
 document
-    .querySelectorAll("#languageModal .modal-body.modal-grid > div")
-    .forEach(function (item) {
-        item.addEventListener("click", function (e) {
-            e.preventDefault();
-            const span = this.querySelector("span.fi");
-            const btn = document.querySelector(
-                'button[data-bs-target="#languageModal"]'
-            );
-            if (span && btn) {
-                // 將button的內容換成<span>
-                btn.innerHTML = span.outerHTML;
-            }
-            // 關閉 modal
-            const modalEl = document.getElementById("languageModal");
-            const modalInstance =
-                window.bootstrap && window.bootstrap.Modal
-                    ? window.bootstrap.Modal.getInstance(modalEl)
-                    : typeof bootstrap !== "undefined" && bootstrap.Modal
-                        ? bootstrap.Modal.getInstance(modalEl)
-                        : null;
-            if (modalInstance) modalInstance.hide();
-        });
+  .querySelectorAll("#languageModal .modal-body.modal-grid > div")
+  .forEach(function (item) {
+    item.addEventListener("click", function (e) {
+      e.preventDefault();
+      const span = this.querySelector("span.fi");
+      const btn = document.querySelector(
+        'button[data-bs-target="#languageModal"]'
+      );
+      if (span && btn) {
+        // 將button的內容換成<span>
+        btn.innerHTML = span.outerHTML;
+      }
+      // 關閉 modal
+      const modalEl = document.getElementById("languageModal");
+      const modalInstance =
+        window.bootstrap && window.bootstrap.Modal
+          ? window.bootstrap.Modal.getInstance(modalEl)
+          : typeof bootstrap !== "undefined" && bootstrap.Modal
+            ? bootstrap.Modal.getInstance(modalEl)
+            : null;
+      if (modalInstance) modalInstance.hide();
     });
+  });
 
-    
