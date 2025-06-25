@@ -80,7 +80,7 @@ $(document).ready(function () {
         data.forEach(order => {
             const statusInfo = getPaymentStatusInfo(order.paymentStatus);
             const methodInfo = getPaymentMethodInfo(order.paymentMethod);
-             
+
             // 儲存 guest 資料
             guestData[order.userId] = {
                 name: order.userName,
@@ -89,7 +89,7 @@ $(document).ready(function () {
                 orders: guestData[order.userId]?.orders + 1 || 1,
                 amount: (guestData[order.userId]?.amount || 0) + order.totalPrice
             };
-        
+
             const row = `
                 <tr>
                     <td># ${order.id}</td>
