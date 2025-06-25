@@ -1,10 +1,12 @@
-// review-management.js
 $(document).ready(function () {
   const reviewList = $("#reviewList");
   const avgRating = $("#avgRating");
   const hotelSelect = $("select.form-select").first();
   const ownerId = 1; // TODO: 替換為登入者的 ID
   let hotelMap = {};
+
+  let currentPage = 0;
+  let totalPages = 0;
 
   // 載入飯店選單
   function loadHotels() {
@@ -25,7 +27,8 @@ $(document).ready(function () {
   }
 
   // 查詢留言
-  function fetchReviews() {
+  function fetchReviews(page = 0) {
+    currentPage = page;
     const params = {};
 
     const keyword = $('input[placeholder="輸入姓名 / 評論內容"]').val().trim();
@@ -38,7 +41,15 @@ $(document).ready(function () {
       params.comment = keyword;
     }
     if (hotel) params.hotelName = hotel;
-    if (date) params.startDate = date;
+    if (date) {
+      const startDate = date;
+      const nextDate = new Date(date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      const endDate = nextDate.toISOString().split("T")[0]; // 取 yyyy-MM-dd
+
+      params.startDate = startDate;
+      params.endDate = endDate;
+    }
 
     if (scoreOption === "8 分以上") {
       params.minScore = 8;
@@ -49,7 +60,7 @@ $(document).ready(function () {
       params.maxScore = 5;
     }
 
-    params.page = 0;
+    params.page = page;
     params.size = 10;
 
     $.ajax({
@@ -57,9 +68,11 @@ $(document).ready(function () {
       method: "GET",
       data: params,
       success: function (data) {
-        console.log("取得留言資料：", data);
+        console.log("載入留言成功",data)
+        totalPages = data.totalPages;
         renderReviews(data.content);
         calculateAvg(data.content);
+        renderPagination(currentPage, totalPages);
       },
       error: function () {
         console.error("載入留言失敗");
@@ -128,7 +141,6 @@ $(document).ready(function () {
   reviewList.on("click", ".send-reply-btn", function () {
     const orderId = $(this).data("orderId");
     const reply = $(this).closest(".collapse").find("textarea").val().trim();
-
     if (!reply) return;
 
     $.ajax({
@@ -137,7 +149,7 @@ $(document).ready(function () {
       contentType: "application/json",
       data: JSON.stringify({ reply }),
       success: function () {
-        fetchReviews();
+        fetchReviews(currentPage);
         const toastEl = $("#replyToast");
         if (toastEl.length) new bootstrap.Toast(toastEl[0]).show();
       },
@@ -150,10 +162,60 @@ $(document).ready(function () {
   // 表單查詢事件
   $("form").on("submit", function (e) {
     e.preventDefault();
-    fetchReviews();
+    fetchReviews(0);
+  });
+
+  // 分頁渲染（滾動式）
+  function renderPagination(current, total) {
+    const maxVisible = 5;
+    const $pagination = $("#pagination");
+    $pagination.empty();
+    let html = "";
+
+    html += `<li class="page-item ${current === 0 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${current - 1}">上一頁</a>
+            </li>`;
+
+    let start = Math.max(0, current - Math.floor(maxVisible / 2));
+    let end = Math.min(total - 1, current + Math.floor(maxVisible / 2));
+
+    if (start > 1) {
+      html += `<li class="page-item"><a class="page-link" href="#" data-page="0">1</a></li>`;
+      if (start > 2) {
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+      }
+    }
+
+    for (let i = start; i <= end; i++) {
+      html += `<li class="page-item ${i === current ? 'active' : ''}">
+                  <a class="page-link" href="#" data-page="${i}">${i + 1}</a>
+              </li>`;
+    }
+
+    if (end < total - 1) {
+      if (end < total - 2) {
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+      }
+      html += `<li class="page-item"><a class="page-link" href="#" data-page="${total - 1}">${total}</a></li>`;
+    }
+
+    html += `<li class="page-item ${current + 1 >= total ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${current + 1}">下一頁</a>
+            </li>`;
+
+    $pagination.append(html);
+  }
+
+  // 點擊分頁事件
+  $(document).on("click", ".pagination .page-link", function (e) {
+    e.preventDefault();
+    const page = parseInt($(this).data("page"));
+    if (!isNaN(page) && page >= 0 && page < totalPages) {
+      fetchReviews(page);
+    }
   });
 
   // 初始化
   loadHotels();
-  fetchReviews();
+  fetchReviews(0);
 });
