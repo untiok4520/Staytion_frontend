@@ -32,7 +32,8 @@ $(document).ready(function () {
     const params = {};
 
     const keyword = $('input[placeholder="輸入姓名 / 評論內容"]').val().trim();
-    const hotel = hotelSelect.val();
+    const hotelId = hotelSelect.val();
+    const hotel = hotelMap[hotelId];
     const date = $('input[type="date"]').val();
     const scoreOption = $("select.form-select").eq(1).val();
 
@@ -63,15 +64,21 @@ $(document).ready(function () {
     params.page = page;
     params.size = 10;
 
+    // 平均分數
+    if (hotelId) {
+      calculateAvg(hotelId); // 傳入選到的 hotelId
+    } else {
+      avgRating.text("--"); // 沒選飯店就清除平均分數
+    }
+
     $.ajax({
       url: "http://localhost:8080/api/host/reviews",
       method: "GET",
       data: params,
       success: function (data) {
-        console.log("載入留言成功",data)
+        console.log("載入留言成功", data)
         totalPages = data.totalPages;
         renderReviews(data.content);
-        calculateAvg(data.content);
         renderPagination(currentPage, totalPages);
       },
       error: function () {
@@ -104,7 +111,7 @@ $(document).ready(function () {
             <div class="card-body">
               <div class="d-flex justify-content-between mb-2">
                 <div>
-                  <h6 class="mb-1">${r.firstName} · ${hotelMap[hotelSelect.val()] || "飯店"}</h6>
+                  <h6 class="mb-1">${r.firstName} · ${r.hotelName || "飯店"}</h6>
                   <small class="text-muted">留言時間：${createdDate}</small>
                 </div>
                 <div>
@@ -132,10 +139,29 @@ $(document).ready(function () {
   }
 
   // 平均分數計算
-  function calculateAvg(list) {
-    const avg = list.reduce((sum, r) => sum + r.score, 0) / list.length;
-    avgRating.text(avg.toFixed(1));
+  function calculateAvg(hotelId) {
+    if (!hotelId) {
+      avgRating.text("--");
+      return;
+    }
+
+    $.ajax({
+      url: `http://localhost:8080/api/rooms/${hotelId}/reviews/average-score`,
+      method: "GET",
+      success: function (data) {
+        if (data && typeof data === "number") {
+          avgRating.text(data.toFixed(1));
+        } else {
+          avgRating.text("--");
+        }
+      },
+      error: function () {
+        avgRating.text("--");
+        console.error("取得平均分數失敗");
+      }
+    });
   }
+
 
   // 回覆留言 PATCH
   reviewList.on("click", ".send-reply-btn", function () {
