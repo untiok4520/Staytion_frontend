@@ -54,7 +54,7 @@ document
     });
 
 // 選擇地點 -------------------------------------------------
-const popularCities = ["台北市", "台中市", "台南市", "台南市", "高雄市"]; 
+const popularCities = ["台北市", "台中市", "台南市", "台南市", "高雄市"];
 const suggestionsEl = document.getElementById("suggestions");
 const destinationInput = document.getElementById("destinationInput");
 
@@ -65,34 +65,34 @@ function showSuggestions(keyword = "") {
         // 如果沒有輸入文字，顯示所有熱門城市
         citiesToShow = popularCities;
     } else {
-    // 發送 API 請求
-    fetch(`http://localhost:8080/api/locations/search?keyword=${encodeURIComponent(keyword)}`)
-        .then(response => response.json()) // 解析返回的 JSON 數據
-        .then(data => {
-            // 根據 API 返回的資料來構建建議清單
-            if (data.length === 0) {
-                suggestionsEl.style.display = "none";
-                return;
-            }
+        // 發送 API 請求
+        fetch(`http://localhost:8080/api/locations/search?keyword=${encodeURIComponent(keyword)}`)
+            .then(response => response.json()) // 解析返回的 JSON 數據
+            .then(data => {
+                // 根據 API 返回的資料來構建建議清單
+                if (data.length === 0) {
+                    suggestionsEl.style.display = "none";
+                    return;
+                }
 
-            suggestionsEl.innerHTML = data
-                .map(item => {
-                    // 構建每一條建議清單項目
-                    return `<li class="list-group-item">
+                suggestionsEl.innerHTML = data
+                    .map(item => {
+                        // 構建每一條建議清單項目
+                        return `<li class="list-group-item">
                                 ${item.value}
                             </li>`;
-                })
-                .join("");
+                    })
+                    .join("");
 
-            suggestionsEl.style.display = "block";
-        })
-        .catch(error => {
-            console.error("Error fetching locations:", error);
-            suggestionsEl.style.display = "none";
-        });
-}
+                suggestionsEl.style.display = "block";
+            })
+            .catch(error => {
+                console.error("Error fetching locations:", error);
+                suggestionsEl.style.display = "none";
+            });
+    }
 
- // 如果沒有匹配的項目，顯示熱門城市
+    // 如果沒有匹配的項目，顯示熱門城市
     if (citiesToShow.length > 0) {
         suggestionsEl.innerHTML = citiesToShow
             .map(city => `<li class="list-group-item">${city}</li>`)
@@ -222,7 +222,7 @@ async function getLocationTypeFromAPI(locationName) {
             headers: {
                 'Content-Type': 'application/json',
             },
-           
+
         });
 
         if (!response.ok) {
@@ -230,11 +230,11 @@ async function getLocationTypeFromAPI(locationName) {
         }
 
         const locationData = await response.json();
-        
+
         // 根據您提供的API回應格式查找匹配的地點
         // API回應格式: [{"city": "台中市", "label": "南屯區（台中市）", "type": "district", "value": "南屯區"}]
-        const matchedLocation = locationData.find(location => 
-            location.value === locationName || 
+        const matchedLocation = locationData.find(location =>
+            location.value === locationName ||
             location.label.includes(locationName) ||
             location.city === locationName
         );
@@ -312,9 +312,14 @@ async function fetchSearchHistory() {
             const endDate = item.checkOutDate || '未知日期';
             const total = item.total || '未知人數';
 
+            const link = document.createElement("a");
+            link.href = "#";  // 設置目標鏈接
+            link.classList.add("text-decoration-none", "text-dark");
+            link.style.display = "block";  // 讓 <a> 標籤像區塊元素一樣，保持佈局不變
+
             const card = document.createElement("div");
             card.classList.add("history-card", "d-flex", "border", "rounded", "p-2");
-            card.style.minWidth = "250px";
+            card.style.minWidth = "250px"
 
             card.innerHTML = `
             <div class="history-img me-3">
@@ -326,8 +331,11 @@ async function fetchSearchHistory() {
                 <div class="history-item">${total} 位</div>
             </div>
         `;
+            // 將 .history-card 放入 <a> 標籤中
+            link.appendChild(card);
 
-            historyCarousel.appendChild(card);
+            // 將 <a> 標籤添加到容器中
+            historyCarousel.appendChild(link);
         });
 
         updateArrowsVisibility();
@@ -345,7 +353,7 @@ async function addSearchHistory(locationName, checkInDate, checkOutDate, adults,
     try {
         // 先獲取地點類型
         const location = await getLocationTypeFromAPI(locationName);
-         if (!location) {
+        if (!location) {
             throw new Error('無法獲取有效的地點類型');
         }
         // 準備符合後端期望格式的請求資料
@@ -392,7 +400,7 @@ async function performSearch() {
     try {
         // 獲取地點類型
         const locationType = await getLocationTypeFromAPI(locationName);
-        
+
         // 準備主要搜尋API的請求資料
         const searchRequestData = {
             locationName: locationName,
@@ -408,7 +416,7 @@ async function performSearch() {
 
         // 同時新增到搜尋歷史
         await addSearchHistory(locationName, startDate, endDate, adults, kids);
-        
+
     } catch (error) {
         console.error('搜尋過程中發生錯誤:', error);
     }
@@ -509,14 +517,14 @@ async function loadTopHotels() {
         }
         const hotels = await response.json();
 
-        hotels.forEach(hotel => {
+        for (const hotel of hotels) {
             const card = document.createElement('div');
             card.classList.add('card');
 
             card.innerHTML = `
                 <a href="#" class="text-decoration-none text-dark d-block position-relative">
                     <img src="${hotel.coverImageUrl}" class="card-img-top" alt="${hotel.hotelName}">
-                    <button class="btn btn-light heart-btn position-absolute top-0 end-0 m-2 rounded-circle shadow-sm">
+                    <button class="btn btn-light heart-btn position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" data-hotel-id="${hotel.hotelId}">
                         <i class="bi bi-heart"></i>
                     </button>
                     <div class="card-body">
@@ -531,24 +539,97 @@ async function loadTopHotels() {
                 </a>
             `;
             recommendationCarousel.appendChild(card);
-        });
+
+            // 檢查是否已收藏
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                // 發送 GET 請求檢查是否已收藏
+                const isFavoriteResponse = await fetch(`http://localhost:8080/api/favorites/check?userId=${userId}&hotelId=${hotel.hotelId}`);
+                if (!isFavoriteResponse.ok) {
+                    console.error('檢查收藏狀態失敗');
+                    return;
+                }
+
+                const isFavorite = await isFavoriteResponse.json();
+                const heartBtn = card.querySelector('.heart-btn');
+                const icon = heartBtn.querySelector('i');
+
+                if (isFavorite) {
+                    // 如果已收藏，顯示填滿的愛心
+                    icon.classList.remove('bi-heart');
+                    icon.classList.add('bi-heart-fill', 'text-danger');
+                } else {
+                    // 否則顯示空心愛心
+                    icon.classList.add('bi-heart');
+                    icon.classList.remove('bi-heart-fill', 'text-danger');
+                }
+            }
+        }
     } catch (error) {
         console.error('取得精選飯店失敗:', error);
     }
 }
 
-// 收藏功能
+
 document.addEventListener('click', function (e) {
-    if (e.target.closest('.heart-btn')) {
+    const heartBtn = e.target.closest('.heart-btn');
+    if (heartBtn) {
         e.stopPropagation(); // 阻止冒泡
         e.preventDefault();  // 防止誤觸 <a>
 
-        const icon = e.target.closest('.heart-btn').querySelector('i');
-        icon.classList.toggle('bi-heart');
-        icon.classList.toggle('bi-heart-fill');
-        icon.classList.toggle('text-danger');
+        const icon = heartBtn.querySelector('i');
+        const hotelId = heartBtn.dataset.hotelId;  // 從按鈕中獲取 hotelId
+        const userId = localStorage.getItem('userId');
+
+        if (icon.classList.contains('bi-heart')) {
+            // 調用 addFavorite 接口
+            addFavorite(userId, hotelId)
+                .then(response => {
+                    icon.classList.toggle('bi-heart');
+                    icon.classList.toggle('bi-heart-fill');
+                    icon.classList.toggle('text-danger');
+                    console.log('添加收藏成功');
+                })
+                .catch(error => console.error('添加收藏失敗:', error));
+        } else {
+            // 調用 removeFavorite 接口
+            removeFavorite(userId, hotelId)
+                .then(() => {
+                    icon.classList.toggle('bi-heart');
+                    icon.classList.toggle('bi-heart-fill');
+                    icon.classList.toggle('text-danger');
+                    console.log('移除收藏成功');
+                })
+                .catch(error => console.error('移除收藏失敗:', error));
+        }
     }
 });
+
+// 添加收藏 API
+function addFavorite(userId, hotelId) {
+    return fetch('http://localhost:8080/api/favorites', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: userId,
+            hotelId: hotelId,
+        }),
+    }).then(response => response.json());
+
+}
+
+// 移除收藏 API
+function removeFavorite(userId, hotelId) {
+    return fetch(`http://localhost:8080/api/favorites?userId=${userId}&hotelId=${hotelId}`, {
+        method: 'DELETE',
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('移除收藏失敗');
+        }
+    });
+}
 
 // 頁面載入完成後執行
 document.addEventListener('DOMContentLoaded', () => {

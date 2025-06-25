@@ -31,8 +31,6 @@ function displayUserInfo(userInfo) {
         return;
     }
     console.log("[User Info Received]:", userInfo);
-    // 如果你未來需要將用戶資訊存儲到某處，可以在這裡處理，例如：
-    // localStorage.setItem('userEmail', userInfo.email);
 }
 
 
@@ -84,7 +82,7 @@ function initializeGoogleSignIn() {
                 {
                     theme: "outline",
                     size: "large",
-                    width: "300",
+                    width: "400",
                     text: "signin_with",
                     shape: "rectangular",
                     logo_alignment: "left"
@@ -135,6 +133,8 @@ async function sendTokenToBackend(idToken) {
         console.log("後端回應:", data);
 
         if (data.token) {
+            localStorage.setItem('jwtToken', data.token);
+            localStorage.setItem('userId', data.user.id);
             console.log("JWT token 已儲存到 localStorage。");
             // 登入成功後，你可能需要導向到其他頁面
             window.location.href = "../../pages/homepage/home.html";

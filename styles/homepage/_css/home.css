@@ -324,7 +324,6 @@
 /* 搜尋紀錄 */
 
 .search-history {
-    display: none;
     position: relative;
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -393,6 +392,8 @@
 .recommendations .card {
     flex: 0 0 250px;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    height: 400px;
+    overflow: hidden; /* 隱藏所有滾動條 */
 
 }
 
@@ -417,7 +418,7 @@
     .recommendations .card {
         flex: 0 0 150px;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-
+        height: 250px;
     }
 
     .city-card .card {

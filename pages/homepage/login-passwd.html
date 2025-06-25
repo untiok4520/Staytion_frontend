@@ -14,13 +14,16 @@
 
     <!-- css -->
     <link rel="stylesheet" href="../../styles/homepage/_css/login.css">
+
+    <!-- 載入 Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
     <!-- 導覽列 -->
     <nav class="my-navbar navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="./home.html">
                 <img src="../../assets/logo.png" class="logo_img" alt="logo" />
             </a>
             <ul class="navbar-nav">
@@ -127,8 +130,8 @@
             <label for="password" class="my-1">密碼</label><br>
             <input type="password" id="password" class="mb-2" placeholder="密碼"><br>
             <button type="submit" class="primaryBtn btn mt-4 mb-3">登入</button>
-            <button class="secondaryBtn btn mb-1">使用驗證碼登入</button>
-            <div class="forgot-passwd mb-3">
+            <!-- <button class="secondaryBtn btn mb-1">使用驗證碼登入</button> -->
+            <div class="forgot-passwd-link mb-3">
                 <a href="./forgot-passwd.html">忘記密碼？點此重設密碼！</a>
             </div>
             <div class="hr-with-text">
@@ -137,11 +140,11 @@
 
             <div class="social-icon container">
                 <div class=row>
-                    <div class="col-6 text-center my-1">
-                        <a href="#"><img src="../../assets/homepage/img/google.svg" alt="google"></a>
+                    <div class="col-12 text-center my-1 google-btn-container">
+                        <div id="googleSignInDiv"></div>
                     </div>
-                    <div class="col-6 text-center my-1">
-                        <a href="#"><img src="../../assets/homepage/img/facebook.svg" alt="facebook"></a>
+                    <div class="col-12 text-center my-1">
+                        <button class="facebookSignIn" onclick="event.preventDefault();"><img class="facebook-icon" src="../../assets/homepage/img/facebook.svg" alt="facebook">使用 Facebook 帳戶登入</button>
                     </div>
                 </div>
             </div>
