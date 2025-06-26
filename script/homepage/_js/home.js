@@ -54,7 +54,7 @@ document
     });
 
 // 選擇地點 -------------------------------------------------
-const popularCities = ["台北市", "台中市", "台南市", "台南市", "高雄市"];
+const popularCities = ["台北市", "桃園市", "台中市", "台南市", "高雄市"];
 const suggestionsEl = document.getElementById("suggestions");
 const destinationInput = document.getElementById("destinationInput");
 
@@ -266,11 +266,12 @@ const prevhistoryBtn = document.getElementById('scroll-prev-history');
 nexthistoryBtn.style.display = 'none';
 prevhistoryBtn.style.display = 'none';
 
-// 使用實際卡片寬度加 margin 做為滾動距離
-const getScrollAmount = () => {
-    const card = document.querySelector('.city-carousel .card');
+// 傳入 carousel 容器與卡片 class，自動計算滑動距離
+function getScrollAmount(containerSelector, cardSelector) {
+    const container = document.querySelector(containerSelector);
+    const card = container?.querySelector(cardSelector);
     return card ? card.offsetWidth + 16 : 260;
-};
+}
 
 // 根據卡片數量來顯示箭頭按鈕
 function updateArrowsVisibility() {
@@ -287,15 +288,22 @@ function updateArrowsVisibility() {
 }
 
 nexthistoryBtn.addEventListener('click', () => {
-    historyCarousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    historyCarousel.scrollBy({
+        left: getScrollAmount('#history-carousel', '.history-card'),
+        behavior: 'smooth'
+    });
 });
 
 prevhistoryBtn.addEventListener('click', () => {
-    historyCarousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    historyCarousel.scrollBy({
+        left: -getScrollAmount('#history-carousel', '.history-card'),
+        behavior: 'smooth'
+    });
 });
 
 async function fetchSearchHistory() {
     const userId = localStorage.getItem('userId') // 取得 userId
+    const searchHistory = document.querySelector('.search-history');
     if (!userId) return;
 
     try {
@@ -303,6 +311,13 @@ async function fetchSearchHistory() {
         if (!response.ok) throw new Error('無法取得歷史紀錄');
 
         const data = await response.json();
+
+        // 若沒有歷史紀錄，則不顯示搜尋歷史區塊
+        if (!Array.isArray(data) || data.length === 0) {
+            searchHistory.style.display = 'none';
+            return;
+        }
+
         historyCarousel.innerHTML = ""; // 清空內容
 
         data.forEach(item => {
@@ -319,11 +334,10 @@ async function fetchSearchHistory() {
 
             const card = document.createElement("div");
             card.classList.add("history-card", "d-flex", "border", "rounded", "p-2");
-            card.style.minWidth = "250px"
 
             card.innerHTML = `
-            <div class="history-img me-3">
-                <img src="${imgUrl}" alt="${city}" width="100px" class="rounded">
+            <div class="history-img me-2">
+                <img src="${imgUrl}" alt="${city}" class="rounded history-img">
             </div>
             <div class="history-content">
                 <div class="history-item fw-bold">${city}</div>
@@ -337,7 +351,8 @@ async function fetchSearchHistory() {
             // 將 <a> 標籤添加到容器中
             historyCarousel.appendChild(link);
         });
-
+        // 有紀錄才顯示區塊
+        searchHistory.style.display = 'block';
         updateArrowsVisibility();
 
     } catch (err) {
@@ -432,19 +447,22 @@ searchBtn.addEventListener('click', async (e) => {
 updateArrowsVisibility();
 
 // 熱門城市 -------------------------------------------------
+const cityCarousel = document.getElementById('city-carousel');
+const nextcityBtn = document.getElementById('scroll-next-city');
+const prevcityBtn = document.getElementById('scroll-prev-city');
 
-const carousel = document.getElementById('city-carousel');
-const nextBtn = document.getElementById('scroll-next');
-const prevBtn = document.getElementById('scroll-prev');
-
-nextBtn.addEventListener('click', () => {
-    carousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+nextcityBtn.addEventListener('click', () => {
+    cityCarousel.scrollBy({
+        left: getScrollAmount('#city-carousel', '.city-card'),
+        behavior: 'smooth'
+    });
 });
-
-prevBtn.addEventListener('click', () => {
-    carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+prevcityBtn.addEventListener('click', () => {
+    cityCarousel.scrollBy({
+        left: -getScrollAmount('#city-carousel', '.city-card'),
+        behavior: 'smooth'
+    });
 });
-
 // 發送多次請求並渲染城市資料
 const cityIds = [3, 4, 5, 6, 7, 8, 9, 10, 11, 14];
 const citiesData = [];  // 存放城市資料
@@ -502,11 +520,16 @@ const nextRecommendationBtn = document.getElementById('scroll-next-recommendatio
 const prevRecommendationBtn = document.getElementById('scroll-prev-recommendation');
 
 nextRecommendationBtn.addEventListener('click', () => {
-    recommendationCarousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    recommendationCarousel.scrollBy({
+        left: getScrollAmount('#recommendation-carousel', '.card'),
+        behavior: 'smooth'
+    });
 });
-
 prevRecommendationBtn.addEventListener('click', () => {
-    recommendationCarousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    recommendationCarousel.scrollBy({
+        left: -getScrollAmount('#recommendation-carousel', '.card'),
+        behavior: 'smooth'
+    });
 });
 
 async function loadTopHotels() {
@@ -529,12 +552,12 @@ async function loadTopHotels() {
                     </button>
                     <div class="card-body">
                         <h5 class="card-title fw-bold">${hotel.hotelName}</h5>
-                        <p class="card-text text-muted small"><i class="bi bi-geo-alt me-1"></i> ${hotel.districtName}, ${hotel.cityName}</p>
+                        <p class="card-text text-muted small"><i class="bi bi-geo-alt me-1"></i>${hotel.districtName}, ${hotel.cityName}</p>
                         <p class="mb-1">
                             <span class="badge rate">${hotel.averageRating.toFixed(1)}</span>
                             <small class="text-muted ms-1">${hotel.reviewCount} 則評價</small>
                         </p>
-                        <p class="fw-bold mt-2">NT$${hotel.lowestPrice} / 晚起</p>
+                        <p class="fw-bold mt-2">NT$ ${hotel.lowestPrice} / 晚起</p>
                     </div>
                 </a>
             `;
@@ -658,6 +681,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const logoutBtn = document.getElementById('logoutBtn');
     logoutBtn?.addEventListener('click', function () {
         localStorage.removeItem('jwtToken');
+        localStorage.removeItem('userId');
         location.reload(); // 重新整理頁面回到未登入狀態
     });
 });

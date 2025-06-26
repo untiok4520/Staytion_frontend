@@ -10,17 +10,33 @@ document.querySelector("form.register")?.addEventListener("submit", async (e) =>
   const password = document.getElementById("password").value.trim();
   const tel = document.getElementById("tel").value.trim();
 
-  // console.log({
-  //   firstName,
-  //   lastName,
-  //   email,
-  //   password,
-  //   tel
-  // });
-
   // 基本欄位驗證
   if (!firstName || !lastName || !email || !password || !tel) {
     alert("請完整填寫所有欄位");
+    return;
+  }
+
+  // ✅ 驗證規則
+  const errors = [];
+
+  if (!firstName || !/^[a-zA-Z]+$/.test(firstName)) {
+    errors.push("英文名字僅能填寫英文字母");
+  }
+
+  if (!lastName || !/^[a-zA-Z]+$/.test(lastName)) {
+    errors.push("英文姓名僅能填寫英文字母");
+  }
+
+  if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+    errors.push("請輸入有效的 Email 格式");
+  }
+
+  if (!tel || !/^\d{10}$/.test(tel)) {
+    errors.push("電話號碼必須是 10 位數字");
+  }
+
+  if (errors.length > 0) {
+    alert("請修正以下錯誤：\n" + errors.join("\n"));
     return;
   }
 
@@ -51,7 +67,7 @@ document.querySelector("form.register")?.addEventListener("submit", async (e) =>
     window.location.href = "../../pages/homepage/login.html";
 
   } catch (error) {
-    alert("系統錯誤：" + error.message);
+    alert("系統發生錯誤，請稍後再試");
   }
 });
 

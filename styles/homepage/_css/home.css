@@ -102,9 +102,9 @@
 
 /* 自訂下拉選單的外觀 */
 .user-dropdown {
-    background-color: #ffffff; /* 背景色 */
-    border-radius: 8px;        /* 圓角 */
-    min-width: 80px;          /* 最小寬度 */
+    background-color: #ffffff;
+    border-radius: 8px;
+    min-width: 80px;
     padding: 0;
 }
 
@@ -131,12 +131,12 @@
 }
 
 .dropdown-menu {
-  position: absolute !important;
-  z-index: 1050; /* 比 navbar 高即可 */
+    position: absolute !important;
+    z-index: 1050; /* 比 navbar 高即可 */
 }
 
 .dropdown {
-  position: relative;
+    position: relative;
 }
 
 
@@ -329,6 +329,7 @@
     margin-bottom: 1rem;
     padding: 2.5rem;
     border-radius: 0.5rem;
+    display: none;
 
 }
 
@@ -350,11 +351,9 @@
     min-width: 250px;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    font-size: 0.9rem;
+    min-width: 250px;
 }
-
-/* .history-content .history-item {
-    font-size: 1rem;
-} */
 
 .history-content {
     flex: 1;
@@ -389,11 +388,21 @@
 }
 
 
+/* 熱門城市、精選飯店卡片的照片大小 */
+.city .card img,
+.recommendations .card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+
+}
+
 .recommendations .card {
     flex: 0 0 250px;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     height: 400px;
-    overflow: hidden; /* 隱藏所有滾動條 */
+    overflow: hidden;
+    /* 隱藏所有滾動條 */
 
 }
 
@@ -414,17 +423,38 @@
 
 @media (max-width: 768px) {
 
-    .history-card,
     .recommendations .card {
         flex: 0 0 150px;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         height: 250px;
     }
 
-    .city-card .card {
-         width: 9.4rem;
+    .history-card {
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        border: 1px solid #f1f1f1;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        font-size: 0.8rem;
+        min-width: 200px;
     }
 
+    .city-card .card {
+        width: 9.4rem;
+    }
+
+    .city .card img,
+    .recommendations .card img {
+        width: 100%;
+        /* 填滿卡片寬度 */
+        height: 115px;
+        /* 你可以調整這個數字，例如 200px */
+        object-fit: cover;
+
+    }
 
     .heart-btn {
         width: 30px;
