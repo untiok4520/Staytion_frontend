@@ -131,7 +131,7 @@
 
 <div class="sticky-top" style="background-color: #1f487e;">
   <section class="container search-bar position-relative">
-    <form class="row g-3 align-items-end" autocomplete="off">
+    <form class="row g-3 align-items-end" onsubmit="return false;" autocomplete="off">
 
         <!-- 目的地 -->
             <div class="col-12 col-md-3-5">
@@ -142,6 +142,7 @@
                     <ul id="suggestions" class="list-group suggestion-list"></ul>
                 </div>
             </div>
+            
 
       <!-- 日期 -->
       <div class="col-12 col-md-3-5">
@@ -214,7 +215,7 @@
   <div class="photo-gallery">
     <!-- 飯店照片 -->
     <div class="photo-placeholder">
-      <img src="/assets/600x400.png" alt="主要照片" width="300" height="300">
+      <img src="/assets/600x400.png" alt="主要照片">
     </div>
     <div class="photo-placeholder">
       <img src="/assets/ting.png" alt="大廳" width="300" height="200">
@@ -246,10 +247,11 @@
 
         </h1>
         <p class="hotel-address">台中市西屯區公益路77號</p>
-        <p>Brad Hotel 坐落於台中市最熱鬧的西屯區，步行即可抵達知名商圈與捷運站，無論是購物、美食或交通都極為便利。
+        <p id="hotel-description">Brad Hotel 坐落於台中市最熱鬧的西屯區，步行即可抵達知名商圈與捷運站，無論是購物、美食或交通都極為便利。
           飯店內部設計融合現代與舒適風格，提供多種房型選擇，無論是商務出差或家庭旅遊，都能找到理想的住宿空間。
           每間客房皆配有高速 Wi-Fi、舒適床鋪與貼心備品，讓您入住期間感受賓至如歸。
           此外，飯店也設有健身房、景觀泳池與全天候服務櫃台，滿足旅客的各種需求。</p>
+          
       </div>
 
 
@@ -267,7 +269,7 @@
     <div class="section">
       <div class="section-title">房型與價格</div>
      <div class="room-list" id="room-list">
-  <!-- 房型會由 JavaScript 自動加入 -->
+  <!-- 房型 api 加入 -->
 </div>
 
            
@@ -279,19 +281,16 @@
       <div class="reviews-grid">
         <div class="rating-summary">
           <div class="rating-score">7.8</div>
-          <p>超棒 (1,234 則評價)</p>
+          <p> (1,234 則評價)</p>
           <hr style="margin: 15px 0;">
           <div style="text-align: left;">
-            <div>清潔度: 8.0</div>
-            <div>服務:  7.5</div>
-            <div>設施:  7.0</div>
-            <div>位置:  8.0</div>
+           
           </div>
         </div>
         <div class="reviews-list">
           <div class="review-item">
             <div class="reviewer-info">
-              <strong>黃小靜</strong>
+              <strong>趙老大</strong>
               <div>
                 <small>2024/05/20</small>
               </div>
@@ -300,7 +299,7 @@
           </div>
           <div class="review-item">
             <div class="reviewer-info">
-              <strong>戴小淇</strong>
+              <strong>趙老大</strong>
               <div>
             
                 <small>2024/05/18</small>
@@ -325,15 +324,17 @@
     <div class="section">
       <div class="section-title">飯店位置</div>
       <div class="map-container">
-        <iframe src="https://www.google.com/maps?q=台灣台中市南屯區公益路二段５３號&output=embed" width="100%" height="300"
-          style="border:0;" allowfullscreen loading="lazy"></iframe>
+       <iframe id="hotel-map"
+        width="100%" height="300" style="border:0;" allowfullscreen loading="lazy">
+</iframe>
+
 
       </div>
-      <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
-        <strong>交通資訊：</strong><br>
-        • 距離台中101：步行5分鐘<br>
-        • 距離市政府捷運站：步行8分鐘<br>
-        • 距離台中機場：車程45分鐘
+      <div class="transport-box">
+        <!-- <strong>交通資訊：</strong><br> -->
+        <strong>附近熱門景點：</strong>
+<div id="nearby-places" style="margin-top: 10px; font-size: 14px; color: #333;"></div>
+
       </div>
     </div>
 
@@ -341,52 +342,46 @@
   </div>
 
   <!-- 預訂面板 -->
-  <div class="right-content">
-    <div class="booking-panel">
-      <h3 style="margin-bottom: 20px; color: #007bff;">立即預訂</h3>
-
-      <div class="form-group">
-        <label>入住日期</label>
-        <input type="date" class="form-control" value="2024-06-15">
-      </div>
-
-      <div class="form-group">
-        <label>退房日期</label>
-        <input type="date" class="form-control" value="2024-06-17">
-      </div>
-
-
-      <hr style="margin: 20px 0;">
-
-      <div style="margin-bottom: 15px;">
-        <div style="display: flex; justify-content: space-between;" id="priceDetails">
-          <span>2晚 × NT$ 6,200</span>
-          <span>NT$ 12,400</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; color: #6c757d; font-size: 14px;">
-          <span>稅金與服務費</span>
-          <span>稅金 NT$ <span id="tax">640</span></span>
-        </div>
-      </div>
-
-      <hr style="margin: 15px 0;">
-
-      <div
-        style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 20px;">
-        <span><strong>總計 NT$ <span id="total">13,040</span></strong></span>
-        <span style="color: #dc3545;">NT$ 13,040</span>
-      </div>
-
-      <button class="booking-btn" style="font-size: 16px; padding: 15px;">
-        開始預訂流程
-      </button>
-
-      <p style="font-size: 12px; color: #6c757d; text-align: center; margin-top: 10px;">
-        現在預訂，稍後付款
-      </p>
+  <div class="booking-panel">
+    <h3 style="margin-bottom: 20px; color: #007bff;">立即預訂</h3>
+  
+    <div class="form-group">
+      <label>入住日期</label>
+      <input type="date" id="checkin-date" class="form-control">
     </div>
+  
+    <div class="form-group">
+      <label>退房日期</label>
+      <input type="date" id="checkout-date" class="form-control">
+    </div>
+  
+    <hr style="margin: 20px 0;">
+  
+    <!--已選房型清單 -->
+    <div id="selected-room-list" style="margin-bottom: 10px;"></div>
+  
+    <div id="priceDetails" style="margin-bottom: 10px;">
+      <span>請選擇房型</span>
+    </div>
+  
+    <hr style="margin: 15px 0;">
+  
+    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 20px;">
+      <span><strong>總計 NT$ <span id="total">0</span></strong></span>
+      <span style="color: #dc3545;">NT$ <span id="total">0</span></span>
+    </div>
+  
+    <button class="booking-btn" style="font-size: 16px; padding: 15px;">
+      開始預訂流程
+    </button>
+  
+    <p style="font-size: 12px; color: #6c757d; text-align: center; margin-top: 10px;">
+      現在預訂，稍後付款
+    </p>
   </div>
-
+  
+  
+  
 
 
 </div>
@@ -447,10 +442,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEotZV3cny-APXikPJ_aJAmSo5NA3Far8&libraries=places&language=zh-TW"></script>
+
 
 <script src="../script/hotel.js"></script>
-<script src="../script/data.js"></script>
-<script src="../script/render.js"></script>
+<script type="module" src="../script/render.js"></script>
+
 
 </body>
 </html>

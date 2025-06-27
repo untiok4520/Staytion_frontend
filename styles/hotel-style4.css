@@ -1,6 +1,8 @@
 * {
   margin: 0;
   padding: 0;
+
+/* === 全域設定與變數 === */
   box-sizing: border-box;
 }
 
@@ -122,6 +124,8 @@ body {
 }
 
 
+
+/* === 飯店資訊區塊 === */
 .hotel-header {
   background: #e9ecef;
   padding: 20px;
@@ -144,31 +148,26 @@ body {
 }
 
 .photo-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 10px;
-  padding-top: 10px; /* 增加與標題的間距 */
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
 }
 
 .photo-placeholder {
-  background: none; /* 移除灰色底 */
-  border: none;     /* 拿掉虛線框 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
 }
 
 .photo-placeholder img {
-  transform: scale(1.02);
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-  transition: transform 0.3s ease;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 
@@ -183,13 +182,15 @@ body {
   gap: 15px;
 }
 
+
+/* === 房型卡片樣式 === */
 .room-card {
   border: 1px solid #dee2e6;
   border-radius: 8px;
   padding: 20px;
   background: #f8f9fa;
   display: grid;
-  grid-template-columns: 150px 1fr 200px;
+  grid-template-columns: 300px 1fr 200px;
   gap: 20px;
   align-items: center;
   flex-direction: column;
@@ -197,15 +198,13 @@ body {
 }
 
 .room-image {
-  background: #e9ecef;
-  border: 2px dashed #adb5bd;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6c757d;
-  font-size: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: none;
+  height: auto;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
+
 
 .room-info h3 {
   color: #2c3e50;
@@ -222,15 +221,30 @@ body {
 .feature-tag {
   background: #17a2b8;
   color: white;
-  padding: 2px 8px;
+  padding: 3px 8px;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 100%;
 }
+
+
+.room-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+
 
 .room-booking {
   text-align: right;
 }
 
+
+/* === 響應式設計 === */
 @media (max-width: 768px) {
   .room-booking {
     text-align: left;
@@ -277,6 +291,8 @@ body {
   margin-bottom: 8px;
 }
 
+
+/* === 地圖與交通 === */
 .map-container {
   background: #e9ecef;
   border: 2px dashed #adb5bd;
@@ -319,7 +335,10 @@ body {
   font-weight: bold;
 }
 
+
+/* === 預訂區塊 === */
 .booking-panel {
+  margin-top: 16px;
   position: sticky;
   top: 6px;
   background: white;
@@ -372,10 +391,6 @@ body {
     width: 100%;
   }
 
-  .booking-panel {
-    margin-top: 16px;
-  }
-
   .price-summary div,
   .total {
     font-size: 14px;
@@ -393,16 +408,20 @@ body {
 
 
 /* 以下搜尋列 */
+
+
+/* === 搜尋列樣式 === */
 .search-bar {
             background: #1f487e;
             border-radius: 0.5rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            box-shadow: none;
             /* 滿版的話也要關掉這個 */
             padding: 1rem;
-
         }
 
         /* 自訂 col-md-3.5 */
+
+/* === 響應式設計 === */
         @media (min-width: 768px) {
             .col-md-3-5 {
                 flex: 0 0 calc(100% * 3.5 / 12);
@@ -415,28 +434,38 @@ body {
             }
         }
 
+
+/* === 搜尋列樣式 === */
         .search-bar input {
             border-radius: 0.25rem;
             border: 1px solid #ccc;
             transition: border-color 0.3s ease;
         }
 
+
+/* === 搜尋列樣式 === */
         .search-bar input:focus {
             border-color: #376996;
             outline: none;
-            box-shadow: 0 0 8px rgba(55, 105, 150, 0.4);
+            box-shadow:none;
         }
 
+
+/* === 搜尋列樣式 === */
         .search-bar button {
             font-weight: 600;
             transition: background-color 0.3s ease;
         }
 
+
+/* === 搜尋列樣式 === */
         .search-bar #search-btn {
             background-color: #1a81ff;
             color: #fff;
         }
 
+
+/* === 搜尋列樣式 === */
         .search-bar #search-btn:hover {
             background-color: #569ff7;
         }
@@ -554,6 +583,8 @@ body {
   width: 40px;
   height: auto;
 }
+
+/* === 響應式設計 === */
 @media (max-width: 768px) {
   .hotel-info-row {
     flex-direction: column;
@@ -577,23 +608,33 @@ body {
 
 
 /* 導覽列 */
+
+/* === 導覽列樣式 === */
 .my-navbar {
   background-color: #fff;
   padding-top: 0;
   padding-bottom: 0;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .container-fluid {
   display: flex;
   align-items: center;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .logo_img {
   width: 250px;
   height: auto;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .nav_img-icon {
   width: 20px;
   height: 20px;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .navbar-nav {
   display: flex;
   justify-content: end;
@@ -601,11 +642,15 @@ body {
   gap: 1rem;
   margin-right: 1rem;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .navbar-nav .nav-item .modal-body.modal-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 3rem;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .navbar-nav .nav-item .modal-body.modal-grid > a {
   display: flex;
   align-items: center;
@@ -618,10 +663,14 @@ body {
   color: black;
   text-decoration: none;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .navbar-nav .nav-item .modal-body.modal-grid > a:hover {
   background-color: rgba(55, 106, 150, 0.31);
   cursor: pointer;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .modal-body.modal-grid > div {
   display: flex;
   align-items: center;
@@ -632,32 +681,46 @@ body {
   transition: all 0.2s ease-in-out;
   text-align: center;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .modal-body.modal-grid > div:hover {
   background-color: rgba(55, 106, 150, 0.3);
   cursor: pointer;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .modal-body.modal-grid > a .fi {
   margin-right: 10px;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .btn {
   padding: 0.375rem 1rem;
   min-width: 80px;
   transition: all 0.3s ease-in-out;
   border-radius: 1rem;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .btn:hover {
   background-color: white;
   color: #376996;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .btn-primary {
   background-color: #376996;
   border: 1px solid #376996;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .btn-outline-primary {
   transition: all 0.1s ease-in-out;
   border: 1px solid #376996;
   color: #376996;
 }
+
+/* === 導覽列樣式 === */
 .my-navbar .btn-outline-primary:hover {
   background-color: transparent;
   color: #376996;
@@ -702,6 +765,8 @@ body {
 
 
 /* 響應式設計 */
+
+/* === 響應式設計 === */
 @media (max-width: 768px) {
   .main-content {
     display: flex;
@@ -719,15 +784,14 @@ body {
     width: 100%;
   }
 
-  .booking-panel {
-    margin-top: 16px;
-  }
 
   .hotel-title {
     font-size: 20px;
   }
 
 }
+
+/* === 評論樣式 === */
 .review-card {
   display: flex;
   align-items: center;
@@ -800,5 +864,34 @@ body {
 
 /* 滑鼠懸浮時顯示 */
 .review-popup-wrapper:hover .review-popup {
+  display: block;
+}
+/* 地圖 */
+.transport-box {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  justify-items: center;
+}
+
+.photo-placeholder {
+  width: 280px;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.photo-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
