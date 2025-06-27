@@ -232,6 +232,11 @@
     border-right: none;
 }
 
+#destinationInput {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
 #guest-btn {
     white-space: nowrap;
     cursor: pointer;
