@@ -5,7 +5,7 @@ function parseJwt(token) {
     try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
         return JSON.parse(jsonPayload);
@@ -152,12 +152,12 @@ async function sendTokenToBackend(idToken) {
 // --- 3. 頁面載入和事件監聽器 ---
 
 // 當頁面載入完成時初始化 Google Sign-In
-window.onload = function() {
+window.onload = function () {
     initializeGoogleSignIn();
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-   
+document.addEventListener('DOMContentLoaded', function () {
+
     // 判斷email是否存在，決定跳轉的頁面
     const emailContinueButton = document.getElementById("emailContinue");
     if (emailContinueButton) {
@@ -181,6 +181,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
 
                 if (response.ok) {
+
+                    // 把使用者輸入的email儲存到sessionStrorage
+                    const email = document.getElementById("email").value.trim();
+                    sessionStorage.setItem('registerEmail', email);
                     if (data.exists) {
                         window.location.href = '../../pages/homepage/login-passwd.html';
                     } else {
@@ -247,20 +251,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-    
+
 });
 
 
 // --- 4. 全局錯誤和載入狀態監聽 ---
 
 // 錯誤處理 (會呼叫 showStatus，現在只輸出到 Console)
-window.addEventListener('error', function(e) {
+window.addEventListener('error', function (e) {
     console.error('頁面錯誤:', e.error);
     showStatus('發生未預期錯誤，請檢查 Console。', 'error');
 });
 
 // 監聽 Google API 載入狀態 (會呼叫 showStatus，現在只輸出到 Console)
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     setTimeout(() => {
         if (typeof google === 'undefined') {
             console.error('Google API 載入失敗或超時，請檢查網路連接。');

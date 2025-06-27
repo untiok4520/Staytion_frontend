@@ -1,7 +1,22 @@
+document.addEventListener('DOMContentLoaded', () => {
+  // 嘗試從 sessionStorage 中獲取註冊頁面 email
+  const email = sessionStorage.getItem('registerEmail');
+  console.log('Session email on register page:', email);
+
+  if (email) {
+    // 找到註冊頁面的 email 輸入框
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+      emailInput.value = email.trim();  // 填入 email
+    }
+    // 使用後刪除 email，防止在頁面刷新後再次填充
+    sessionStorage.removeItem('registerEmail');
+  }
+});
+
 // 註冊
 document.querySelector("form.register")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-
 
 
   const firstName = document.getElementById("firstName").value.trim();
@@ -9,6 +24,7 @@ document.querySelector("form.register")?.addEventListener("submit", async (e) =>
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
   const tel = document.getElementById("tel").value.trim();
+  console.log(email)
 
   // 基本欄位驗證
   if (!firstName || !lastName || !email || !password || !tel) {
@@ -53,12 +69,12 @@ document.querySelector("form.register")?.addEventListener("submit", async (e) =>
         password,
         tel
       }),
-      credentials: "include" // 如果後端要設 cookie（可保留）
+      // credentials: "include" // 如果後端要設 cookie（可保留）
     });
 
     if (!response.ok) {
-      const err = await response.json();
-      alert("註冊失敗：" + (err.message || JSON.stringify(err)));
+      // const err = await response.json();
+      alert("註冊失敗，請稍後再試");
       return;
     }
 

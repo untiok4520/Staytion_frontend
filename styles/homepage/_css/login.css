@@ -174,7 +174,8 @@ h4 {
 
 /* 使用驗證碼登入按鈕 */
 .register .secondaryBtn,
-.forgot-passwd .secondaryBtn {
+.forgot-passwd .secondaryBtn,
+.login-passwd .secondaryBtn{
     width: 100%;
     background-color: #fff;
     color: #1a81ff;
@@ -182,7 +183,8 @@ h4 {
 }
 
 .register .secondaryBtn:hover,
-.forgot-passwd .secondaryBtn:hover {
+.forgot-passwd .secondaryBtn:hover,
+.login-passwd .secondaryBtn:hover {
     background-color: #fff;
     color: #1a81ff;
     border-color: #1a81ff;

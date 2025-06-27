@@ -1,7 +1,21 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const email = sessionStorage.getItem('registerEmail');
+  console.log('Session email on register page:', email);
+
+  if (email) {
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+      emailInput.value = email;
+    }
+    sessionStorage.removeItem('registerEmail');
+  }
+});
+
+
 const form = document.querySelector('.login-passwd');
 if (form) {
   form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // 防止表單提交
+    e.preventDefault();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
@@ -27,11 +41,16 @@ if (form) {
       if (!res.ok) {
         // 從後端取得錯誤訊息
         const errorText = await res.text();
-        throw new Error(errorText || '登入失敗');
+        if (errorText.includes("尚未驗證") || errorText.includes("email not verified")) {
+          const resendBtn = document.getElementById("resendVerificationBtn");
+          if (resendBtn) {
+            resendBtn.style.display = 'block'; // 顯示按鈕
+            resendBtn.dataset.email = email;          // 暫存 email
+          }
+        }
       }
 
       const data = await res.json();
-      // 假設後端回傳 { token: '...' }
       localStorage.setItem('jwtToken', data.token);
       console.log(data);
 
@@ -43,10 +62,12 @@ if (form) {
       window.location.href = '../../pages/homepage/home.html';
 
     } catch (err) {
-      alert('錯誤：' + err.message);
+      alert('帳號或密碼錯誤');
     }
   });
 }
+
+
 
 // 從 localStorage 取得 token
 async function getUserIdFromToken() {
