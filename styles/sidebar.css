@@ -6,7 +6,7 @@
   background-color: white;
   height: calc(100vh - var(--navbar-height));
   overflow-y: auto;
-  border-right: 1px solid #ddd;
+  /* border-right: 1px solid #ddd; */
   transition: width 0.3s;
 }
 
