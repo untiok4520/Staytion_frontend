@@ -9,6 +9,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     sessionStorage.removeItem('registerEmail');
   }
+
+  const resendBtn = document.getElementById("resendVerificationBtn");
+  if (resendBtn) {
+    resendBtn.addEventListener("click", async () => {
+      const email = resendBtn.dataset.email || document.getElementById("email").value;
+
+      try {
+        const res = await fetch("http://localhost:8080/api/auth/resend-verification", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        });
+
+        if (res.ok) {
+          alert("驗證信已重新發送，請至信箱查收");
+          resendBtn.style.display = "none"; // 發送完再隱藏
+        } else {
+          const error = await res.text();
+          alert("發送失敗，請稍後再試");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("系統錯誤，請稍後再試");
+      }
+    });
+  }
+
 });
 
 
