@@ -158,6 +158,7 @@ onChange: function(selectedDates) {
 
     const checkin = format(selectedDates[0]);
     const checkout = format(selectedDates[1]);
+    updateRoomQuantitiesByAvailability(checkin, checkout);
 
     // 設定右下角日期欄位
     document.getElementById("checkin-date").value = checkin;
@@ -331,3 +332,32 @@ onChange: function(selectedDates) {
 // 搜尋跳轉( 阿笨)
   window.location.href = `/SearchPageV2.html?${searchParams.toString()}`;
 });
+
+async function updateRoomQuantitiesByAvailability(checkin, checkout) {
+  const selects = document.querySelectorAll(".booking-select");
+
+  for (const select of selects) {
+    const roomTypeId = select.dataset.roomtypeid;
+    const roomName = select.dataset.room;
+    const price = parseInt(select.dataset.price, 10) || 0;
+
+    const res = await fetch(`http://localhost:8080/api/rooms/${roomTypeId}/availability?start=${checkin}&end=${checkout}`);
+    const data = await res.json();
+
+    // 找出那段時間的最小可用數量
+    const remaining = Math.min(...data.map(d => d.availableQuantity));
+    const safeRemaining = isFinite(remaining) ? remaining : 0;
+
+    // ✅ 更新剩餘房間數文字
+    const stockText = select.closest(".room-booking").querySelector(".price");
+    if (stockText) {
+      stockText.textContent = `剩餘${safeRemaining}間房間`;
+    }
+
+    // 重設 select 的選項 (0 ~ 剩餘數量)
+    select.innerHTML = Array.from({ length: safeRemaining + 1 }).map((_, n) => {
+      const total = n * price;
+      return `<option value="${n}">${n} 間（NT$ ${total}）</option>`;
+    }).join("");
+  }
+}

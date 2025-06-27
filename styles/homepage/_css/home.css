@@ -100,6 +100,52 @@
     border: 2px solid #376996;
 }
 
+/* 自訂下拉選單的外觀 */
+.user-dropdown {
+    background-color: #ffffff;
+    border-radius: 8px;
+    min-width: 80px;
+    padding: 0;
+}
+
+/* 調整下拉選單內每個選項的樣式 */
+.user-dropdown .dropdown-item {
+    padding: 10px;
+    font-size: 15px;
+    color: #333;
+}
+
+.user-dropdown li:first-child .dropdown-item {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.user-dropdown li:last-child .dropdown-item {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border: none;
+}
+
+.user-dropdown li a {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+    z-index: 1050; /* 比 navbar 高即可 */
+}
+
+.dropdown {
+    position: relative;
+}
+
+
+.user-dropdown .dropdown-item:hover {
+    background-color: #376996;
+    color: #fff;
+}
+
+
 /* banner */
 
 .hero-banner {
@@ -283,12 +329,12 @@
 /* 搜尋紀錄 */
 
 .search-history {
-    display: none;
     position: relative;
     margin-top: 1rem;
     margin-bottom: 1rem;
     padding: 2.5rem;
     border-radius: 0.5rem;
+    display: none;
 
 }
 
@@ -310,11 +356,9 @@
     min-width: 250px;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    font-size: 0.9rem;
+    min-width: 250px;
 }
-
-/* .history-content .history-item {
-    font-size: 1rem;
-} */
 
 .history-content {
     flex: 1;
@@ -344,12 +388,26 @@
     padding-bottom: 1rem;
 }
 
+.city-card .card {
+    width: 18rem;
+}
 
 
-.city-carousel .card,
+/* 熱門城市、精選飯店卡片的照片大小 */
+.city .card img,
+.recommendations .card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+
+}
+
 .recommendations .card {
     flex: 0 0 250px;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    height: 400px;
+    overflow: hidden;
+    /* 隱藏所有滾動條 */
 
 }
 
@@ -370,11 +428,36 @@
 
 @media (max-width: 768px) {
 
-    .history-card,
-    .city-carousel .card,
     .recommendations .card {
         flex: 0 0 150px;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        height: 250px;
+    }
+
+    .history-card {
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        border: 1px solid #f1f1f1;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        font-size: 0.8rem;
+        min-width: 200px;
+    }
+
+    .city-card .card {
+        width: 9.4rem;
+    }
+
+    .city .card img,
+    .recommendations .card img {
+        width: 100%;
+        /* 填滿卡片寬度 */
+        height: 115px;
+        /* 你可以調整這個數字，例如 200px */
+        object-fit: cover;
 
     }
 
@@ -392,7 +475,6 @@
         font-size: 0.8rem;
     }
 
-    .city-carousel .card-body,
     .recommendations .card-body {
         padding: 0.5rem
     }

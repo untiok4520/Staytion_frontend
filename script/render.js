@@ -1,34 +1,14 @@
 let selectedRooms = [];
-// 👉 新增：根據入住/退房日期查可用庫存
 
-// === 根據日期查詢庫存 ===
 
-async function fetchAvailability(roomTypeId, checkin, checkout) {
-  const res = await fetch(`http://localhost:8080/api/rooms/${roomTypeId}/availability?checkin=${checkin}&checkout=${checkout}`);
-  const data = await res.json();
-  return Math.min(...data.map(d => d.availableRooms));
-}
-
-async function updateRoomQuantitiesByAvailability(checkin, checkout) {
-  const selects = document.querySelectorAll(".booking-select");
-
-  for (const select of selects) {
-    const roomTypeId = select.dataset.roomtypeid;
-    const roomName = select.dataset.room;
-    const price = parseInt(select.dataset.price, 10);
-
-    const res = await fetch(`http://localhost:8080/api/rooms/${roomTypeId}/availability?checkin=${checkin}&checkout=${checkout}`);
-    const data = await res.json();
-    const remaining = Math.min(...data.map(d => d.availableRooms));
-
-    select.innerHTML = Array.from({ length: remaining + 1 }).map((_, n) => {
-      const data = { room: roomName, price, count: n };
-      return `<option value='${JSON.stringify(data)}'>
-        ${n === 0 ? "0 間" : `${n} 間 - NT$ ${(price * n).toLocaleString()}`}
-      </option>`;
-    }).join("");
+document.addEventListener("DOMContentLoaded", () => {
+  const checkin = document.getElementById("checkin-date").value;
+  const checkout = document.getElementById("checkout-date").value;
+  if (checkin && checkout) {
+    updateRoomSelectOptionsByAvailability(checkin, checkout);
   }
-}
+});
+
 
 
 // === 取得房型資料 ===
@@ -61,33 +41,29 @@ function renderRoom(room) {
         <div class="room-amenities" style="margin-top: 5px;">
           ${room.amenities.map(a => `<span class="feature-tag">${a}</span>`).join(" ")}
         </div>` : ""}
-<div style="margin-top: 10px;">
-  <p style="color: ${room.isCanceled ? '#28a745' : '#dc3545'}; font-weight: bold; margin: 0;">
-    ${room.isCanceled ? "✓ 可免費取消" : "⚠ 不可取消"}
-  </p>
-</div>
-
+        <div style="margin-top: 10px;">
+          <p style="color: ${room.isCanceled ? '#28a745' : '#dc3545'}; font-weight: bold; margin: 0;">
+            ${room.isCanceled ? "✓ 可免費取消" : "⚠ 不可取消"}
+          </p>
+        </div>
       </div>
-<div class="room-booking">
-  <div class="price">剩餘${room.quantity}間房間</div>
-  <small>每晚價格</small>
-  <div class="price">NT$ ${room.price.toLocaleString()}</div>
+      <div class="room-booking">
+        <div class="price">剩餘${room.quantity}間房間</div>
+        <small>每晚價格</small>
+        <div class="price">NT$ ${room.price.toLocaleString()}</div>
 
-  <select
-    class="booking-select"
-    data-room="${room.rname}"
-    data-price="${room.price}"
-    data-roomtypeid="${room.id}"
-  >
-    <option value='${JSON.stringify({ room: room.rname, price: room.price, count: 0 })}'>0 間</option>
-  </select>
-</div>
-
-
+        <select
+          class="booking-select"
+          data-roomtypeid="${room.id}"  
+          data-room="${room.rname}"
+          data-price="${room.price}">
+          <option value="0">0 間</option>
+        </select>
       </div>
     </div>
   `;
 }
+
 
 
 // === 計算與更新預訂總計 ===
@@ -205,25 +181,6 @@ function setupBookingEvents() {
 
     document.getElementById(id).addEventListener("change", updateBookingSummary);
   });
-}
-async function updateRoomStockByDate(date) {
-  const selects = document.querySelectorAll(".booking-select");
-
-  for (const select of selects) {
-    const roomTypeId = select.dataset.roomtypeid;
-    const roomName = select.dataset.room;
-    const price = parseInt(select.dataset.price, 10);
-
-    const res = await fetch(`http://localhost:8080/api/rooms/${roomTypeId}/one-count?date=${date}`);
-    const remaining = await res.json(); // 假設回傳的是整數數量
-
-    select.innerHTML = Array.from({ length: remaining + 1 }).map((_, n) => {
-      const data = { room: roomName, price, count: n };
-      return `<option value='${JSON.stringify(data)}'>
-        ${n === 0 ? "0 間" : `${n} 間 - NT$ ${(price * n).toLocaleString()}`}
-      </option>`;
-    }).join("");
-  }
 }
 
 
@@ -377,7 +334,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupBookingEvents();
 
     const checkin = document.getElementById("checkin-date").value;
-    if (checkin) updateRoomStockByDate(checkin);
   });
 
 // === 取得與渲染評論 ===
@@ -390,12 +346,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("checkin-date").addEventListener("change", () => {
     const checkin = document.getElementById("checkin-date").value;
-    if (checkin) updateRoomStockByDate(checkin);
   });
 });
   document.getElementById("checkin-date").addEventListener("change", () => {
     const checkin = document.getElementById("checkin-date").value;
-    if (checkin) updateRoomStockByDate(checkin);
   });
 
 //跳轉到付款流程
@@ -435,8 +389,17 @@ const googleApiKey = "AIzaSyDEotZV3cny-APXikPJ_aJAmSo5NA3Far8";
 
 
 function simplifyAddress(address) {
-  return address.replace(/\\d+鄰/g, "").replace(/弄\\d+號.*/, "").trim();
+  // 移除「幾鄰」、「弄幾號」、「幾號」、還有「里、村、鄰」後面的太細地址
+  let simplified = address
+    .replace(/\d+鄰/g, "")
+    .replace(/弄\d+號.*/, "")
+    .replace(/\d+號/g, "")
+    .replace(/(里|村)[^市區]+/, "") 
+    .trim();
+  return simplified || address;
 }
+
+
 
 async function getCoordinatesFromAddress(address) {
   const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${googleApiKey}`);
@@ -457,34 +420,39 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
   return R * c;
 }
 
+/** render.js：模擬假資料顯示附近景點（等待串接真 */
+
 async function renderNearbyPlaces(address) {
-  console.log(" 開始抓附近景點，地址：", address);
+  console.log("開始抓附近景點，地址：", address);
 
-  const coord = await getCoordinatesFromAddress(address);
-  console.log(" 座標結果：", coord);
-  if (!coord) return;
+  const simplified = simplifyAddress(address);
+  console.log("簡化後地址：", simplified);
 
-  const map = new google.maps.Map(document.createElement("div"));
-  const service = new google.maps.places.PlacesService(map);
+  let coord = await getCoordinatesFromAddress(simplified);
+  if (!coord) {
+    console.warn("⚠️ 地址轉換失敗，使用預設座標（南投埔里）");
+    coord = { lat: 23.9641, lng: 120.9745 };
+  } else {
+    console.log("📍 地址轉座標：", coord);
+  }
 
-  const request = {
-    location: new google.maps.LatLng(coord.lat, coord.lng),
-    radius: 1000,
-    type: "tourist_attraction"
-  };
+  try {
+    const res = await fetch(`http://localhost:8080/api/nearby?lat=${coord.lat}&lng=${coord.lng}`);
+    const data = await res.json();
 
-  service.nearbySearch(request, (results, status) => {
-    console.log(" Google NearbySearch 結果：", status, results);
+    if (!Array.isArray(data) || data.length === 0) {
+      document.getElementById("nearby-places").innerHTML = "<p>找不到附近景點</p>";
+      return;
+    }
 
-    if (status !== google.maps.places.PlacesServiceStatus.OK || !results) return;
-
-    const html = results.slice(0, 5).map(p => {
-      const dist = calculateDistance(coord.lat, coord.lng, p.geometry.location.lat(), p.geometry.location.lng());
-      return `<li>${p.name}（約 ${dist.toFixed(1)} 公里）</li>`;
+    const html = data.slice(0, 5).map(p => {
+      return `<li>${p.name} 約 ${p.distance.toFixed(1)} 公里</li>`;
     }).join("");
 
     const listEl = document.getElementById("nearby-places");
     if (listEl) listEl.innerHTML = `<ul>${html}</ul>`;
-  });
+  } catch (err) {
+    console.error("抓附近景點失敗：", err);
+    document.getElementById("nearby-places").innerHTML = "<p>附近景點載入失敗</p>";
+  }
 }
-

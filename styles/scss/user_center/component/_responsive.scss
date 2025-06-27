@@ -1,0 +1,275 @@
+// 響應式設計
+// 使用Bootstrap的斷點：
+// xs: 0px
+// sm: 576px
+// md: 768px
+// lg: 992px
+// xl: 1200px
+// xxl: 1400px
+
+// 全局響應式設定
+@media (max-width: 991.98px) {
+  // 在中小屏幕上調整usercenter_container的佈局
+  .usercenter_container {
+    flex-direction: column;
+    padding: 0 20px;
+    gap: 30px;
+
+    // 側邊欄在小屏幕上水平排列
+    .sidebar {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+
+      .sidebar-item {
+        width: auto;
+        padding: 10px 15px;
+        margin: 0;
+      }
+    }
+  }
+
+  // 調整訂單列表的佈局
+  .order-list {
+    .order-content {
+      flex-direction: column;
+      align-items: center;
+
+      .hotel-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 15px;
+
+        .hotel-dates {
+          flex-direction: column;
+          gap: 10px;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  // 調整訂單詳情面板的佈局
+  .order-detail-panel {
+    .order-header {
+      flex-direction: column;
+
+      .right-section {
+        margin-top: 20px;
+      }
+    }
+
+    .payment-info {
+      .line-item,
+      .total {
+        padding-right: 0;
+      }
+    }
+  }
+
+  // 調整聊天佈局
+  .chat-container {
+    flex-direction: column;
+    height: auto;
+
+    .chat-list {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #ccc;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .chat-box {
+      height: 400px;
+    }
+  }
+
+  // 調整評論佈局
+  #reviews {
+    .review-card,
+    .unreview-card {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .review-img {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+
+      .review-content {
+        width: 100%;
+      }
+    }
+
+    .unreview-section {
+      .unreview-card {
+        .review-content {
+          flex-direction: column;
+          gap: 20px;
+
+          .left-info,
+          .right-info {
+            width: 100%;
+          }
+
+          .right-info {
+            .rating-options {
+              .review-text {
+                flex-direction: column;
+
+                textarea {
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 調整收藏清單佈局
+  #favorites {
+    .favlist-grid {
+      justify-content: center;
+    }
+  }
+
+  // 調整個人資料佈局
+  #profile {
+    .profile-card {
+      .profile-field {
+        &.name {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+
+          .avatar {
+            margin-right: 0;
+            margin-bottom: 10px;
+          }
+
+          button.name {
+            margin-left: 0;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 更小屏幕的特定調整
+@media (max-width: 767.98px) {
+  // 調整tabs佈局
+  .uc-main-content {
+    .tabs {
+      .tab {
+        padding: 10px 5px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // 調整filter佈局
+  .filter {
+    flex-direction: column;
+    align-items: stretch;
+
+    .search-box {
+      max-width: 100%;
+    }
+  }
+
+  // 調整modal視窗
+  .cancel-modal,
+  .changedate-modal {
+    width: 90%;
+    padding: 15px;
+  }
+
+  // 調整日期選擇器
+  input.choose-date {
+    width: 100%;
+  }
+
+  // 調整footer
+  footer {
+    .row {
+      row-gap: 1.5rem !important;
+    }
+  }
+}
+
+// 極小屏幕的特定調整
+@media (max-width: 575.98px) {
+  // 調整navbar
+  .my-navbar {
+    .container-fluid {
+      flex-direction: column;
+      padding: 10px 0;
+    }
+
+    .navbar-brand {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .navbar-nav {
+      flex-direction: row !important;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+
+  // 調整sidebar
+  .usercenter_container {
+    .sidebar {
+      .sidebar-item {
+        i {
+          margin-right: 5px;
+          font-size: 14px;
+        }
+        span {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  // 調整訂單列表
+  .order-list {
+    padding: 15px;
+  }
+
+  // 調整評論區域
+  #reviews {
+    .unreview-section {
+      .unreview-card {
+        .review-content {
+          .right-info {
+            .rating-options {
+              .radio-group {
+                gap: 2px;
+
+                label {
+                  padding: 3px 5px;
+                  font-size: 12px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
