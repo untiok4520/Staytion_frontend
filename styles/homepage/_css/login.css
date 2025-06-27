@@ -109,7 +109,11 @@
 
 }
 
-.register {
+.register,
+.login-email,
+.login-passwd,
+.forgot-passwd,
+.change-passwd {
     width: 100%;
     max-width: 445px;
     box-sizing: border-box
@@ -121,7 +125,11 @@ h4 {
 
 
 /* 電子信箱輸入框 */
-.register input {
+.register input,
+.login-email input,
+.login-passwd input,
+.forgot-passwd input,
+.change-passwd input {
     width: 100%;
     border-radius: 0.25rem;
     border: 1px solid black;
@@ -130,7 +138,11 @@ h4 {
 
 }
 
-.register input:focus {
+.register input:focus,
+.login-email input:focus,
+.login-passwd input:focus,
+.forgot-passwd input:focus,
+.change-passwd input:focus {
     border-color: #1a81ff;
     outline: none;
     box-shadow: 0 0 0 2px #1a81ff;
@@ -140,6 +152,10 @@ h4 {
 
 /* 繼續按鈕、驗證電子信箱按鈕樣式 */
 .register button,
+.login-email button,
+.login-passwd button,
+.forgot-passwd button,
+.change-passwd button,
 .otp-container+button {
     width: 100%;
     background-color: #1a81ff;
@@ -147,20 +163,28 @@ h4 {
 }
 
 .register button:hover,
+.login-email button:hover,
+.login-passwd button:hover,
+.forgot-passwd button:hover,
+.change-passwd button:hover,
 .otp-container+button:hover {
     background-color: #569ff7;
     color: #fff;
 }
 
 /* 使用驗證碼登入按鈕 */
-.register .secondaryBtn {
+.register .secondaryBtn,
+.forgot-passwd .secondaryBtn,
+.login-passwd .secondaryBtn{
     width: 100%;
     background-color: #fff;
     color: #1a81ff;
     border-color: #1a81ff;
 }
 
-.register .secondaryBtn:hover {
+.register .secondaryBtn:hover,
+.forgot-passwd .secondaryBtn:hover,
+.login-passwd .secondaryBtn:hover {
     background-color: #fff;
     color: #1a81ff;
     border-color: #1a81ff;
@@ -168,7 +192,7 @@ h4 {
 }
 
 /* 重新發送、使用密碼按鈕樣式 */
-.verifiy-options button {
+/* .verifiy-options button {
     background-color: transparent;
     font-weight: bold;
     color: black;
@@ -189,7 +213,7 @@ h4 {
 .verifiy-options a:hover {
     text-decoration: none;
     color: #1a81ff;
-}
+} */
 
 
 
@@ -218,61 +242,51 @@ h4 {
 }
 
 /* 忘記密碼靠右對齊 */
-.forgot-passwd {
+.forgot-passwd-link {
     text-align: right;
 }
 
 /* google & fb 的 svg 樣式 */
-.social-icon {
+/* .social-icon {
     display: flex;
     justify-content: center;
     gap: 10px;
 
-}
-
-.register a img {
-    width: 50px;
-    border: 1px solid #dadce0;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-.register a img:hover {
-    width: 50px;
-    border: 1px solid #1a81ff;
-    padding: 5px;
-}
-
-/* 驗證碼輸入框 */
-.otp-container {
+} */
+.S9gUrf-YoZ4jf div{
     display: flex;
-    gap: 10px;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+}
+.facebook-icon {
+    width: 23px;
+    float: left;
+}
+ 
+.social-icon .facebookSignIn {
+    width: 400px;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    background-color: transparent;
+    color: black;
+    font-size: 14.25px;
+    font-weight: 550;
+    padding: 9px;
 }
 
-.otp-input {
-    flex: 1;
-    max-width: 40px;
-    font-size: 1.5rem;
-    text-align: center;
-    border: 1px solid black;
-    border-radius: 0.25rem;
-    box-sizing: border-box;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
-    outline: none;
+.social-icon .facebookSignIn:hover {
+    background-color: #F0F5FE;
+    color: black;
 }
 
-.otp-input:focus {
-    border-color: #1a81ff;
-    box-shadow: 0 0 0 2px #1a81ff;
-}
 
 .terms a,
-.forgot-passwd a {
+.forgot-passwd-link a {
     text-decoration: none;
 }
 
 .terms a:hover,
-.forgot-passwd a:hover {
+.forgot-passwd-link a:hover {
     text-decoration: underline;
 }
