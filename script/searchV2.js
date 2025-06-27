@@ -1,4 +1,4 @@
-//V3.js
+//V5.js
 let currentPage = 1;
 const pageSize = 5;
 let loading = false;
@@ -6,6 +6,122 @@ let allLoaded = false;
 
 $(function () {
   'use strict';
+
+  // 狀態區
+  const filterState = {
+    city: '',
+    area: '',
+    checkin: '',
+    checkout: '',
+    adult: 2,
+    child: 0,
+    room: 1,
+    price: [],
+    facility: [],
+    score: [],
+    recommend: [],
+    facilities: []
+  };
+  const guestCounts = { adults: 2, children: 0, rooms: 1 };
+  let cityOptions = [];
+  let areaOptions = [];
+  let areaOptionsMap = {};
+
+  // ==== 新增：組查詢參數字串 ====
+  function getSearchParams() {
+    return new URLSearchParams({
+      destination: $("#destinationInput").val(),
+      checkin: filterState.checkin,
+      checkout: filterState.checkout,
+      adults: filterState.adult,
+      children: filterState.child,
+      rooms: filterState.room,
+    }).toString();
+  }
+
+  // 回傳 Promise 版本
+  function fetchCities() {
+    return fetch('http://localhost:8080/api/cities')
+      .then(res => res.json())
+      .then(data => { cityOptions = data || []; });
+  }
+  function fetchAreasAll() {
+    return fetch('http://localhost:8080/api/areas/all')
+      .then(res => res.json())
+      .then(data => { areaOptions = data || []; });
+  }
+
+  // 解析 URL 參數
+  function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      destination: params.get('destination') || '',
+      checkin: params.get('checkin') || '',
+      checkout: params.get('checkout') || '',
+      adults: parseInt(params.get('adults')) || 2,
+      children: parseInt(params.get('children')) || 0,
+      rooms: parseInt(params.get('rooms')) || 1
+    };
+  }
+
+  // --- 關鍵步驟：所有初始化邏輯都包在這裡 ---
+  Promise.all([fetchCities(), fetchAreasAll()]).then(() => {
+    const urlParams = getUrlParams();
+
+    // 目的地/城市、區域塞值
+    if (urlParams.destination) {
+      $("#destinationInput").val(urlParams.destination);
+      // 查城市
+      const cityObj = cityOptions.find(c => c.label === urlParams.destination);
+      if (cityObj) {
+        filterState.city = cityObj.value;
+      } else {
+        const areaObj = areaOptions.find(a => a.label === urlParams.destination);
+        if (areaObj) {
+          filterState.city = areaObj.city;
+          filterState.area = areaObj.value;
+        }
+      }
+    }
+    // 日期
+    flatpickr("#daterange", {
+      locale: "zh_tw",
+      mode: "range",
+      minDate: "today",
+      dateFormat: "Y-m-d",
+      showMonths: 2,
+      defaultDate: urlParams.checkin && urlParams.checkout ? [urlParams.checkin, urlParams.checkout] : null,
+      onClose: function (selectedDates, dateStr) {
+        if (!dateStr) {
+          filterState.checkin = "";
+          filterState.checkout = "";
+          return;
+        }
+        filterState.checkin = selectedDates[0] ? selectedDates[0].toISOString().split('T')[0] : "";
+        filterState.checkout = selectedDates[1] ? selectedDates[1].toISOString().split('T')[0] : "";
+      }
+    });
+    // 也同步更新文字input
+    if (urlParams.checkin) {
+      $("#daterange").val(`${urlParams.checkin} - ${urlParams.checkout}`);
+      filterState.checkin = urlParams.checkin;
+      filterState.checkout = urlParams.checkout;
+    }
+
+    // 房客數量
+    if (urlParams.adults || urlParams.children || urlParams.rooms) {
+      guestCounts.adults = urlParams.adults;
+      guestCounts.children = urlParams.children;
+      guestCounts.rooms = urlParams.rooms;
+      filterState.adult = urlParams.adults;
+      filterState.child = urlParams.children;
+      filterState.room = urlParams.rooms;
+      if (typeof updateGuestText === "function") updateGuestText();
+    }
+
+    // 預設有城市參數就直接查詢
+    if (filterState.city) fetchHotelsMain(filterState);
+  });
 
   //貨幣切換按鈕
   document
@@ -59,49 +175,6 @@ $(function () {
         if (modalInstance) modalInstance.hide();
       });
     });
-
-  //狀態區
-  const filterState = {
-    city: '',
-    area: '',
-    checkin: '',
-    checkout: '',
-    adult: 2,
-    child: 0,
-    room: 1,
-    price: [],
-    facility: [],
-    score: [],
-    recommend: [],
-    facilities: []
-  };
-
-  let cityOptions = [];
-  let areaOptions = [];
-  let areaOptionsMap = {};
-
-  // 取得所有城市
-  function fetchCities(callback) {
-    fetch('http://localhost:8080/api/cities')
-      .then(res => res.json())
-      .then(data => {
-        cityOptions = data || [];
-        callback && callback(cityOptions);
-      });
-  }
-
-  // 取得所有區域
-  function fetchAreasAll(callback) {
-    fetch('http://localhost:8080/api/areas/all')
-      .then(res => res.json())
-      .then(data => {
-        areaOptions = data || [];
-        callback && callback(areaOptions);
-      });
-  }
-
-  fetchCities();
-  fetchAreasAll();
 
   function fetchAreas(cityValue, callback) {
     console.log('fetchAreas cityValue:', cityValue, typeof cityValue);
@@ -259,29 +332,9 @@ $(function () {
     $('#areaDropdown').toggleClass('active');
   });
 
-  //日期
-  flatpickr("#daterange", {
-    locale: "zh_tw",
-    mode: "range",
-    minDate: "today",
-    dateFormat: "Y-m-d",
-    showMonths: 2,
-    onClose: function (selectedDates, dateStr) {
-      if (!dateStr) {
-        filterState.checkin = "";
-        filterState.checkout = "";
-        return;
-      }
-      // 直接存選到的兩個日期
-      filterState.checkin = selectedDates[0] ? selectedDates[0].toISOString().split('T')[0] : "";
-      filterState.checkout = selectedDates[1] ? selectedDates[1].toISOString().split('T')[0] : "";
-    }
-  });
-
   //房客人數 popup
   const guestBtn = $("#guest-btn");
   const guestPopup = $("#guest-popup");
-  const guestCounts = { adults: 2, children: 0, rooms: 1 };
 
   function updateGuestText() {
     guestBtn.val(`${guestCounts.adults} 位成人・${guestCounts.children} 位孩童・${guestCounts.rooms} 間房`);
@@ -446,6 +499,7 @@ $(function () {
     console.log('>>> 渲染房型, night:', nights, 'checkin:', filterState.checkin, 'checkout:', filterState.checkout);
 
     hotels.forEach(hotel => {
+      const detailUrl = `roomsdetailpage.html?hotelId=${hotel.id}&${getSearchParams()}`;
       const $card = $(`
         <article class="hotel-card">
           <div class="hotel-image">
@@ -453,8 +507,7 @@ $(function () {
           </div>
           <div class="hotel-info">
             <h2 class="hotel-name">
-              <a href="hotel-detail.html?id=${hotel.id}">${hotel.name}</a>
-            </h2>
+              <a href="${detailUrl}">${hotel.name}</a>            </h2>
             <div class="hotel-location">
               ${hotel.district}, ${hotel.city}
               <a href="${hotel.mapUrl}" target="_blank">在地圖上顯示</a>
@@ -472,7 +525,7 @@ $(function () {
               ${nights} 晚，${adults} 成人<br>
               <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
             </div>
-            <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
+            <button class="btn btn-booking" onclick="location.href='${detailUrl}'">
               查詢客房詳情
             </button>
           </div>
@@ -486,7 +539,10 @@ $(function () {
   //動態新增所有飯店
   function appendHotelList(hotels) {
     const $list = $('#hotelList');
+    const nights = calculateNights(filterState.checkin, filterState.checkout);
+    const adults = filterState.adult ?? '-';
     hotels.forEach(hotel => {
+      const detailUrl = `roomsdetailpage.html?hotelId=${hotel.id}&${getSearchParams()}`;
       const $card = $(`
         <article class="hotel-card">
           <div class="hotel-image">
@@ -494,7 +550,7 @@ $(function () {
           </div>
           <div class="hotel-info">
             <h2 class="hotel-name">
-              <a href="hotel-detail.html?id=${hotel.id}">${hotel.name}</a>
+              <a href="${detailUrl}">${hotel.name}</a>
             </h2>
             <div class="hotel-location">
               ${hotel.district}, ${hotel.city}
@@ -510,10 +566,10 @@ $(function () {
               </span>
             </div>
             <div class="hotel-date">
-              ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
+              ${nights} 晚，${adults} 成人<br>
               <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
             </div>
-            <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
+            <button class="btn btn-booking" onclick="location.href='${detailUrl}'">
               查詢客房詳情
             </button>
           </div>
@@ -522,6 +578,7 @@ $(function () {
       $list.append($card);
     });
   }
+
 
   function updateResultTitle(count = 0) {
     const cityLabel = cityOptions.find(c => c.value === filterState.city)?.label || '請選擇城市';
@@ -586,16 +643,17 @@ $(function () {
     fetch('http://localhost:8080/api/hotels?' + params.toString())
       .then(res => res.json())
       .then(data => {
-        console.log('地圖模式資料:', data);
         const $list = $('#mapHotelList');
         $list.empty();
         const hotels = data.hotels || [];
-        console.log('hotels:', hotels);
         if (!hotels.length) {
           $list.append(`<div class="no-result text-center py-4">查無資料</div>`);
           return;
         }
+        const nights = calculateNights(filterState.checkin, filterState.checkout);
+        const adults = filterState.adult ?? '-';
         hotels.forEach(hotel => {
+          const detailUrl = `roomsdetailpage.html?hotelId=${hotel.id}&${getSearchParams()}`;
           const $card = $(`
             <article class="hotel-card">
               <div class="hotel-image">
@@ -603,11 +661,11 @@ $(function () {
               </div>
               <div class="hotel-info">
                 <h2 class="hotel-name">
-                  <a href="hotel-detail.html?id=${hotel.id}">${hotel.name}</a>
+                  <a href="${detailUrl}">${hotel.name}</a>
                 </h2>
                 <div class="hotel-location">
-                   ${hotel.district}, ${hotel.city}
-                   距市中心${hotel.distance ?? '-'}公里
+                  ${hotel.district}, ${hotel.city}
+                  距市中心${hotel.distance ?? '-'}公里
                 </div>
                 <div class="hotel-type">${hotel.roomType}</div>
               </div>
@@ -618,10 +676,10 @@ $(function () {
                   </span>
                 </div>
                 <div class="hotel-date">
-                  ${hotel.night ?? '-'} 晚，${hotel.adults ?? '-'} 成人<br>
+                  ${nights} 晚，${adults} 成人<br>
                   <strong>TWD ${hotel.price ?? '-'}</strong><br>含稅及其他費用
                 </div>
-                <button class="btn btn-booking" onclick="location.href='hotel-detail.html?id=${hotel.id}'">
+                <button class="btn btn-booking" onclick="location.href='${detailUrl}'">
                   查詢客房詳情
                 </button>
               </div>
@@ -658,13 +716,13 @@ $(function () {
           map: map,
           title: hotel.name,
         });
-
+        const detailUrl = `roomsdetailpage.html?hotelId=${hotel.id}&${getSearchParams()}`;
         marker.addListener('click', function () {
           infoWindow.setContent(`
             <div style="min-width: 180px;">
               <strong>${hotel.name}</strong><br>
               ${hotel.district ?? ''}, ${hotel.city ?? ''}<br>
-              <a href="hotel-detail.html?id=${hotel.id}" target="_blank">查看詳情</a>
+              <a href="${detailUrl}" target="_blank">查看詳情</a>
             </div>
           `);
           infoWindow.open(map, marker);
