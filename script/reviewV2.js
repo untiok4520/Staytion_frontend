@@ -1,176 +1,273 @@
 $(document).ready(function () {
-    const ownerId = 1; // TODO: 替換成登入後取得的 ownerId
-    let reviews = [];
-    let currentPage = 0;
-    let totalPages = 0;
-    const pageSize = 6;
+  const reviewList = $("#reviewList");
+  const avgRating = $("#avgRating");
+  const hotelSelect = $("select.form-select").first();
+  const ownerId = 1; // TODO: 替換為登入者的 ID
+  let hotelMap = {};
 
-    // 初始化
-    loadHotels();
-    loadReviews();
+  let currentPage = 0;
+  let totalPages = 0;
 
-    // 載入飯店選單
-    function loadHotels() {
-        $.ajax({
-            url: `http://localhost:8080/api/admin/hotels/owner/${ownerId}`,
-            method: "GET",
-            // data: { ownerId },
-            success: function (hotels) {
-                const hotelSelect = $("#hotelSelect");
-                hotelSelect.empty().append(`<option value="">全部</option>`);
-                hotels.forEach(hotel => {
-                    hotelSelect.append(`<option value="${hotel.id}">${hotel.name}</option>`);
-                });
-            }
+  // 載入全部評論
+  function loadReviews(page=0) {
+
+    currentPage = page;
+    const params = {};
+    params.page = page;
+    params.size = 10;
+
+    $.ajax({
+      url: `http://localhost:8080/api/host/reviews/${ownerId}`,
+      method: "GET",
+      data: params,
+      success: function (data) {
+        console.log("載入留言成功", data)
+        totalPages = data.totalPages;
+        renderReviews(data.content);
+        renderPagination(currentPage, totalPages);
+      },
+      error: function () {
+        console.error("載入評論列表失敗");
+      }
+    });
+  }
+
+
+  // 載入飯店選單
+  function loadHotels() {
+    $.ajax({
+      url: `http://localhost:8080/api/admin/hotels/owner/${ownerId}`,
+      method: "GET",
+      success: function (hotels) {
+        hotelSelect.empty().append(`<option value="">全部</option>`);
+        hotels.forEach(h => {
+          hotelSelect.append(`<option value="${h.id}">${h.hotelname}</option>`);
+          hotelMap[h.id] = h.hotelname;
         });
+      },
+      error: function () {
+        console.error("載入飯店列表失敗");
+      }
+    });
+  }
+
+  // 查詢留言
+  function fetchReviews(page = 0) {
+    currentPage = page;
+    const params = {};
+
+    const keyword = $('input[placeholder="輸入姓名 / 評論內容"]').val().trim();
+    const hotelId = hotelSelect.val();
+    const hotel = hotelMap[hotelId];
+    const date = $('input[type="date"]').val();
+    const scoreOption = $("select.form-select").eq(1).val();
+
+    if (keyword) {
+      params.firstName = keyword;
+      params.comment = keyword;
+    }
+    if (hotel) params.hotelName = hotel;
+    if (date) {
+      const startDate = date;
+      const nextDate = new Date(date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      const endDate = nextDate.toISOString().split("T")[0]; // 取 yyyy-MM-dd
+
+      params.startDate = startDate;
+      params.endDate = endDate;
     }
 
-    // 查詢評論（分頁 + 篩選）
-    function loadReviews(filters = {}) {
-        filters.page = currentPage;
-        filters.size = pageSize;
-
-        $.ajax({
-            url: "http://localhost:8080/api/host/reviews",
-            method: "GET",
-            data: filters,
-            success: function (res) {
-                reviews = res.content || [];
-                totalPages = res.totalPages || 0;
-                renderReviews();
-                renderAvgScore();
-                renderPagination();
-            },
-            error: function () {
-                alert("評論載入失敗！");
-            }
-        });
+    if (scoreOption === "8 分以上") {
+      params.minScore = 8;
+    } else if (scoreOption === "6~7 分") {
+      params.minScore = 6;
+      params.maxScore = 7;
+    } else if (scoreOption === "5 分以下") {
+      params.maxScore = 5;
     }
 
-    // 顯示平均分數
-    function renderAvgScore() {
-        if (reviews.length === 0) {
-            $("#avgRating").text("--");
-            return;
-        }
-        const total = reviews.reduce((sum, r) => sum + r.score, 0);
-        const avg = (total / reviews.length).toFixed(1);
-        $("#avgRating").text(avg);
+    params.page = page;
+    params.size = 10;
+
+    // 平均分數
+    if (hotelId) {
+      calculateAvg(hotelId); // 傳入選到的 hotelId
+    } else {
+      avgRating.text("--"); // 沒選飯店就清除平均分數
     }
 
-    // 顯示評論
-    function renderReviews() {
-        const reviewList = $("#reviewList");
-        reviewList.empty();
+    $.ajax({
+      url: "http://localhost:8080/api/host/reviews",
+      method: "GET",
+      data: params,
+      success: function (data) {
+        console.log("載入留言成功", data)
+        totalPages = data.totalPages;
+        renderReviews(data.content);
+        renderPagination(currentPage, totalPages);
+      },
+      error: function () {
+        console.error("載入留言失敗");
+      }
+    });
+  }
 
-        if (reviews.length === 0) {
-            reviewList.append(`<div class="text-muted">目前沒有評論資料。</div>`);
-            return;
-        }
+  // 渲染留言卡片
+  function renderReviews(list) {
+    reviewList.empty();
+    if (!list.length) {
+      reviewList.append(`<p class="text-center text-muted">目前沒有符合條件的留言</p>`);
+      avgRating.text("--");
+      return;
+    }
 
-        reviews.forEach(r => {
-            const card = $(`
-                <div class="col-md-6">
-                    <div class="border rounded p-3 position-relative">
-                        <div class="d-flex justify-content-between">
-                            <h6 class="fw-bold mb-1">${r.firstName || "匿名"}</h6>
-                            <small class="text-muted">${new Date(r.createdAt).toLocaleDateString()}</small>
-                        </div>
-                        <div class="mb-2">⭐ 評分：${r.score}</div>
-                        <div class="mb-2">💬 留言：${r.comment}</div>
-                        <div class="mb-2">📩 回覆：${r.reply || "<em class='text-muted'>尚未回覆</em>"}</div>
-                        <div class="input-group mt-2">
-                            <input type="text" class="form-control reply-input" placeholder="輸入回覆內容..." />
-                            <button class="btn btn-primary btn-reply" data-orderid="${r.orderId}">回覆</button>
-                        </div>
-                    </div>
+    list.forEach(r => {
+      const createdDate = r.createdAt.split("T")[0];
+      const replyHTML = r.reply
+        ? `<div class="alert alert-secondary small"><strong>業者回覆：</strong>${r.reply}</div>`
+        : "";
+      const replyButton = r.reply
+        ? `<button class="btn btn-sm btn-outline-success" disabled>已回覆</button>`
+        : `<button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#replyBox${r.orderId}">回覆</button>`;
+
+      const card = `
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <div>
+                  <h6 class="mb-1">${r.firstName} · ${r.hotelName || "飯店"}</h6>
+                  <small class="text-muted">留言時間：${createdDate}</small>
                 </div>
-            `);
-            reviewList.append(card);
-        });
+                <div>
+                  <span class="badge fs-6" style="background-color:#1f487e">${r.score}</span>
+                </div>
+              </div>
+              <p>${r.comment}</p>
+              ${replyHTML}
+              <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-sm btn-outline-danger">修改</button>
+                ${replyButton}
+              </div>
+              <div class="collapse mt-2" id="replyBox${r.orderId}">
+                <textarea class="form-control mb-2" rows="2" placeholder="輸入回覆內容..."></textarea>
+                <div class="text-end">
+                  <button class="btn btn-primary btn-sm send-reply-btn" data-order-id="${r.orderId}">送出回覆</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      reviewList.append(card);
+    });
+  }
+
+  // 平均分數計算
+  function calculateAvg(hotelId) {
+    if (!hotelId) {
+      avgRating.text("--");
+      return;
     }
 
-    // 顯示分頁
-    function renderPagination() {
-        const pagination = $(".pagination");
-        pagination.empty();
-
-        // 上一頁
-        const prevDisabled = currentPage === 0 ? "disabled" : "";
-        pagination.append(`<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">上一頁</a></li>`);
-
-        // 頁碼
-        for (let i = 0; i < totalPages; i++) {
-            const active = i === currentPage ? "active" : "";
-            pagination.append(`<li class="page-item ${active}"><a class="page-link" href="#" data-page="${i}">${i + 1}</a></li>`);
+    $.ajax({
+      url: `http://localhost:8080/api/rooms/${hotelId}/reviews/average-score`,
+      method: "GET",
+      success: function (data) {
+        if (data && typeof data === "number") {
+          avgRating.text(data.toFixed(1));
+        } else {
+          avgRating.text("--");
         }
+      },
+      error: function () {
+        avgRating.text("--");
+        console.error("取得平均分數失敗");
+      }
+    });
+  }
 
-        // 下一頁
-        const nextDisabled = currentPage >= totalPages - 1 ? "disabled" : "";
-        pagination.append(`<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">下一頁</a></li>`);
+
+  // 回覆留言 PATCH
+  reviewList.on("click", ".send-reply-btn", function () {
+    const orderId = $(this).data("orderId");
+    const reply = $(this).closest(".collapse").find("textarea").val().trim();
+    if (!reply) return;
+
+    $.ajax({
+      url: `http://localhost:8080/api/reviews/${orderId}/reply`,
+      method: "PATCH",
+      contentType: "application/json",
+      data: JSON.stringify({ reply }),
+      success: function () {
+        fetchReviews(currentPage);
+        const toastEl = $("#replyToast");
+        if (toastEl.length) new bootstrap.Toast(toastEl[0]).show();
+      },
+      error: function () {
+        alert("送出回覆失敗，請稍後再試");
+      }
+    });
+  });
+
+  // 表單查詢事件
+  $("form").on("submit", function (e) {
+    e.preventDefault();
+    fetchReviews(0);
+  });
+
+  // 分頁渲染（滾動式）
+  function renderPagination(current, total) {
+    const maxVisible = 5;
+    const $pagination = $("#pagination");
+    $pagination.empty();
+    let html = "";
+
+    html += `<li class="page-item ${current === 0 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${current - 1}">上一頁</a>
+            </li>`;
+
+    let start = Math.max(0, current - Math.floor(maxVisible / 2));
+    let end = Math.min(total - 1, current + Math.floor(maxVisible / 2));
+
+    if (start > 1) {
+      html += `<li class="page-item"><a class="page-link" href="#" data-page="0">1</a></li>`;
+      if (start > 2) {
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+      }
     }
 
-    // 點擊分頁按鈕
-    $(document).on("click", ".pagination .page-link", function (e) {
-        e.preventDefault();
-        const page = parseInt($(this).data("page"));
-        if (!isNaN(page) && page >= 0 && page < totalPages) {
-            currentPage = page;
-            loadReviews(getFilterData());
-        }
-    });
-
-    // 取得目前篩選條件
-    function getFilterData() {
-        const keyword = $("#keyword").val().trim();
-        const hotelId = $("#hotelSelect").val();
-        const date = $("#dateFilter").val();
-        const scoreRange = $("#scoreFilter").val();
-
-        const filters = {};
-        if (keyword) filters.keyword = keyword;
-        if (hotelId) filters.hotelId = hotelId;
-        if (date) filters.date = date;
-
-        if (scoreRange) {
-            switch (scoreRange) {
-                case "8": filters.minScore = 8; break;
-                case "6": filters.minScore = 6; filters.maxScore = 7; break;
-                case "5": filters.maxScore = 5; break;
-            }
-        }
-        return filters;
+    for (let i = start; i <= end; i++) {
+      html += `<li class="page-item ${i === current ? 'active' : ''}">
+                  <a class="page-link" href="#" data-page="${i}">${i + 1}</a>
+              </li>`;
     }
 
-    // 查詢按鈕
-    $("#filterForm").on("submit", function (e) {
-        e.preventDefault();
-        currentPage = 0;
-        loadReviews(getFilterData());
-    });
+    if (end < total - 1) {
+      if (end < total - 2) {
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+      }
+      html += `<li class="page-item"><a class="page-link" href="#" data-page="${total - 1}">${total}</a></li>`;
+    }
 
-    // 回覆送出
-    $(document).on("click", ".btn-reply", function () {
-        const orderId = $(this).data("orderid");
-        const replyText = $(this).siblings("input").val().trim();
+    html += `<li class="page-item ${current + 1 >= total ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${current + 1}">下一頁</a>
+            </li>`;
 
-        if (!replyText) {
-            alert("請輸入回覆內容！");
-            return;
-        }
+    $pagination.append(html);
+  }
 
-        $.ajax({
-            url: `http://localhost:8080/api/reviews/${orderId}/reply`,
-            method: "PATCH",
-            contentType: "application/json",
-            data: JSON.stringify({ reply: replyText }),
-            success: function () {
-                $("#replyToast").toast("show");
-                loadReviews(getFilterData()); // 維持目前篩選條件與頁碼
-            },
-            error: function () {
-                alert("回覆失敗！");
-            }
-        });
-    });
+  // 點擊分頁事件
+  $(document).on("click", ".pagination .page-link", function (e) {
+    e.preventDefault();
+    const page = parseInt($(this).data("page"));
+    if (!isNaN(page) && page >= 0 && page < totalPages) {
+      fetchReviews(page);
+    }
+  });
+
+  // 初始化
+  loadHotels();
+  loadReviews(0);
+  fetchReviews(0);
 });

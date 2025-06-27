@@ -198,25 +198,24 @@
             <!-- 篩選與匯出工具列 -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <div class="d-flex gap-2">
-                    <select id="hotelSelect" class="form-select" style="width: 180px;">
-                        <option value="" disabled selected>選擇飯店</option>
+                    <select class="form-select" style="width: 120px;">
+                        <option selected>2025年</option>
+                        <option>2024年</option>
+                        <option>2023年</option>
                     </select>
-
-                    <select id="yearSelect" class="form-select" style="width: 120px;">
-                        <option value="" disabled selected>選擇年份</option>
+                    <select class="form-select" style="width: 100px;">
+                        <option selected>6月</option>
+                        <option>5月</option>
+                        <option>4月</option>
                     </select>
-
-                    <select id="monthSelect" class="form-select" style="width: 100px;">
-                        <option value="" disabled selected>選擇月份</option>
-                    </select>
-                    <button id="queryBtn" class="btn btn-outline-primary">查詢</button>
+                    <button class="btn btn-outline-primary">查詢</button>
                 </div>
 
                 <div class="d-flex gap-2">
-                    <button id="exportExcelBtn" class="btn btn-outline-success">
+                    <button class="btn btn-outline-success">
                         <i class="bi bi-file-earmark-excel"></i> 匯出 Excel
                     </button>
-                    <button id="exportPdfBtn" class="btn btn-outline-danger">
+                    <button class="btn btn-outline-danger">
                         <i class="bi bi-file-earmark-pdf"></i> 匯出 PDF
                     </button>
                 </div>
@@ -226,9 +225,9 @@
             <div class="row mb-4 g-3">
                 <div class="col-md-4">
                     <div class="card text-center">
-                        <div class="card-header">本年度營收</div>
+                        <div class="card-header">年度營收</div>
                         <div class="card-body">
-                            <p id="yearRevenue" class="fs-5 fw-bold text-success">$ 0</p>
+                            <p class="fs-5 fw-bold text-success">$12,600,000</p>
                         </div>
                     </div>
                 </div>
@@ -236,15 +235,15 @@
                     <div class="card text-center">
                         <div class="card-header">本月營收</div>
                         <div class="card-body">
-                            <p id="monthRevenue" class="fs-5 fw-bold text-primary">$ 0</p>
+                            <p class="fs-5 fw-bold text-primary">$1,250,000</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card text-center">
-                        <div class="card-header">累積總營收</div>
+                        <div class="card-header">總營收</div>
                         <div class="card-body">
-                            <p id="totalRevenue" class="fs-5 fw-bold text-warning">$ 0</p>
+                            <p class="fs-5 fw-bold text-warning">$28,800,000</p>
                         </div>
                     </div>
                 </div>
@@ -264,7 +263,7 @@
                     <div class="card text-center">
                         <div class="card-body">
                             <div class="card-title">入住率</div>
-                            <p id="occupancyRate" class="fs-4 fw-bold text-primary">0 %</p>
+                            <p class="fs-4 fw-bold text-primary">85 %</p>
                         </div>
                     </div>
                 </div>
@@ -272,7 +271,7 @@
                     <div class="card text-center">
                         <div class="card-body">
                             <div class="card-title">訂單數</div>
-                            <p id="totalOrders" class="fs-4 fw-bold text-success">0 筆</p>
+                            <p class="fs-4 fw-bold text-success">320 筆</p>
                         </div>
                     </div>
                 </div>
@@ -280,25 +279,25 @@
                     <div class="card text-center">
                         <div class="card-body">
                             <div class="card-title">平均房價</div>
-                            <p id="averagePrice" class="fs-4 fw-bold text-warning">$ 0</p>
+                            <p class="fs-4 fw-bold text-warning">$2,450</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 圖表區塊 -->
+            <!-- 圖表群 -->
             <div class="row mb-4 g-4">
-                <!-- 月營收折線圖 -->
+                <!-- 月收入統計 -->
                 <div class="col-lg-6">
                     <div class="card shadow-sm">
-                        <h5 class="card-header">月營收趨勢</h5>
+                        <h5 class="card-header">月收入統計</h5>
                         <div class="card-body">
                             <canvas id="monthlyIncomeChart" height="200"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- 房型比例圓餅圖 -->
+                <!-- 房型比例 -->
                 <div class="col-lg-6">
                     <div class="card shadow-sm">
                         <h5 class="card-header">房型比例</h5>
@@ -308,7 +307,7 @@
                     </div>
                 </div>
 
-                <!-- 每日訂單柱狀圖 -->
+                <!-- 每日訂單 -->
                 <div class="col-lg-6">
                     <div class="card shadow-sm">
                         <h5 class="card-header">每日訂單數</h5>
@@ -366,10 +365,9 @@
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../script/navbar.js"></script>
-    <script src="../script/chartV2.js"></script>
+    <script src="../script/charts.js"></script>
 
 </body>
 

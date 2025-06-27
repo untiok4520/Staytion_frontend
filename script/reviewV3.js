@@ -2,8 +2,14 @@ $(document).ready(function () {
   const reviewList = $("#reviewList");
   const avgRating = $("#avgRating");
   const hotelSelect = $("select.form-select").first();
-  const ownerId = 1; // TODO: 替換為登入者的 ID
+  const ownerId = 201; // TODO: 替換為登入者的 ID
   let hotelMap = {};
+
+  const token = localStorage.getItem("jwtToken") || "";
+  const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+    };
 
   let currentPage = 0;
   let totalPages = 0;
@@ -74,6 +80,7 @@ $(document).ready(function () {
     $.ajax({
       url: "http://localhost:8080/api/host/reviews",
       method: "GET",
+      headers,
       data: params,
       success: function (data) {
         console.log("載入留言成功", data)

@@ -1,7 +1,7 @@
 // admin.js
 $(function () {
     const token = localStorage.getItem("token") || "";
-    const ownerId = 1;
+    const ownerId = 201;
 
     const headers = {
         "Content-Type": "application/json",
@@ -248,8 +248,8 @@ $(function () {
 
     // ---------- 載入所有房型
     function loadRooms() {
-        const hid = $("#hotelFilter").val() || "all";
-        const url = hid === "all"
+        const hid = $("#hotelFilter").val() || "";
+        const url = hid === ""
             ? `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`
             : `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`; // 待處理
 

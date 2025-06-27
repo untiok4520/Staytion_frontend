@@ -1,8 +1,15 @@
 $(document).ready(function () {
     const apiUrl = "http://localhost:8080/api/admins/orders/filter";
     const hotelSelect = $("select.form-select").first();
+
+    const token = localStorage.getItem("token") || "";
+    const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+    };
+
     let currentPage = 0;
-    let currentUserId = 1;
+    let currentUserId = 201;
 
     let orderData = []; // 儲存當前訂單資料
     let guestData = {}; // 儲存客戶資料（如果有的話）
@@ -98,7 +105,7 @@ $(document).ready(function () {
                     <td>${order.items.map(i => `${i.roomTypeName} x${i.quantity}`).join(", ")}</td>
                     <td>${order.createdAt.split("T")[0]}</td>
                     <td><span class="text-${statusInfo.className} fw-bold">${statusInfo.text}</span></td>
-                    <td><span class="text-${methodInfo.className}">${methodInfo.text}</span></td>
+                    <td><span class="text-${methodInfo.className} fw-bold">${methodInfo.text}</span></td>
                     <td>$ ${order.totalPrice}</td>
                     <td><button class="btn btn-sm btn-outline-primary" onclick="showOrderDetail(${order.id})">查看</button></td>
                 </tr>`;
