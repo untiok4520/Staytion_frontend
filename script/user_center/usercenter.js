@@ -10,6 +10,11 @@ import {
   renderChatList,
   renderChatBox,
 } from "./domUtils.js";
+import {
+  fetchAndClassifyOrders,
+  renderOrderHTML,
+  formatDateWithDay,
+} from "./userOrderService.js";
 
 //貨幣按鈕
 document
@@ -97,35 +102,55 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
 
       //========住宿評論資料=============
       if (targetPage === "reviews") {
-        const mockUnreviewedCards = [
-          {
-            hotelName: "Hotel Name",
-            checkinDate: "2025/06/01",
-            checkoutDate: "2025/06/03",
+        const userId = localStorage.getItem("userId");
+        // 取得尚未評論的訂單資料
+        fetch(`http://localhost:8080/api/unreviewed`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
           },
-          {
-            hotelName: "Hotel Name",
-            checkinDate: "2025/06/10",
-            checkoutDate: "2025/06/12",
+        })
+          .then((res) => res.json())
+          .then((unreviewedList) => {
+            return fetch(
+              `http://localhost:8080/api/bookings/me?userId=${userId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+                },
+              }
+            )
+              .then((res) => res.json())
+              .then((bookings) => {
+                const hotelImageMap = new Map();
+                bookings.forEach((b) => {
+                  hotelImageMap.set(b.orderId, b.roomImgUrl);
+                });
+                // 把 imageUrl 填進 unreviewedList
+                unreviewedList.forEach((item) => {
+                  item.imageUrl =
+                    hotelImageMap.get(item.orderId) ||
+                    "https://via.placeholder.com/300x200?text=No+Image";
+                });
+                renderUnreviewedCards(unreviewedList);
+              });
+          })
+          .catch((err) => {
+            console.error("取得尚未評論資料失敗");
+          });
+        // 取得使用者已評論資料
+        fetch(`http://localhost:8080/api/users/me/reviews`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
           },
-        ];
-        renderUnreviewedCards(mockUnreviewedCards);
-
-        const mockReviews = [
-          {
-            hotelName: "Hotel Name",
-            date: "2025年5月26日",
-            score: "8",
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-          },
-          {
-            hotelName: "Another Hotel",
-            date: "2025年5月20日",
-            score: "9",
-            text: "這間真的很乾淨，交通方便。",
-          },
-        ];
-        renderReviews(mockReviews);
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("未授權或伺服器錯誤");
+            return res.json();
+          })
+          .then(renderReviews)
+          .catch((err) => {
+            console.error("取得評論失敗：", err);
+          });
       }
     }
     //=======尚未評論卡片渲染=============
@@ -140,14 +165,53 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
         .querySelectorAll(".unreview-card:not(.template)")
         .forEach((el) => el.remove());
 
+      const section = document.querySelector(".unreview-section");
       data.forEach((review) => {
         const card = template.cloneNode(true);
         card.classList.remove("template");
         card.style.display = "";
+        card.querySelector(".hotel-img").src = review.imageUrl;
         card.querySelector(".review-hotel-name").textContent = review.hotelName;
-        card.querySelector(".checkin-date").textContent = review.checkinDate;
-        card.querySelector(".checkout-date").textContent = review.checkoutDate;
-        const section = document.querySelector(".unreview-section");
+        card.querySelector(".checkin-date").textContent = review.checkInDate;
+        card.querySelector(".checkout-date").textContent = review.checkOutDate;
+
+        // 使用 class 選擇 input 與 span
+        const scoreInput = card.querySelector(".score-slider");
+        const scoreValueSpan = card.querySelector(".score-value");
+        if (scoreInput && scoreValueSpan) {
+          // 初始化分數顯示
+          scoreValueSpan.textContent = scoreInput.value;
+          // 監聽 input 事件，及時更新分數
+          scoreInput.addEventListener("input", () => {
+            scoreValueSpan.textContent = scoreInput.value;
+          });
+        }
+        const commentInput = card.querySelector(".review-comment");
+        const submitBtn = card.querySelector(".submit-review-btn");
+        submitBtn.addEventListener("click", () => {
+          const score = scoreInput.value;
+          const comment = commentInput.value;
+          if (!score || !comment) {
+            alert("請填寫評論與評分");
+            return;
+          }
+          fetch(`http://localhost:8080/api/users/me/reviews`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderId: review.orderId,
+              score: score,
+              comment: comment,
+            }),
+          }).then((res) => {
+            if (res.ok) {
+              alert("評論送出成功！");
+              card.remove();
+            } else {
+              alert("評論送出失敗！");
+            }
+          });
+        });
         section.appendChild(card);
       });
     }
@@ -155,163 +219,55 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
 });
 document.querySelector('.sidebar-item[data-page="orders"]').click();
 
-//訂單管理區塊更新
-//假資料
-const mockOrders = {
-  future: {
-    location: `
-      <div class="location-title">台北市</div>
-      <div class="location-date">6月20日（週五）</div>
-    `,
-    order: `
-      <div class="order-number">編號：F12345</div>
-      <div class="order-content">
-        <div class="hotel-image"></div>
-        <div class="hotel-info">
-          <div class="hotel-name">台北大飯店</div>
-          <div class="hotel-dates">
-            <div class="checkin-date">
-              <span>入住日期</span><br />
-              <span>6月21日（週六）</span>
-            </div>
-            <div class="checkout-date">
-              <span>退房日期</span><br />
-              <span>6月23日（週一）</span>
-            </div>
-          </div>
-        </div>
-        <div class="order-detail">
-        <button class="btn btn-secondary show-detail"
-            data-id="F12345"
-            data-name="台北大飯店"
-            data-checkin="6月21日（週六）"
-            data-checkout="6月23日（週一）"
-            data-location="台北市"
-            data-price="917.71"
-            data-tax="142.06"
-            data-total="1059.77"
-            data-phone="+886 2 6619 8888"
-            data-card="Visa"
-            data-cardmask="•••• •••• •••• ••••"
-          >訂單內容</button>
-        </div>
-      </div>
-    `,
-  },
-  past: {
-    location: `
-      <div class="location-title">高雄市</div>
-      <div class="location-date">5月12日（週日）</div>
-    `,
-    order: `
-      <div class="order-number">編號：P67890</div>
-      <div class="order-content">
-        <div class="hotel-image"></div>
-        <div class="hotel-info">
-          <div class="hotel-name">高雄大飯店</div>
-          <div class="hotel-dates">
-            <div class="checkin-date">
-              <span>入住日期</span><br />
-              <span>5月10日（週五）</span>
-            </div>
-            <div class="checkout-date">
-              <span>退房日期</span><br />
-              <span>5月12日（週日）</span>
-            </div>
-          </div>
-        </div>
-        <div class="order-detail">
-          <button class="btn btn-secondary show-detail"
-            data-id="P67890"
-            data-name="高雄大飯店"
-            data-checkin="5月10日（週五）"
-            data-checkout="5月12日（週日）"
-            data-location="高雄市"
-            data-price="800.00"
-            data-tax="120.00"
-            data-total="920.00"
-            data-phone="+886 7 1234 5678"
-            data-card="MasterCard"
-            data-cardmask="•••• •••• •••• 1234"
-          >訂單內容</button>
-        </div>
-      </div>
-    `,
-  },
-  cancelled: {
-    location: `
-      <div class="location-title">首爾</div>
-      <div class="location-date">9月24日（週三）</div>
-    `,
-    order: `
-      <div class="order-number">編號：C00000</div>
-      <div class="order-content">
-        <div class="hotel-image"></div>
-        <div class="hotel-info">
-          <div class="hotel-name">弘大青年旅館</div>
-          <div class="hotel-dates">
-            <div class="checkin-date">
-              <span>入住日期</span><br />
-              <span>9月24日（週三）</span>
-            </div>
-            <div class="checkout-date">
-              <span>退房日期</span><br />
-              <span>9月25日（週四）</span>
-            </div>
-          </div>
-        </div>
-        <div class="order-detail">
-          <button class="btn btn-secondary show-detail"
-            data-id="C00000"
-            data-name="弘大青年旅館"
-            data-checkin="9月24日（週三）"
-            data-checkout="9月25日（週四）"
-            data-location="首爾"
-            data-price="500.00"
-            data-tax="75.00"
-            data-total="575.00"
-            data-phone="+82 2 1234 5678"
-            data-card="Amex"
-            data-cardmask="•••• •••• •••• 5678"
-          >訂單內容</button>
-        </div>
-      </div>
-    `,
-  },
-};
+//==============訂單管理===============================
+let ordersByType = {};
 
-// 切換 tab 時更新內容
-document.querySelectorAll(".tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    const detailPanel = document.querySelector(".order-detail-panel");
-    if (detailPanel.style.display !== "none") {
-      detailPanel.style.display = "none";
-      document.querySelector(".location").style.display = "block";
-      document.querySelector(".order-list").style.display = "block";
-    }
-    // tab 樣式切換
-    document
-      .querySelectorAll(".tab")
-      .forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
+function renderOrdersTab(type) {
+  const ordersContainer = document.getElementById("orders");
+  const detailPanel = document.querySelector(".order-detail-panel");
 
-    // 根據 data-type 取得資料
-    const type = tab.dataset.type;
-    const locationEl = document.querySelector(".location");
-    const orderListEl = document.querySelector(".order-list");
+  console.log(
+    "目前選擇的 tab 類型：",
+    type,
+    "，對應訂單數量：",
+    ordersByType[type]?.length || 0
+  );
+  const orders = ordersByType[type] || [];
+  const oldLocations = ordersContainer.querySelectorAll(
+    ".location, .order-list"
+  );
+  oldLocations.forEach((el) => el.remove());
 
-    // 更新 HTML
-    locationEl.innerHTML = mockOrders[type].location;
-    orderListEl.innerHTML = mockOrders[type].order;
+  if (orders.length === 0) {
+    const emptyLocation = document.createElement("div");
+    emptyLocation.className = "location";
+    emptyLocation.innerHTML = "<div class='location-title'>無訂單</div>";
+    ordersContainer.insertBefore(emptyLocation, detailPanel);
+    return;
+  }
 
-    // 新增 show-detail 按鈕點擊事件
-    orderListEl.querySelectorAll(".show-detail").forEach((btn) => {
+  orders.forEach((order) => {
+    const { locationHTML, orderHTML } = renderOrderHTML(order);
+
+    const locationWrapper = document.createElement("div");
+    locationWrapper.className = "location";
+    locationWrapper.innerHTML = locationHTML;
+
+    const orderListWrapper = document.createElement("div");
+    orderListWrapper.className = "order-list";
+    orderListWrapper.innerHTML = orderHTML;
+
+    ordersContainer.insertBefore(locationWrapper, detailPanel);
+    ordersContainer.insertBefore(orderListWrapper, detailPanel);
+
+    orderListWrapper.querySelectorAll(".show-detail").forEach((btn) => {
       btn.addEventListener("click", () => {
         const detail = {
           orderNumber: btn.dataset.id,
           hotelName: btn.dataset.name,
           checkinDate: btn.dataset.checkin,
           checkoutDate: btn.dataset.checkout,
+          roomType: btn.dataset.roomtype,
           location: btn.dataset.location,
           price: parseFloat(btn.dataset.price),
           tax: parseFloat(btn.dataset.tax),
@@ -324,16 +280,106 @@ document.querySelectorAll(".tab").forEach((tab) => {
       });
     });
   });
+}
+
+// ============ 訂單編號查詢功能 =============
+const searchInput = document.querySelector("#orderSearchInput");
+if (searchInput) {
+  searchInput.addEventListener("keypress", async (e) => {
+    if (e.key === "Enter") {
+      const orderId = searchInput.value.trim();
+      if (orderId === "") {
+        const all = await fetchAndClassifyOrders();
+        ordersByType = all;
+        // 設定 future tab 為 active
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelector('.tab[data-type="future"]')
+          .classList.add("active");
+        renderOrdersTab("future");
+        return;
+      }
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/bookings/${orderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            },
+          }
+        );
+        if (!res.ok) throw new Error("查詢失敗");
+        const booking = await res.json();
+        ordersByType = { future: [], past: [], cancelled: [], ongoing: [] };
+        let determinedTab = "future";
+        if (booking) {
+          if (booking.status === "CONFIRMED") {
+            const checkIn = new Date(booking.checkInDate);
+            const checkOut = new Date(booking.checkOutDate);
+            const now = new Date();
+            if (checkIn > now) {
+              ordersByType.future.push(booking);
+              determinedTab = "future";
+            } else if (checkOut <= now) {
+              ordersByType.past.push(booking);
+              determinedTab = "past";
+            } else {
+              ordersByType.ongoing.push(booking);
+              determinedTab = "ongoing";
+            }
+          } else if (booking.status === "CANCELED") {
+            ordersByType.cancelled.push(booking);
+            determinedTab = "cancelled";
+          }
+          // 切換 tab 樣式
+          document
+            .querySelectorAll(".tab")
+            .forEach((t) => t.classList.remove("active"));
+          const matchedTab = document.querySelector(
+            `.tab[data-type="${determinedTab}"]`
+          );
+          if (matchedTab) matchedTab.classList.add("active");
+          renderOrdersTab(determinedTab);
+        }
+      } catch (err) {
+        alert("查無此訂單");
+        console.error("搜尋訂單錯誤：", err);
+      }
+    }
+  });
+}
+
+//tab按鈕
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    document
+      .querySelectorAll(".tab")
+      .forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+    renderOrdersTab(tab.dataset.type);
+  });
 });
-document.querySelector('.tab[data-type="future"]').click();
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    const type = tab.dataset.type;
+    renderOrdersTab(type);
+  });
+});
+
+fetchAndClassifyOrders().then((classifiedOrders) => {
+  ordersByType = classifiedOrders;
+  renderOrdersTab("ongoing");
+});
 
 function showOrderDetail(detail) {
-  const locationEl = document.querySelector(".location");
-  const orderListEl = document.querySelector(".order-list");
+  const locationEls = document.querySelectorAll(".location");
+  const orderListEls = document.querySelectorAll(".order-list");
   const detailPanel = document.querySelector(".order-detail-panel");
 
-  locationEl.style.display = "none";
-  orderListEl.style.display = "none";
+  locationEls.forEach((el) => (el.style.display = "none"));
+  orderListEls.forEach((el) => (el.style.display = "none"));
 
   // 填入資料到 detailPanel 的各欄位
   document.getElementById("detail-hotelName").textContent = detail.hotelName;
@@ -341,6 +387,7 @@ function showOrderDetail(detail) {
     detail.checkinDate;
   document.getElementById("detail-checkoutDate").textContent =
     detail.checkoutDate;
+  document.getElementById("detail-roomtype").textContent = detail.roomType;
   document.getElementById("detail-location").textContent = detail.location;
   document.getElementById("detail-phone").textContent = detail.phone;
   document.getElementById("detail-orderNumber").textContent =
@@ -361,8 +408,10 @@ function showOrderDetail(detail) {
 
   document.getElementById("backToList").addEventListener("click", () => {
     detailPanel.style.display = "none";
-    locationEl.style.display = "block";
-    orderListEl.style.display = "block";
+    document.querySelectorAll(".location").forEach((el) => {
+      el.style.display = "block";
+    });
+    orderListEls.forEach((el) => (el.style.display = "block"));
   });
 
   //取消訂單、更新日期、更改房型modal視窗
@@ -390,14 +439,57 @@ function showOrderDetail(detail) {
   // 點「繼續」處理邏輯
   document
     .getElementById("cancelModalConfirm")
-    .addEventListener("click", () => {
+    .addEventListener("click", async () => {
       const reason = document.getElementById("cancelReason").value;
       if (!reason) {
         alert("請選擇取消原因");
         return;
       }
-      alert("已送出取消申請，原因：" + reason);
-      document.getElementById("cancelModal").style.display = "none";
+      const bookingId =
+        document.getElementById("detail-orderNumber").textContent;
+
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/bookings/${bookingId}/cancel`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            },
+          }
+        );
+        if (!res.ok) {
+          throw new Error("取消失敗，請稍後再試");
+        }
+
+        alert("已送出取消申請");
+
+        // 關閉 modal 與訂單詳情，顯示列表
+        document.getElementById("cancelModal").style.display = "none";
+        document.querySelector(".order-detail-panel").style.display = "none";
+        document.querySelectorAll(".location").forEach((el) => {
+          el.style.display = "block";
+        });
+        document.querySelectorAll(".order-list").forEach((el) => {
+          el.style.display = "block";
+        });
+
+        // 重新分類與渲染取消後的訂單狀態
+        const updatedOrders = await fetchAndClassifyOrders();
+        ordersByType = updatedOrders;
+        // 設定 cancelled tab 為 active
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelector('.tab[data-type="cancelled"]')
+          .classList.add("active");
+        renderOrdersTab("cancelled");
+      } catch (err) {
+        console.error("取消訂單錯誤：", err);
+        alert("取消失敗：" + err.message);
+      }
     });
 
   // 關閉 changeDateModal（按鈕 & ✕）
@@ -441,7 +533,8 @@ fetch("http://localhost:8080/api/chatrooms/my", {
   });
 // ===================== 新增 handleChatListItemClick =====================
 
-let sendButtonInitialized = false; // 新增：防止重複綁定
+let sendButtonInitialized = false; // 防止重複綁定
+
 async function handleChatListItemClick(item) {
   // 更新全域變數
   const chatRoomId = Number(item.dataset.chatRoomId);
@@ -474,42 +567,6 @@ async function handleChatListItemClick(item) {
     sendButtonInitialized = true;
   }
 }
-
-// document.querySelectorAll(".chat-list-item").forEach((item) => {
-//   item.addEventListener("click", () => {
-//     document.querySelectorAll(".chat-list-item").forEach((el) => {
-//       el.classList.remove("active");
-//     });
-//     // 為當前點擊項目加上 active
-//     item.classList.add("active");
-
-//     // 取得飯店名稱
-//     const hotelName = item.querySelector(".chat-hotel-name").textContent;
-
-//     // 更新右側聊天區塊內容
-//     const chatBox = document.querySelector(".chat-box");
-//     const lastHotelMessage = "您好，入住時間為下午 3 點後。";
-//     chatBox.innerHTML = `
-//       <div class="chat-header">
-//         <h4>${hotelName}</h4>
-//       </div>
-//       <div class="chat-messages">
-//         <div class="message from-user">請問入住時間是幾點？</div>
-//         <div class="message from-hotel">${lastHotelMessage}</div>
-//       </div>
-//       <div class="chat-input">
-//         <input type="text" placeholder="輸入訊息..." />
-//         <button class="btn btn-secondary">送出</button>
-//       </div>
-//     `;
-
-//     // 更新對應的 chat-preview 內容
-//     item.querySelector(".chat-preview").textContent = lastHotelMessage.slice(
-//       0,
-//       10
-//     );
-//   });
-// });
 
 //=======住宿評論渲染=============
 function renderReviews(reviews) {

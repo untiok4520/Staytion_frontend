@@ -218,6 +218,7 @@
           <div class="tabs">
             <div class="tab active" data-type="future">未來式</div>
             <div class="tab" data-type="past">過去式</div>
+            <div class="tab" data-type="ongoing">入住中</div>
             <div class="tab" data-type="cancelled">已取消</div>
           </div>
 
@@ -245,7 +246,11 @@
                 width="18px"
                 height="18px"
               />
-              <input type="text" placeholder="以訂單編號搜尋" />
+              <input
+                type="text"
+                id="orderSearchInput"
+                placeholder="以訂單編號搜尋"
+              />
             </div>
           </div>
 
@@ -269,7 +274,10 @@
                     <span id="detail-checkoutDate"></span>
                   </div>
                 </div>
-                <div class="room-info">
+                <div class="roomtype">
+                  房型：<span id="detail-roomtype"></span>
+                </div>
+                <div class="room-address">
                   地址：<span id="detail-location"></span>
                 </div>
                 <div class="contact">
@@ -340,7 +348,7 @@
           <h2>尚未評論</h2>
           <div class="unreview-section">
             <div class="unreview-card template" style="display: none">
-              <div class="review-img"></div>
+              <img class="hotel-img" src="" alt="hotel image" />
               <div class="review-content">
                 <div class="left-info">
                   <h5 class="review-hotel-name"></h5>
@@ -357,8 +365,8 @@
                 </div>
                 <div class="right-info">
                   <div class="rating-options">
-                    <label>請為這間住宿評分：</label>
-                    <div class="radio-group">
+                    <!-- <label>請為這間住宿評分：</label> -->
+                    <!-- <div class="radio-group">
                       <label
                         ><input type="radio" name="score" value="1" />1</label
                       >
@@ -389,13 +397,27 @@
                       <label
                         ><input type="radio" name="score" value="10" />10</label
                       >
-                    </div>
+                    </div> -->
+                    <label for="score">請為這間住宿評分：</label>
+                    <input
+                      type="range"
+                      class="score-slider"
+                      name="score"
+                      min="1"
+                      max="10"
+                      step="1"
+                      value="5"
+                    />
+                    <span class="score-value"></span>
                     <div class="review-text">
                       <textarea
                         class="review-comment"
                         placeholder="留下您的評論..."
                       ></textarea>
-                      <button class="btn btn-secondary" type="submit">
+                      <button
+                        class="btn btn-secondary submit-review-btn"
+                        type="submit"
+                      >
                         送出
                       </button>
                     </div>

@@ -1,14 +1,21 @@
 export function renderIncomingMessage(msg) {
   const container = document.querySelector(".chat-messages");
+  const userId = Number(localStorage.getItem("userId"));
+  const isOwnMessage = msg.senderId === userId;
+
   //檢查容器是否存在
   if (!container) {
     console.error("找不到 .chat-messages 容器");
     return;
   }
   const msgEl = document.createElement("div");
-  msgEl.classList.add("message");
-  msgEl.classList.add(msg.senderRole === "HOTEL" ? "from-hotel" : "from-user");
-  msgEl.textContent = msg.content;
+  msgEl.className = isOwnMessage
+    ? "chat-message chat-message-right"
+    : "chat-message chat-message-left";
+
+  msgEl.innerHTML = `
+    <div class="chat-bubble">${msg.content}</div>
+  `;
   container.appendChild(msgEl);
   container.scrollTop = container.scrollHeight;
 }

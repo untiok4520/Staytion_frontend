@@ -26,6 +26,16 @@ export function subscribeChatRoom(chatRoomId) {
     (message) => {
       const msg = JSON.parse(message.body);
       renderIncomingMessage(msg);
+      //更新chat-list-item預覽文字
+      const chatItem = document.querySelector(
+        `.chat-list-item[data-chat-room-id="${msg.chatRoomId}"]`
+      );
+      if (chatItem) {
+        const previewEl = chatItem.querySelector(".chat-preview");
+        if (previewEl) {
+          previewEl.textContent = msg.content.slice(0, 10);
+        }
+      }
     }
   );
   currentChatRoomId = chatRoomId;
