@@ -68,19 +68,19 @@
       color: v.$primary;
     }
   }
-  .navbar-toggler {
-    outline: none;
-    box-shadow: none;
-    transition: all 0.2s ease-in;
-    &:hover {
-      border: 2px solid v.$primary;
-    }
+  // .navbar-toggler {
+  //   outline: none;
+  //   box-shadow: none;
+  //   transition: all 0.2s ease-in;
+  //   &:hover {
+  //     border: 2px solid v.$primary;
+  //   }
 
-    &:active {
-      outline: none;
-      box-shadow: none;
-    }
-  }
+  //   &:active {
+  //     outline: none;
+  //     box-shadow: none;
+  //   }
+  // }
   .btn-outline-primary {
     transition: all 0.2s ease-in-out;
     &:hover {
