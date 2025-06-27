@@ -292,27 +292,26 @@
         <div class="row mb-2">
           <div class="col-md-6">
             <span class="text-muted small">Check-in：</span>
-            <span class="fw-semibold">2025/07/18</span>
+            <span id="checkInDate" class="fw-semibold">2025/07/18</span>
           </div>
           <div class="col-md-6">
             <span class="text-muted small">Check-out：</span>
-            <span class="fw-semibold">2025/07/20</span>
+            <span id="checkOutDate" class="fw-semibold">2025/07/20</span>
           </div>
         </div>
-      
+        
         <p class="mb-1">
           <span class="text-muted small">共入住：</span>
-          <span class="fw-semibold">2 天</span>
+          <span id="totalDays" class="fw-semibold">2 天</span>
         </p>
         <p class="mb-1">
           <span class="text-muted small">已選擇房型：</span>
-          <span class="fw-semibold">豪華雙人房</span>
+          <span id="roomType" class="fw-semibold">豪華雙人房</span>
         </p>
         <p class="fw-bold fs-5 text-success">
-          總金額：TWD 2,500
+          總金額：<span id="totalPrice">TWD 2,500</span>
         </p>
       </div>
-
       <div class="card p-4 mb-4 card-hover">
         <div class="section-title">
           <i class="bi bi-person-fill me-1"></i>輸入個人資料
@@ -323,7 +322,7 @@
               <input
                 type="text"
                 class="form-control"
-                placeholder="英文姓氏"
+                placeholder="英文名字"
                 required
               />
             </div>
@@ -331,7 +330,7 @@
               <input
                 type="text"
                 class="form-control"
-                placeholder="英文名"
+                placeholder="英文姓氏"
                 required
               />
             </div>
@@ -451,9 +450,9 @@
 </div>
 
 
-      <p class="text-muted text-center mt-2" style="font-size: 0.9rem">
+      <!-- <p class="text-muted text-center mt-2" style="font-size: 0.9rem">
         登入帳號：Kevin@gmail.com <a href="#">登出</a>
-      </p>
+      </p> -->
 
       <div class="alert alert-info">
         <div class="fw-bold mb-1">
@@ -507,26 +506,75 @@ paymentRadios.forEach((radio) => {
   });
 });
 
-// ✅ 綠界付款按鈕觸發跳轉
-goToEcpayBtn.addEventListener("click", () => {
-  // 這裡你可以改成真正的綠界網址
-  window.location.href = "ecpay_processing.html";
-});
+document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("請重新登入");
+      return;
+    }
 
+    // ✅ 綁定付款方式切換事件
+    const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+    paymentRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        const method = radio.value;
 
-      function formatCardNumber(input) {
-        let value = input.value.replace(/\D/g, "").substring(0, 16);
-        let formatted = value.match(/.{1,4}/g);
-        input.value = formatted ? formatted.join(" ") : "";
+        document.getElementById("creditCardForm").style.display = method === "credit" ? "block" : "none";
+        document.getElementById("cashPaymentInfo").style.display = method === "cash" ? "block" : "none";
+        document.getElementById("ecpayInfo").style.display = method === "ecpay" ? "block" : "none";
+        document.getElementById("ecpayButtonWrapper").style.display = method === "ecpay" ? "block" : "none";
+      });
+    });
+
+    // ✅ 頁面載入完成後，觸發一次付款方式切換顯示
+    const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+    if (selectedRadio) {
+      selectedRadio.dispatchEvent(new Event("change"));
+    }
+
+    // ✅ 綠界付款按鈕處理
+    const goToEcpayBtn = document.getElementById("goToEcpayBtn");
+    goToEcpayBtn.addEventListener("click", () => {
+      // ✅ 驗證基本個人資料欄位
+      const requiredFields = [
+        ...document.querySelectorAll('input[placeholder="英文姓氏"]'),
+        ...document.querySelectorAll('input[placeholder="英文名"]'),
+        ...document.querySelectorAll('input[type="email"]'),
+        ...document.querySelectorAll('input[type="tel"]')
+      ];
+
+      for (let input of requiredFields) {
+        if (!input.value.trim()) {
+          alert("請完整填寫個人資料");
+          return;
+        }
       }
 
-      function formatExpiry(input) {
-        let value = input.value.replace(/\D/g, "").substring(0, 4);
-        input.value =
-          value.length > 2
-            ? value.substring(0, 2) + "/" + value.substring(2)
-            : value;
-      }
+      // ✅ 儲存必要資料（僅儲存 email 和 phone，信用卡略過）
+      const email = document.querySelector('input[type="email"]').value;
+      const phone = document.querySelector('input[type="tel"]').value;
+
+      sessionStorage.setItem("paymentMethod", "ECPAY");
+      sessionStorage.setItem("email", email);
+      sessionStorage.setItem("phone", phone);
+
+      // ✅ 跳轉至綠界處理頁
+      window.location.href = "ecpay_processing.html";
+    });
+  });
+
+  // ✅ 卡號格式化（只有信用卡付款時有用）
+  function formatCardNumber(input) {
+    let value = input.value.replace(/\D/g, "").substring(0, 16);
+    let formatted = value.match(/.{1,4}/g);
+    input.value = formatted ? formatted.join(" ") : "";
+  }
+
+  function formatExpiry(input) {
+    let value = input.value.replace(/\D/g, "").substring(0, 4);
+    input.value = value.length > 2 ? value.substring(0, 2) + "/" + value.substring(2) : value;
+  }
+
 
       // navbar 語言與幣別切換
       document
@@ -560,6 +608,45 @@ goToEcpayBtn.addEventListener("click", () => {
             ).hide();
           });
         });
+
+        document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      alert("找不到使用者 ID，請重新登入");
+      return;
+    }
+
+    fetch(`http://localhost:8080/api/users/orders/${userId}?page=0&size=1&sort=id,desc`)
+      .then(res => res.json())
+      .then(data => {
+        const order = data.content[0];
+
+        if (!order) {
+          alert("尚未有訂單資料");
+          return;
+        }
+
+        const checkIn = new Date(order.checkInDate);
+        const checkOut = new Date(order.checkOutDate);
+        const checkInStr = checkIn.toLocaleDateString("zh-TW");
+        const checkOutStr = checkOut.toLocaleDateString("zh-TW");
+        const days = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+
+        document.getElementById("checkInDate").textContent = checkInStr;
+        document.getElementById("checkOutDate").textContent = checkOutStr;
+        document.getElementById("totalDays").textContent = `${days} 天`;
+
+        document.getElementById("roomType").textContent =
+          order.items.length > 0 ? order.items[0].roomTypeName : '—';
+
+        document.getElementById("totalPrice").textContent = `TWD ${order.totalPrice}`;
+      })
+      .catch(err => {
+        console.error("載入訂單失敗：", err);
+        alert("無法取得訂單資料，請稍後再試");
+      });
+  });
     </script>
   </body>
 </html>

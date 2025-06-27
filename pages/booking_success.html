@@ -904,6 +904,49 @@ window.addEventListener("DOMContentLoaded", () => {
     const modal = bootstrap.Modal.getInstance(document.getElementById("changeRoomModal"));
     modal.hide();
   }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("userId"); // 假設登入時有存入
+
+    if (!userId) {
+      alert("找不到使用者 ID，請重新登入");
+      return;
+    }
+
+    fetch(`http://localhost:8080/api/users/orders/${userId}?page=0&size=1&sort=id`)
+      .then(res => res.json())
+      .then(data => {
+        const order = data.content[0];
+
+        const confirmedRoomName = order.items.length > 0 ? order.items[0].roomTypeName : '—';
+        document.getElementById("confirmedRoomName").textContent = confirmedRoomName;
+
+        const checkIn = new Date(order.checkInDate);
+        const checkOut = new Date(order.checkOutDate);
+        const checkInStr = checkIn.toLocaleDateString("zh-TW");
+        const checkOutStr = checkOut.toLocaleDateString("zh-TW");
+        const days = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+
+        let paymentStatus = "尚未付款";
+        if (order.paymentStatus === "PAID") {
+          paymentStatus = `已付款（${order.paymentMethod}）`;
+        } else if (order.paymentStatus === "UNPAID") {
+          paymentStatus = "尚未付款";
+        }
+
+        const orderInfoHTML = `
+          <li><strong>訂單編號：</strong>${order.id}</li>
+          <li><strong>入住日期：</strong>${checkInStr}</li>
+          <li><strong>退房日期：</strong>${checkOutStr}</li>
+          <li><strong>入住天數：</strong>${days} 晚</li>
+          <li><strong>付款狀態：</strong>${paymentStatus}</li>
+        `;
+        document.querySelector(".card .list-unstyled").innerHTML = orderInfoHTML;
+      })
+      .catch(err => {
+        console.error("讀取訂單失敗：", err);
+      });
+  });
 </script>
 
 

@@ -39,10 +39,46 @@
     </div>
 
     <script>
-      // ✅ 5 秒後跳轉到付款成功頁（可修改）
-      setTimeout(() => {
-        window.location.href = "booking_success.html"; // ✅ 可改為綠界回傳頁
-      }, 5000);
+      document.addEventListener("DOMContentLoaded", () => {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          alert("找不到 userId，請重新登入");
+          return;
+        }
+
+        const paymentMethod = "ECPAY";
+
+        fetch("http://localhost:8080/api/payments/process", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId: userId,
+            paymentMethod: paymentMethod
+          })
+        })
+          .then(res => res.text())
+          .then(htmlForm => {
+            const div = document.createElement("div");
+            div.innerHTML = htmlForm;
+            document.body.appendChild(div);
+            const form = div.querySelector("form");
+            if (form) {
+              // ✅ 3 秒後送出表單
+              setTimeout(() => {
+                form.submit();
+              }, 3000);
+            } else {
+              throw new Error("找不到綠界表單");
+            }
+          })
+          .catch(err => {
+            console.error("導向綠界失敗：", err);
+            document.querySelector(".loading-text").textContent =
+              "導向綠界失敗，請稍後再試。";
+          });
+      });
     </script>
   </body>
 </html>
