@@ -438,9 +438,38 @@ async function performSearch() {
 }
 
 // 修改搜尋按鈕事件監聽器
+// searchBtn.addEventListener('click', async (e) => {
+//     e.preventDefault();
+//     await performSearch();
+// });
+
+// 假設搜尋頁為 search.html
 searchBtn.addEventListener('click', async (e) => {
     e.preventDefault();
+    const locationName = document.getElementById('destinationInput').value || '台北市';
+    const dateInput = document.getElementById('daterange');
+    const dateRange = dateInput.value.split(' 至 ');
+    const checkin = dateRange[0]?.trim() || '';
+    const checkout = dateRange[1]?.trim() || '';
+    const adults = guestCounts?.adults ?? 1;
+    const children = guestCounts?.children ?? 0;
+    const rooms = guestCounts?.rooms ?? 1;
+
+    // 這裡可以呼叫你的API或紀錄歷史的函式
     await performSearch();
+
+    // 組合查詢參數
+    const params = new URLSearchParams({
+        destination: locationName,
+        checkin,
+        checkout,
+        adults,
+        children,
+        rooms,
+    });
+
+    // 跳轉
+    window.location.href = `/pages/SearchPageV2.html?${params.toString()}`;
 });
 
 // 更新箭頭顯示狀態
@@ -497,6 +526,16 @@ function renderCityCard(city) {
     const cityCarousel = document.getElementById('city-carousel');
     const cityCard = document.createElement('div');
     cityCard.classList.add('city-card');
+
+    // 組查詢參數
+    const params = new URLSearchParams({
+        destination: city.city,
+        checkin: '',   // 也可以預設今天
+        checkout: '',  // 也可以預設明天
+        adults: 2,
+        children: 0,
+        rooms: 1,
+    });
 
     cityCard.innerHTML = `
         <div class="card">
@@ -593,6 +632,28 @@ async function loadTopHotels() {
     }
 }
 
+// 精選飯店卡片點擊（hotelId + cityName 帶到搜尋頁，highlight_hotel_id 強制排最上面）
+document.addEventListener('click', function (e) {
+    // 假設你卡片裡的 <a> 會加 data-hotel-id, data-city
+    const link = e.target.closest('#recommendation-carousel .card a'); if (link) {
+        e.preventDefault();
+        const hotelId = link.closest('.card').querySelector('button.heart-btn').dataset.hotelId;
+        // 注意：你要確定 cityName 正確掛在 a 或其他元素上（這裡 demo 用 data-city）
+        const cityName = link.closest('.card').querySelector('.card-text').textContent.split(',')[1]?.trim() || '';
+        // 組參數
+        const params = new URLSearchParams({
+            destination: cityName,
+            checkin: '',
+            checkout: '',
+            adults: 2,
+            children: 0,
+            rooms: 1,
+            highlight_hotel_id: hotelId
+        });
+        window.location.href = `/pages/SearchPageV2.html?${params.toString()}`;
+    }
+});
+
 
 document.addEventListener('click', function (e) {
     const heartBtn = e.target.closest('.heart-btn');
@@ -684,4 +745,24 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.removeItem('userId');
         location.reload(); // 重新整理頁面回到未登入狀態
     });
+});
+
+// 熱門城市卡片點擊跳轉
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('.city-card a');
+    if (link) {
+        e.preventDefault();
+        // 從卡片 DOM 取 city 名稱
+        const city = link.querySelector('.ccard-title').textContent.trim();
+        // 你也可以取得其他預設查詢條件
+        const params = new URLSearchParams({
+            destination: city,
+            checkin: '', // 你也可以預設今天
+            checkout: '',
+            adults: 2,
+            children: 0,
+            rooms: 1,
+        });
+        window.location.href = `/pages/SearchPageV2.html?${params.toString()}`;
+    }
 });
