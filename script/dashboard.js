@@ -1,4 +1,9 @@
-
+// admin/index.html 裡面一進來先驗證
+// const token = localStorage.getItem("adminToken"); // 看你後台存的 key 叫什麼
+// if (!token) {
+//   // 沒有 token 直接跳轉
+//   window.location.href = "/pages/homepage/login.html";
+// }
 // 收入趨勢圖
 const ctx = document.getElementById('revenueChart').getContext('2d');
 const revenueChart = new Chart(ctx, {
