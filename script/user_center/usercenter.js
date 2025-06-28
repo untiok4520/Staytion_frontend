@@ -102,6 +102,8 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
       //========住宿評論資料=============
       if (targetPage === "reviews") {
         loadReviewPage();
+      } else if (targetPage === "favorites") {
+        loadFavorites("");
       }
     }
   });
@@ -698,3 +700,147 @@ document.querySelectorAll("#profile .edit-btn").forEach((btn) => {
     btn.textContent = "儲存";
   });
 });
+
+// ========== 收藏清單串接與渲染 ==========
+// 收藏地區下拉選單切換事件
+document.addEventListener("DOMContentLoaded", () => {
+  const favSelect = document.getElementById("fav-location");
+  if (favSelect) {
+    favSelect.addEventListener("change", (e) => {
+      const city = e.target.value;
+      const favTitle = document.querySelector(".favlist-title");
+      if (favTitle) {
+        favTitle.textContent = city || "全部城市";
+      }
+      loadFavorites(city);
+    });
+  }
+});
+
+let allCities = [];
+async function loadFavorites(city = "") {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/favorites/users${
+        city ? "?city=" + encodeURIComponent(city) : ""
+      }`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("取得收藏清單失敗，狀態碼：" + res.status);
+    }
+    const favorites = await res.json();
+    console.log("取得收藏清單：", favorites);
+
+    // 提取所有 city 並更新下拉選單
+    if (city === "") {
+      // 第一次載入才更新城市選單
+      allCities = [
+        ...new Set(favorites.map((fav) => fav.city).filter(Boolean)),
+      ];
+      const favSelect = document.getElementById("fav-location");
+      if (favSelect) {
+        favSelect.innerHTML = '<option value="">全部城市</option>';
+        allCities.forEach((cityName) => {
+          const opt = document.createElement("option");
+          opt.value = cityName;
+          opt.textContent = cityName;
+          favSelect.appendChild(opt);
+        });
+      }
+    }
+    renderFavorites(favorites);
+  } catch (err) {
+    console.error(err);
+    alert("無法取得收藏清單");
+  }
+}
+
+function renderFavorites(favList) {
+  const grid = document.querySelector(".favlist-grid");
+  const template = document.querySelector(".fav-card.template");
+  if (!grid || !template) return;
+
+  // 清空現有卡片
+  grid
+    .querySelectorAll(".fav-card:not(.template)")
+    .forEach((el) => el.remove());
+
+  favList.forEach((fav) => {
+    const card = template.cloneNode(true);
+    card.classList.remove("template");
+    card.style.display = "";
+
+    // 圖片
+    const imgDiv = card.querySelector(".fav-img");
+    if (imgDiv) {
+      imgDiv.style.backgroundImage = `url(${
+        fav.imgUrl || "/images/default-hotel.jpg"
+      })`;
+    }
+
+    // 飯店名稱
+    card.querySelector("h5").textContent = fav.name;
+
+    // 分數
+    card.querySelector(".score").textContent = fav.score?.toFixed(1) || "-";
+
+    // 評論數
+    card.querySelector(".count").textContent = `${fav.reviewCount || 0} 則評論`;
+
+    // 地區
+    const districtEl = card.querySelector(".fav-location .fav-district");
+    if (districtEl) {
+      districtEl.textContent = fav.district || "";
+    }
+
+    // 城市
+    const cityEl = card.querySelector(".fav-location .fav-city");
+    if (cityEl) {
+      cityEl.textContent = fav.city || "";
+    }
+
+    // 價格
+    card.querySelector(".fav-price").textContent = `TWD ${
+      fav.price?.toLocaleString() || "-"
+    }`;
+    //收藏愛心功能（取消收藏）
+    const heartBtn = card.querySelector(".fav-heart-btn");
+    if (heartBtn) {
+      heartBtn.addEventListener("click", () => {
+        //先讓愛心變空心
+        const icon = heartBtn.querySelector("i");
+        if (icon) {
+          icon.classList.remove("bi-heart-fill");
+          icon.classList.add("bi-heart");
+        }
+        //呼叫刪除api
+        fetch(`http://localhost:8080/api/favorites?hotelId=${fav.id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error("刪除失敗");
+            card.remove();
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("無法移除收藏");
+            // 若失敗，把愛心改回亮紅色
+            if (icon) {
+              icon.classList.remove("bi-heart");
+              icon.classList.add("bi-heart-fill");
+            }
+          });
+      });
+    }
+    grid.appendChild(card);
+  });
+}
