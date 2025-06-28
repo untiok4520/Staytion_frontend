@@ -3,7 +3,6 @@ import {
   subscribeChatRoom,
   sendMessage,
   loadChatHistory,
-  setChatContext,
 } from "./chatService.js";
 import {
   renderIncomingMessage,
@@ -15,6 +14,7 @@ import {
   renderOrderHTML,
   formatDateWithDay,
 } from "./userOrderService.js";
+import { setChatContext, getChatContext } from "./chatContext.js";
 
 //貨幣按鈕
 document
@@ -219,9 +219,30 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
 });
 document.querySelector('.sidebar-item[data-page="orders"]').click();
 
-//==============訂單管理===============================
+//============= 訂單管理  ===============================
 let ordersByType = {};
 
+document.addEventListener("DOMContentLoaded", async () => {
+  const listContainer = document.querySelector(".order-list");
+  const ordersData = await fetchAndClassifyOrders();
+  if (!ordersData) {
+    listContainer.innerHTML = "<p>載入失敗，請稍後再試</p>";
+    return;
+  }
+  ordersByType = ordersData;
+  renderOrdersTab("future");
+
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      document
+        .querySelectorAll(".tab")
+        .forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      const type = tab.dataset.type;
+      renderOrdersTab(type);
+    });
+  });
+});
 function renderOrdersTab(type) {
   const ordersContainer = document.getElementById("orders");
   const detailPanel = document.querySelector(".order-detail-panel");
@@ -283,6 +304,14 @@ function renderOrdersTab(type) {
 }
 
 // ============ 訂單編號查詢功能 =============
+function setActiveTab(type) {
+  document
+    .querySelectorAll(".tab")
+    .forEach((t) => t.classList.remove("active"));
+  const matchedTab = document.querySelector(`.tab[data-type="${type}"]`);
+  if (matchedTab) matchedTab.classList.add("active");
+}
+
 const searchInput = document.querySelector("#orderSearchInput");
 if (searchInput) {
   searchInput.addEventListener("keypress", async (e) => {
@@ -292,13 +321,9 @@ if (searchInput) {
         const all = await fetchAndClassifyOrders();
         ordersByType = all;
         // 設定 future tab 為 active
-        document
-          .querySelectorAll(".tab")
-          .forEach((t) => t.classList.remove("active"));
-        document
-          .querySelector('.tab[data-type="future"]')
-          .classList.add("active");
+        setActiveTab("future");
         renderOrdersTab("future");
+        searchInput.value = "";
         return;
       }
       try {
@@ -312,6 +337,10 @@ if (searchInput) {
         );
         if (!res.ok) throw new Error("查詢失敗");
         const booking = await res.json();
+        if (!booking || Object.keys(booking).length === 0) {
+          alert("查無此訂單");
+          return;
+        }
         ordersByType = { future: [], past: [], cancelled: [], ongoing: [] };
         let determinedTab = "future";
         if (booking) {
@@ -319,6 +348,7 @@ if (searchInput) {
             const checkIn = new Date(booking.checkInDate);
             const checkOut = new Date(booking.checkOutDate);
             const now = new Date();
+            now.setHours(0, 0, 0, 0);
             if (checkIn > now) {
               ordersByType.future.push(booking);
               determinedTab = "future";
@@ -351,26 +381,19 @@ if (searchInput) {
   });
 }
 
-//tab按鈕
+//======== tab clikck事件 ==============
 document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => {
+    const detailPanel = document.querySelector(".order-detail-panel");
+    if (detailPanel) {
+      detailPanel.style.display = "none";
+    }
     document
       .querySelectorAll(".tab")
       .forEach((t) => t.classList.remove("active"));
     tab.classList.add("active");
     renderOrdersTab(tab.dataset.type);
   });
-});
-document.querySelectorAll(".tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    const type = tab.dataset.type;
-    renderOrdersTab(type);
-  });
-});
-
-fetchAndClassifyOrders().then((classifiedOrders) => {
-  ordersByType = classifiedOrders;
-  renderOrdersTab("ongoing");
 });
 
 function showOrderDetail(detail) {
@@ -520,43 +543,62 @@ function showOrderDetail(detail) {
 }
 
 // ===================== 住宿訊息聊天室 =====================
-connectWebSocket();
-fetch("http://localhost:8080/api/chatrooms/my", {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-  },
-})
-  .then((res) => res.json())
-  .then((chatList) => {
-    console.log("後端傳來的chatList：", chatList);
-    renderChatList(chatList, handleChatListItemClick);
-  });
-// ===================== 新增 handleChatListItemClick =====================
+document.addEventListener("DOMContentLoaded", () => {
+  connectWebSocket();
+  fetch("http://localhost:8080/api/chatrooms/my", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("未授權或伺服器錯誤");
+      }
+      return res.json();
+    })
+    .then((chatList) => {
+      console.log("後端傳來的chatList：", chatList);
+      renderChatList(chatList, handleChatListItemClick);
+    })
+    .catch((err) => {
+      console.error("無法取得聊天室列表：", err);
+    });
+});
 
-let sendButtonInitialized = false; // 防止重複綁定
+// ==================== 點聊天室項目 =====================
 
 async function handleChatListItemClick(item) {
   // 更新全域變數
   const chatRoomId = Number(item.dataset.chatRoomId);
   const receiverId = Number(item.dataset.receiverId);
   const hotelId = Number(item.dataset.hotelId);
-  console.log("chatRoomId:", item.dataset.chatRoomId);
-  console.log("receiverId:", item.dataset.receiverId);
-  console.log("hotelId:", item.dataset.hotelId);
-
+  const hotelName =
+    item.dataset.hotelName ||
+    item.querySelector(".chat-hotel-name").textContent;
+  console.log("點擊聊天室：", {
+    chatRoomId,
+    receiverId,
+    hotelId,
+  });
+  //存好 context
   setChatContext(chatRoomId, receiverId, hotelId);
 
-  // 訂閱該聊天室並載入訊息
+  // 訂閱該聊天室
   subscribeChatRoom(chatRoomId);
-  renderChatBox(item.dataset.hotelName);
+
+  //渲染聊天室頁面
+  renderChatBox(hotelName);
+
+  //載入歷史訊息
   const history = await loadChatHistory(chatRoomId);
   const container = document.querySelector(".chat-messages");
   container.innerHTML = "";
   history.forEach((msg) => renderIncomingMessage(msg));
 
   // 修改：只綁定一次發送按鈕事件
-  if (!sendButtonInitialized) {
-    document.getElementById("sendBtn").addEventListener("click", () => {
+  const sendBtn = document.getElementById("sendBtn");
+  if (sendBtn && !sendBtn._bound) {
+    sendBtn.addEventListener("click", () => {
       const input = document.getElementById("messageInput");
       const content = input.value.trim();
       if (content) {
@@ -564,7 +606,7 @@ async function handleChatListItemClick(item) {
         input.value = "";
       }
     });
-    sendButtonInitialized = true;
+    sendBtn._bound = true;
   }
 }
 
