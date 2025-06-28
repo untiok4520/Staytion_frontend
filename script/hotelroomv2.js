@@ -269,7 +269,7 @@ $(function () {
                         <tr>
                           <td>${r.rname}</td>
                           <td>${r.quantity}</td>
-                          <td>${r.available ?? 0}</td>
+                          <td>${r.available ?? 1}</td>
                           <td>${r.status ?? "上架中"}</td>
                           <td>${r.price ?? 0}</td>
                           <td>
