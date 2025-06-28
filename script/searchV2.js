@@ -601,7 +601,18 @@ $(function () {
     fetch('http://localhost:8080/api/hotels?' + params.toString())
       .then(res => res.json())
       .then(data => {
-        const hotels = data.hotels || [];
+        let hotels = data.hotels || [];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const highlightHotelId = urlParams.get('highlight_hotel_id');
+        if (highlightHotelId) {
+          const idx = hotels.findIndex(h => String(h.id) === String(highlightHotelId));
+          if (idx > 0) {
+            const [highlightHotel] = hotels.splice(idx, 1);
+            hotels.unshift(highlightHotel);
+          }
+        }
+
         if (append) {
           appendHotelList(hotels);
         } else {
