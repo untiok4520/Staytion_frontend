@@ -99,126 +99,163 @@ document.querySelectorAll(".sidebar-item").forEach((item) => {
     const targetEl = document.getElementById(targetPage);
     if (targetEl) {
       targetEl.style.display = "block";
-
       //========住宿評論資料=============
       if (targetPage === "reviews") {
-        const userId = localStorage.getItem("userId");
-        // 取得尚未評論的訂單資料
-        fetch(`http://localhost:8080/api/unreviewed`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-          },
-        })
-          .then((res) => res.json())
-          .then((unreviewedList) => {
-            return fetch(
-              `http://localhost:8080/api/bookings/me?userId=${userId}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-                },
-              }
-            )
-              .then((res) => res.json())
-              .then((bookings) => {
-                const hotelImageMap = new Map();
-                bookings.forEach((b) => {
-                  hotelImageMap.set(b.orderId, b.roomImgUrl);
-                });
-                // 把 imageUrl 填進 unreviewedList
-                unreviewedList.forEach((item) => {
-                  item.imageUrl =
-                    hotelImageMap.get(item.orderId) ||
-                    "https://via.placeholder.com/300x200?text=No+Image";
-                });
-                renderUnreviewedCards(unreviewedList);
-              });
-          })
-          .catch((err) => {
-            console.error("取得尚未評論資料失敗");
-          });
-        // 取得使用者已評論資料
-        fetch(`http://localhost:8080/api/users/me/reviews`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-          },
-        })
-          .then((res) => {
-            if (!res.ok) throw new Error("未授權或伺服器錯誤");
-            return res.json();
-          })
-          .then(renderReviews)
-          .catch((err) => {
-            console.error("取得評論失敗：", err);
-          });
+        loadReviewPage();
       }
-    }
-    //=======尚未評論卡片渲染=============
-    function renderUnreviewedCards(data) {
-      const reviewsContainer = document.getElementById("reviews");
-      const template = reviewsContainer.querySelector(
-        ".unreview-card.template"
-      );
-      if (!template) return;
-
-      reviewsContainer
-        .querySelectorAll(".unreview-card:not(.template)")
-        .forEach((el) => el.remove());
-
-      const section = document.querySelector(".unreview-section");
-      data.forEach((review) => {
-        const card = template.cloneNode(true);
-        card.classList.remove("template");
-        card.style.display = "";
-        card.querySelector(".hotel-img").src = review.imageUrl;
-        card.querySelector(".review-hotel-name").textContent = review.hotelName;
-        card.querySelector(".checkin-date").textContent = review.checkInDate;
-        card.querySelector(".checkout-date").textContent = review.checkOutDate;
-
-        // 使用 class 選擇 input 與 span
-        const scoreInput = card.querySelector(".score-slider");
-        const scoreValueSpan = card.querySelector(".score-value");
-        if (scoreInput && scoreValueSpan) {
-          // 初始化分數顯示
-          scoreValueSpan.textContent = scoreInput.value;
-          // 監聽 input 事件，及時更新分數
-          scoreInput.addEventListener("input", () => {
-            scoreValueSpan.textContent = scoreInput.value;
-          });
-        }
-        const commentInput = card.querySelector(".review-comment");
-        const submitBtn = card.querySelector(".submit-review-btn");
-        submitBtn.addEventListener("click", () => {
-          const score = scoreInput.value;
-          const comment = commentInput.value;
-          if (!score || !comment) {
-            alert("請填寫評論與評分");
-            return;
-          }
-          fetch(`http://localhost:8080/api/users/me/reviews`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              orderId: review.orderId,
-              score: score,
-              comment: comment,
-            }),
-          }).then((res) => {
-            if (res.ok) {
-              alert("評論送出成功！");
-              card.remove();
-            } else {
-              alert("評論送出失敗！");
-            }
-          });
-        });
-        section.appendChild(card);
-      });
     }
   });
 });
-document.querySelector('.sidebar-item[data-page="orders"]').click();
+const defaultItem = document.querySelector('.sidebar-item[data-page="orders"]');
+if (defaultItem) {
+  defaultItem.click();
+} else {
+  console.error('找不到 sidebar-item[data-page="orders"]');
+}
 
+//========== 評論管理 =================
+// 將 reviews 資料取得邏輯抽出成 async function
+async function loadReviewPage() {
+  try {
+    // 取得尚未評論的訂單資料
+    const unreviewedRes = await fetch(`http://localhost:8080/api/unreviewed`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+    });
+    if (!unreviewedRes.ok) {
+      throw new Error(`取得尚未評論資料失敗，狀態碼：${unreviewedRes.status}`);
+    }
+    const unreviewedList = await unreviewedRes.json();
+    console.log("取得尚未評論資料：", unreviewedList);
+    renderUnreviewedCards(unreviewedList);
+  } catch (err) {
+    console.error("取得尚未評論資料失敗:", err);
+  }
+  try {
+    const reviewedRes = await fetch(
+      `http://localhost:8080/api/users/me/reviews`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+      }
+    );
+    console.log("Status:", reviewedRes.status);
+    if (!reviewedRes.ok) throw new Error("未授權或伺服器錯誤");
+    const reviewedList = await reviewedRes.json();
+    console.log("取得已評論資料：", reviewedList);
+    renderReviews(reviewedList);
+  } catch (err) {
+    console.error("取得評論失敗：", err);
+  }
+}
+
+//=======尚未評論卡片渲染=============
+function renderUnreviewedCards(data) {
+  const reviewsContainer = document.getElementById("reviews");
+  const template = reviewsContainer.querySelector(".unreview-card.template");
+  if (!template) return;
+
+  reviewsContainer
+    .querySelectorAll(".unreview-card:not(.template)")
+    .forEach((el) => el.remove());
+
+  const section = document.querySelector(".unreview-section");
+  data.forEach((review) => {
+    const card = template.cloneNode(true);
+    card.classList.remove("template");
+    card.style.display = "";
+    const imgDiv = card.querySelector(".review-img");
+    if (imgDiv) {
+      imgDiv.style.backgroundImage = `url('${
+        review.imgUrl || "/images/default-hotel.jpg"
+      }')`;
+    }
+    card.querySelector(".review-hotel-name").textContent = review.hotelName;
+    card.querySelector(".checkin-date").textContent = review.checkInDate;
+    card.querySelector(".checkout-date").textContent = review.checkOutDate;
+
+    // 使用 class 選擇 input 與 span
+    const scoreInput = card.querySelector(".score-slider");
+    const scoreValueSpan = card.querySelector(".score-value");
+    if (scoreInput && scoreValueSpan) {
+      // 初始化分數顯示
+      scoreValueSpan.textContent = scoreInput.value;
+      // 監聽 input 事件，及時更新分數
+      scoreInput.addEventListener("input", () => {
+        scoreValueSpan.textContent = scoreInput.value;
+      });
+    }
+    const commentInput = card.querySelector(".review-comment");
+    const submitBtn = card.querySelector(".submit-review-btn");
+    submitBtn.addEventListener("click", () => {
+      const score = scoreInput.value;
+      const comment = commentInput.value;
+      if (!score || !comment) {
+        alert("請填寫評論與評分");
+        return;
+      }
+      fetch(`http://localhost:8080/api/users/me/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+        body: JSON.stringify({
+          orderId: review.orderId,
+          score: score,
+          comment: comment,
+        }),
+      }).then((res) => {
+        if (res.ok) {
+          alert("評論送出成功！");
+          card.remove();
+        } else {
+          alert("評論送出失敗！");
+        }
+      });
+    });
+    section.appendChild(card);
+  });
+}
+
+//=======住宿評論渲染=============
+function renderReviews(reviews) {
+  const reviewsContainer = document.getElementById("reviews");
+  // 移除現有的非 template 卡片
+  reviewsContainer
+    .querySelectorAll(".review-card:not(.template)")
+    .forEach((el) => el.remove());
+
+  const template = document.querySelector(".review-card.template");
+  reviews.forEach((review) => {
+    const card = template.cloneNode(true);
+    card.classList.remove("template");
+    card.style.display = "";
+    // 設定 .review-img div 的背景圖
+    const imgDiv = card.querySelector(".review-img");
+    if (imgDiv) {
+      imgDiv.style.backgroundImage = `url(${
+        review.imgUrl || "/images/default-hotel.jpg"
+      })`;
+    }
+    card.querySelector(".review-hotel-name").textContent = review.hotelName;
+    // 格式化 createdAt 為 'YYYY-MM-DD'，若為空顯示 '-'
+    let dateText = "-";
+    if (review.createdAt) {
+      const date = new Date(review.createdAt);
+      dateText = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    }
+    card.querySelector(".review-date").textContent = dateText;
+    card.querySelector(".score").textContent = review.score;
+    card.querySelector(".review-text").textContent = review.comment;
+    const reviewSection = document.querySelector(".review-section");
+    reviewSection.appendChild(card);
+  });
+}
 //============= 訂單管理  ===============================
 let ordersByType = {};
 
@@ -608,28 +645,6 @@ async function handleChatListItemClick(item) {
     });
     sendBtn._bound = true;
   }
-}
-
-//=======住宿評論渲染=============
-function renderReviews(reviews) {
-  const reviewsContainer = document.getElementById("reviews");
-  // 移除現有的非 template 卡片
-  reviewsContainer
-    .querySelectorAll(".review-card:not(.template)")
-    .forEach((el) => el.remove());
-
-  const template = document.querySelector(".review-card.template");
-  reviews.forEach((review) => {
-    const card = template.cloneNode(true);
-    card.classList.remove("template");
-    card.style.display = "";
-    card.querySelector(".review-hotel-name").textContent = review.hotelName;
-    card.querySelector(".review-date").textContent = review.date;
-    card.querySelector(".score").textContent = review.score;
-    card.querySelector(".review-text").textContent = review.text;
-    const reviewSection = document.querySelector(".review-section");
-    reviewSection.appendChild(card);
-  });
 }
 
 // =======個人資料 - 編輯切換==========
