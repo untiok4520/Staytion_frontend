@@ -82,15 +82,20 @@
       justify-content: flex-start;
       font-size: 14px;
       gap: 8px;
-
+      background-color: #376a96;
+      border-radius: v.$border-radius;
+      padding: 10px;
+      p {
+        color: white;
+        margin-bottom: 10px;
+      }
       a {
         text-decoration: none;
-        color: #333;
+        color: white;
         cursor: pointer;
-
         &:hover {
           text-decoration: underline;
-          color: v.$secondary;
+          // color: v.$secondary;
         }
       }
     }
@@ -234,5 +239,175 @@ input.choose-date {
     background: none;
     font-size: 20px;
     cursor: pointer;
+  }
+}
+
+// 換房 Modal 樣式
+#changeRoomModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+
+  .changeRoom-modal {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+
+    h2 {
+      margin-bottom: 1.5rem;
+      font-size: 24px;
+      text-align: center;
+      font-weight: bold;
+      color: #376a96;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: none;
+      background: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #333;
+
+      &:hover {
+        color: #376a96;
+      }
+    }
+
+    .room-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 2rem;
+
+      .room-card {
+        background: #fefcf0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        &.selected {
+          border: 2px solid #376a96;
+          background: #eaf2f9;
+        }
+
+        img.room-img {
+          width: 100%;
+          height: 140px;
+          object-fit: cover;
+          border-radius: 4px;
+          margin-bottom: 12px;
+        }
+
+        h3.room-name {
+          font-size: 16px;
+          font-weight: bold;
+          margin-bottom: 8px;
+          color: #333;
+        }
+
+        p.room-price {
+          font-size: 14px;
+          color: #376a96;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 16px;
+
+      .btn {
+        width: 120px;
+        font-size: 16px;
+        padding: 8px 12px;
+      }
+    }
+  }
+}
+
+#hotelRulesModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+
+  .hotel-rules-modal {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #376a96;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: none;
+      background: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #333;
+
+      &:hover {
+        color: #376a96;
+      }
+    }
+
+    .rules-list {
+      list-style: disc;
+      padding-left: 1.5rem;
+      color: #333;
+
+      li {
+        margin-bottom: 10px;
+        line-height: 1.6;
+        font-size: 15px;
+      }
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+
+      .btn {
+        min-width: 120px;
+      }
+    }
   }
 }
