@@ -82,15 +82,20 @@
       justify-content: flex-start;
       font-size: 14px;
       gap: 8px;
-
+      background-color: #376a96;
+      border-radius: v.$border-radius;
+      padding: 10px;
+      p {
+        color: white;
+        margin-bottom: 10px;
+      }
       a {
         text-decoration: none;
-        color: #333;
+        color: white;
         cursor: pointer;
-
         &:hover {
           text-decoration: underline;
-          color: v.$secondary;
+          // color: v.$secondary;
         }
       }
     }

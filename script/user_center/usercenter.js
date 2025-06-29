@@ -514,7 +514,7 @@ function showOrderDetail(detail) {
         const res = await fetch(
           `http://localhost:8080/api/bookings/${bookingId}/cancel`,
           {
-            method: "PUT",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -567,18 +567,58 @@ function showOrderDetail(detail) {
     });
 
   // 點「確認」處理邏輯
-  document
-    .getElementById("changeDateModalConfirm")
-    .addEventListener("click", () => {
-      const checkin = document.getElementById("newCheckin").value;
-      const checkout = document.getElementById("newCheckout").value;
-      if (!checkin || !checkout) {
-        alert("請選擇新的入住與退房日期");
-        return;
-      }
-      alert("已送出更改申請：入住 " + checkin + "，退房 " + checkout);
-      document.getElementById("changeDateModal").style.display = "none";
-    });
+  document.addEventListener("DOMContentLoaded", () => {
+    const confirmBtn = document.getElementById("changeDateModalConfirm");
+    if (confirmBtn && !confirmBtn._bound) {
+      confirmBtn.addEventListener("click", async () => {
+        const range = document.getElementById("daterange").value;
+        if (!range) {
+          alert("請選擇新的入住與退房日期");
+          return;
+        }
+        const [checkin, checkout] = range.split(" to ");
+        if (!checkin || !checkout) {
+          alert("請選擇完整的日期範圍");
+          return;
+        }
+
+        const bookingId =
+          document.getElementById("detail-orderNumber").textContent;
+
+        try {
+          const res = await fetch(
+            `http://localhost:8080/api/bookings/${bookingId}/update-dates`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+              },
+              body: JSON.stringify({
+                checkInDate: checkin,
+                checkOutDate: checkout,
+              }),
+            }
+          );
+
+          if (!res.ok) throw new Error("更改訂單失敗");
+
+          alert("更改成功！");
+          document.getElementById("changeDateModal").style.display = "none";
+
+          // 若需要刷新訂單列表，可加：
+          const updatedOrders = await fetchAndClassifyOrders();
+          ordersByType = updatedOrders;
+          setActiveTab("future");
+          renderOrdersTab("future");
+        } catch (err) {
+          console.error(err);
+          alert("更改失敗：" + err.message);
+        }
+      });
+      confirmBtn._bound = true;
+    }
+  });
 }
 
 // ===================== 住宿訊息聊天室 =====================
@@ -648,57 +688,170 @@ async function handleChatListItemClick(item) {
     sendBtn._bound = true;
   }
 }
+// ============ 個人資料 ===================
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("http://localhost:8080/api/user/profile", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+    });
+    if (!res.ok) throw new Error("取得個人資料失敗");
 
-// =======個人資料 - 編輯切換==========
-document.querySelectorAll("#profile .edit-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    // Revised logic to select container and valueEl more robustly
-    let container = btn.closest(".profile-value");
-    if (!container) {
-      // Handle the case where button is outside of .profile-value (e.g., in .profile-field.name)
-      const profileField = btn.closest(".profile-field");
-      container = profileField.querySelector(".profile-value") || profileField;
-    }
-    const valueEl = container.querySelector(".value");
+    const data = await res.json();
 
-    if (btn.textContent === "儲存") {
-      const input = container.querySelector("input");
-      if (input) {
-        // 取得使用者輸入的值
-        const newValue = input.value;
-        const isPassword = input.type === "password";
+    // 直接顯示在頁面上
+    document.querySelector(
+      ".profile-field.name .profile-value .value"
+    ).textContent = `${data.firstName} ${data.lastName}`;
+    document.querySelector(".email").textContent = data.email || "";
+    document.querySelector(".tel").textContent = data.tel || "";
+  } catch (err) {
+    console.error(err);
+  }
+});
 
-        // 顯示的文字：密碼顯示固定長度的遮蔽符號，其他正常顯示
-        if (valueEl) {
-          valueEl.textContent = isPassword ? "••••••••••••" : newValue;
-        }
+// ======= 個人資料 - 編輯切換 ==========
+document.addEventListener("DOMContentLoaded", () => {
+  const nameEditBtn = document.querySelector(".edit-btn.name");
+  const field = document.querySelector(".profile-field.name");
+  const displayArea = field?.querySelector(".profile-value");
+  const editArea = field?.querySelector(".edit-passport-name");
 
-        input.remove();
-        if (valueEl) valueEl.style.display = "block";
-        btn.textContent = "編輯";
+  if (nameEditBtn && field && displayArea && editArea) {
+    nameEditBtn.addEventListener("click", async () => {
+      displayArea.style.display = "none";
+      editArea.style.display = "block";
+
+      try {
+        const res = await fetch("http://localhost:8080/api/user/profile", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("取得個人資料失敗");
+
+        const data = await res.json();
+
+        document.getElementById("passportFirstName").value =
+          data.firstName || "";
+        document.getElementById("passportLastName").value = data.lastName || "";
+
+        console.log("從後端取得英文姓名：", data.firstName, data.lastName);
+      } catch (err) {
+        console.error(err);
+        alert("無法取得使用者英文姓名");
       }
-      return;
+    });
+
+    const cancelBtn = editArea.querySelector(".cancel-edit-btn");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", () => {
+        editArea.style.display = "none";
+        displayArea.style.display = "";
+      });
     }
 
-    const input = document.createElement("input");
-    // Find the label for the field (may be in ancestor)
-    let labelText = "";
-    let labelEl = container.closest(".profile-field")?.querySelector("label");
-    if (labelEl) labelText = labelEl.textContent;
-    input.type = labelText.includes("密碼") ? "password" : "text";
-    // Use valueEl's text if present, otherwise empty
-    input.value = valueEl ? valueEl.textContent : "";
-    input.classList.add("edit-input");
+    const saveBtn = editArea.querySelector(".save-edit-btn");
+    if (saveBtn) {
+      saveBtn.addEventListener("click", async () => {
+        const newFirstName = document.getElementById("passportFirstName").value;
+        const newLastName = document.getElementById("passportLastName").value;
 
-    // Insert input after valueEl if found, otherwise append to container
-    if (valueEl) {
-      valueEl.style.display = "none";
-      valueEl.insertAdjacentElement("afterend", input);
-    } else {
-      container.appendChild(input);
+        const newFullName = `${newFirstName} ${newLastName}`.trim();
+
+        try {
+          const res = await fetch(
+            "http://localhost:8080/api/user/update-profile",
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+              },
+              body: JSON.stringify({
+                firstName: newFirstName,
+                lastName: newLastName,
+              }),
+            }
+          );
+
+          if (!res.ok) {
+            throw new Error("更新個人資料失敗");
+          }
+
+          displayArea.querySelector(".value").textContent = newFullName;
+
+          editArea.style.display = "none";
+          displayArea.style.display = "flex";
+
+          alert("更新成功！");
+          console.log("已寫回後端：", newFullName);
+        } catch (err) {
+          console.error(err);
+          alert("更新失敗：" + err.message);
+        }
+      });
     }
-    btn.textContent = "儲存";
-  });
+  }
+});
+
+// 更改密碼 - 只綁一次事件監聽，避免重複 alert
+document.addEventListener("DOMContentLoaded", () => {
+  const passwordEditBtn = document.querySelector(".edit-btn.password");
+  const field = document.querySelector(".profile-field.password");
+  const displayArea = field ? field.querySelector(".profile-value") : null;
+  const editArea = field ? field.querySelector(".edit-password") : null;
+
+  if (passwordEditBtn && field && displayArea && editArea) {
+    passwordEditBtn.addEventListener("click", () => {
+      displayArea.style.display = "none";
+      editArea.style.display = "block";
+    });
+  }
+
+  if (editArea && displayArea) {
+    const cancelBtn = editArea.querySelector(".cancel-password-btn");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", () => {
+        editArea.style.display = "none";
+        displayArea.style.display = "";
+      });
+    }
+    const saveBtn = editArea.querySelector(".save-password-btn");
+    if (saveBtn) {
+      saveBtn.addEventListener("click", async () => {
+        const newPassword = document.getElementById("newPassword").value.trim();
+        if (!newPassword) {
+          alert("請輸入新密碼！");
+          return;
+        }
+        try {
+          const res = await fetch(
+            "http://localhost:8080/api/user/update-profile",
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+              },
+              body: JSON.stringify({ password: newPassword }),
+            }
+          );
+          if (!res.ok) throw new Error("更新密碼失敗");
+          field.querySelector(".profile-value .value").textContent =
+            "••••••••••••";
+          editArea.style.display = "none";
+          displayArea.style.display = "";
+          alert("密碼更新成功！");
+        } catch (err) {
+          console.error(err);
+          alert("更新密碼失敗：" + err.message);
+        }
+      });
+    }
+  }
 });
 
 // ========== 收藏清單串接與渲染 ==========

@@ -343,6 +343,7 @@
             </div>
           </div>
         </div>
+
         <!-- 住宿評論 -->
         <div id="reviews" class="content-page" style="display: none">
           <h2>尚未評論</h2>
@@ -408,6 +409,7 @@
             </div>
           </div>
         </div>
+
         <!-- 收藏清單 -->
         <div id="favorites" class="content-page" style="display: none">
           <div class="favlist-filter">
@@ -444,58 +446,102 @@
                 <div class="fav-price">TWD 99,999</div>
               </div>
             </div>
-
-            <!-- <div class="fav-card col-sm-6 col-md-4 col-lg-3 mb-4">
-              <div class="fav-img"></div>
-              <div class="fav-content">
-                <h5>Hotel Name</h5>
-                <div class="fav-score-line">
-                  <span class="score">8.0</span>
-                  <span class="count">99,999則評論</span>
-                </div>
-                <div class="fav-location">
-                  <i class="bi bi-geo-alt"></i> 鹽埕區，高雄
-                </div>
-                <div class="fav-price">TWD 99,999</div>
-              </div>
-            </div> -->
           </div>
         </div>
+
+        <!-- 個人資料 -->
         <div id="profile" class="content-page" style="display: none">
           <h5>用戶詳細資料</h5>
           <div class="profile-card">
             <div class="profile-field name">
-              <div class="avatar"></div>
-              <div class="member-name">
-                <label>英文姓名</label>
-                <div class="profile-value">
-                  <p class="value">Yun-Chu Chu</p>
+              <label>英文姓名</label>
+              <div class="profile-value">
+                <p class="value"></p>
+                <button class="edit-btn name">編輯</button>
+              </div>
+              <div class="edit-passport-name" style="display: none">
+                <div class="form-group">
+                  <label for="passportFirstName">護照英文名</label>
+                  <input
+                    type="text"
+                    id="passportFirstName"
+                    class="form-control"
+                    placeholder="護照英文名"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="passportLastName">護照英文姓</label>
+                  <input
+                    type="text"
+                    id="passportLastName"
+                    class="form-control"
+                    placeholder="護照英文姓"
+                  />
+                </div>
+                <div class="button-group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary cancel-edit-btn"
+                  >
+                    取消
+                  </button>
+                  <button type="button" class="btn btn-primary save-edit-btn">
+                    儲存
+                  </button>
                 </div>
               </div>
-              <button class="edit-btn name">編輯</button>
             </div>
 
             <div class="profile-field">
               <label>電子郵件</label>
               <div class="profile-value">
-                <p class="value">yyy@gmail.com</p>
-                <button class="edit-btn">編輯</button>
+                <p class="email"></p>
+                <div class="verified">
+                  <p class="verified">已通過驗證</p>
+                </div>
               </div>
             </div>
 
             <div class="profile-field">
               <label>電話號碼</label>
               <div class="profile-value">
-                <p class="value">+886 0912345678</p>
-                <button class="edit-btn">編輯</button>
+                <p class="tel"></p>
+                <div class="verified">
+                  <p class="verified">已通過驗證</p>
+                </div>
               </div>
             </div>
 
-            <div class="profile-field">
+            <div class="profile-field password">
               <label>密碼</label>
               <div class="profile-value">
                 <p class="value">••••••••••••</p>
-                <button class="edit-btn">編輯</button>
+                <button class="edit-btn password">更改</button>
+              </div>
+              <div class="edit-password" style="display: none">
+                <div class="form-group">
+                  <label for="newPassword">新密碼</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    class="form-control"
+                    placeholder="請輸入新密碼"
+                  />
+                </div>
+                <div class="button-group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary me-2 cancel-password-btn"
+                  >
+                    取消
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary save-password-btn"
+                  >
+                    儲存
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -542,8 +588,12 @@
         <h2>取消原因</h2>
         <select id="cancelReason">
           <option value="">請選擇原因</option>
-          <option value="change_plan">改變行程</option>
-          <option value="found_better">找到更便宜的住宿</option>
+          <option value="change_plan">改變原訂行程</option>
+          <option value="found_better">找到價格更優惠的住宿</option>
+          <option value="found_better">住宿地點不方便</option>
+          <option value="found_better">健康因素或突發疾病</option>
+          <option value="found_better">需要改變住宿類型</option>
+          <option value="found_better">同行者取消或無法出行</option>
           <option value="other">其他原因</option>
         </select>
         <div class="modal-actions">
