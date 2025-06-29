@@ -53,12 +53,16 @@ function renderRoom(room) {
         <div class="price">NT$ ${room.price.toLocaleString()}</div>
 
         <select
-          class="booking-select"
-          data-roomtypeid="${room.id}"  
-          data-room="${room.rname}"
-          data-price="${room.price}">
-          <option value="0">0 間</option>
-        </select>
+        class="booking-select"
+        data-roomtypeid="${room.id}"  
+        data-room="${room.rname}"
+        data-price="${room.price}">
+        <option value='${JSON.stringify({ room: room.rname, price: room.price, count: 0 })}'>0 間</option>
+        ${Array.from({ length: room.quantity }, (_, i) => `
+          <option value='${JSON.stringify({ room: room.rname, price: room.price, count: i + 1 })}'>${i + 1} 間</option>
+        `).join("")}
+      </select>
+
       </div>
     </div>
   `;
@@ -191,7 +195,6 @@ function fetchReviews() {
   return fetch(`http://localhost:8080/api/rooms/${hotelId}/reviews`)
     .then(res => res.json())
     .then(data => {
-      console.log("取得評論資料：", data);
       return data;
     });
 }
@@ -256,7 +259,7 @@ function fetchHotelDetail() {
   return fetch(`http://localhost:8080/api/hotels/${hotelId}`)
     .then(res => res.json())
     .then(data => {
-      console.log("取得飯店資料：", data);
+      // console.log("取得飯店資料：", data);
       return data;
     });
 }
@@ -370,20 +373,7 @@ document.querySelector(".booking-btn").addEventListener("click", () => {
   // 跳轉先咧的 checkout 頁面
   window.location.href = "/booking_success.html"; 
 });
-document.addEventListener("scroll", () => {
-  const bookingPanel = document.querySelector(".booking-panel");
-  const roomSection = document.querySelector(".section-title");
-
-  if (!bookingPanel || !roomSection) return;
-
-  const triggerTop = roomSection.getBoundingClientRect().top;
-
-  if (triggerTop < 100) {
-    bookingPanel.style.display = "block";
-  } else {
-    bookingPanel.style.display = "none";
-  }
-});
+//金鎖
 const googleApiKey = "AIzaSyDEotZV3cny-APXikPJ_aJAmSo5NA3Far8";
 
 
@@ -420,20 +410,18 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
   return R * c;
 }
 
-/** render.js：模擬假資料顯示附近景點（等待串接真 */
 
 async function renderNearbyPlaces(address) {
-  console.log("開始抓附近景點，地址：", address);
+  // console.log("開始抓附近景點，地址：", address);
 
   const simplified = simplifyAddress(address);
-  console.log("簡化後地址：", simplified);
+  // console.log("簡化後地址：", simplified);
 
   let coord = await getCoordinatesFromAddress(simplified);
   if (!coord) {
-    console.warn("⚠️ 地址轉換失敗，使用預設座標（南投埔里）");
     coord = { lat: 23.9641, lng: 120.9745 };
   } else {
-    console.log("📍 地址轉座標：", coord);
+   
   }
 
   try {
