@@ -12459,6 +12459,98 @@ input.choose-date:focus {
   cursor: pointer;
 }
 
+#changeRoomModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+#changeRoomModal .changeRoom-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+#changeRoomModal .changeRoom-modal h2 {
+  margin-bottom: 1.5rem;
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  color: #376a96;
+}
+#changeRoomModal .changeRoom-modal .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+#changeRoomModal .changeRoom-modal .close-btn:hover {
+  color: #376a96;
+}
+#changeRoomModal .changeRoom-modal .room-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 2rem;
+}
+#changeRoomModal .changeRoom-modal .room-options .room-card {
+  background: #fefcf0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#changeRoomModal .changeRoom-modal .room-options .room-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+#changeRoomModal .changeRoom-modal .room-options .room-card.selected {
+  border: 2px solid #376a96;
+  background: #eaf2f9;
+}
+#changeRoomModal .changeRoom-modal .room-options .room-card img.room-img {
+  width: 100%;
+  height: 140px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+#changeRoomModal .changeRoom-modal .room-options .room-card h3.room-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+#changeRoomModal .changeRoom-modal .room-options .room-card p.room-price {
+  font-size: 14px;
+  color: #376a96;
+  font-weight: bold;
+}
+#changeRoomModal .changeRoom-modal .modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 16px;
+}
+#changeRoomModal .changeRoom-modal .modal-actions .btn {
+  width: 120px;
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
 .chat-container {
   display: flex;
   height: 500px;

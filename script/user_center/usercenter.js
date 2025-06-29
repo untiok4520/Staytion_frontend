@@ -324,9 +324,12 @@ function renderOrdersTab(type) {
       btn.addEventListener("click", () => {
         const detail = {
           orderNumber: btn.dataset.id,
+          hotelId: btn.dataset.hotelId,
           hotelName: btn.dataset.name,
           checkinDate: btn.dataset.checkin,
+          checkinIso: btn.dataset.checkinIso,
           checkoutDate: btn.dataset.checkout,
+          checkoutIso: btn.dataset.checkoutIso,
           roomType: btn.dataset.roomtype,
           location: btn.dataset.location,
           price: parseFloat(btn.dataset.price),
@@ -340,6 +343,324 @@ function renderOrdersTab(type) {
       });
     });
   });
+}
+//顯示訂單詳情
+function showOrderDetail(detail) {
+  const locationEls = document.querySelectorAll(".location");
+  const orderListEls = document.querySelectorAll(".order-list");
+  const detailPanel = document.querySelector(".order-detail-panel");
+
+  locationEls.forEach((el) => (el.style.display = "none"));
+  orderListEls.forEach((el) => (el.style.display = "none"));
+
+  // 填入資料到 detailPanel 的各欄位
+  document.getElementById("detail-hotelName").textContent = detail.hotelName;
+  document.getElementById("detail-checkinDate").textContent =
+    detail.checkinDate;
+  document.getElementById("detail-checkoutDate").textContent =
+    detail.checkoutDate;
+  document.getElementById("detail-roomtype").textContent = detail.roomType;
+  document.getElementById("detail-location").textContent = detail.location;
+  document.getElementById("detail-phone").textContent = detail.phone;
+  document.getElementById("detail-orderNumber").textContent =
+    detail.orderNumber;
+  document.getElementById(
+    "detail-price"
+  ).textContent = `TWD ${detail.price.toFixed(2)}`;
+  document.getElementById("detail-tax").textContent = `TWD ${detail.tax.toFixed(
+    2
+  )}`;
+  document.getElementById(
+    "detail-total"
+  ).textContent = `TWD ${detail.total.toFixed(2)}`;
+  document.getElementById("detail-cardType").textContent = detail.cardType;
+  document.getElementById("detail-cardMasked").textContent = detail.cardMasked;
+
+  detailPanel.style.display = "block";
+
+  document.getElementById("backToList").addEventListener("click", () => {
+    detailPanel.style.display = "none";
+    document.querySelectorAll(".location").forEach((el) => {
+      el.style.display = "block";
+    });
+    orderListEls.forEach((el) => (el.style.display = "block"));
+  });
+
+  //=========== 取消訂單、更新日期、更改房型modal視窗 ==============
+
+  //============== 取消訂單 ===============
+  // 顯示 取消訂單 modal
+  document.querySelector(".cancel-order-btn").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("cancelModal").style.display = "flex";
+  });
+  // 關閉 取消訂單Modal
+  document.getElementById("cancelModalClose").addEventListener("click", () => {
+    document.getElementById("cancelModal").style.display = "none";
+  });
+  document.getElementById("closeCancelModal").addEventListener("click", () => {
+    document.getElementById("cancelModal").style.display = "none";
+  });
+
+  // 點「繼續」處理取消訂單邏輯
+  document
+    .getElementById("cancelModalConfirm")
+    .addEventListener("click", async () => {
+      const reason = document.getElementById("cancelReason").value;
+      if (!reason) {
+        alert("請選擇取消原因");
+        return;
+      }
+      const bookingId =
+        document.getElementById("detail-orderNumber").textContent;
+
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/bookings/${bookingId}/cancel`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            },
+          }
+        );
+        if (!res.ok) {
+          throw new Error("取消失敗，請稍後再試");
+        }
+
+        alert("已送出取消申請");
+
+        // 關閉 modal 與訂單詳情，顯示列表
+        document.getElementById("cancelModal").style.display = "none";
+        document.querySelector(".order-detail-panel").style.display = "none";
+        document.querySelectorAll(".location").forEach((el) => {
+          el.style.display = "block";
+        });
+        document.querySelectorAll(".order-list").forEach((el) => {
+          el.style.display = "block";
+        });
+
+        // 重新分類與渲染取消後的訂單狀態
+        const updatedOrders = await fetchAndClassifyOrders();
+        ordersByType = updatedOrders;
+        // 設定 cancelled tab 為 active
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelector('.tab[data-type="cancelled"]')
+          .classList.add("active");
+        renderOrdersTab("cancelled");
+      } catch (err) {
+        console.error("取消訂單錯誤：", err);
+        alert("取消失敗：" + err.message);
+      }
+    });
+
+  //=============== 更改日期 ================
+  // 顯示 changeDateModal
+  document.querySelector(".change-date-btn").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("changeDateModal").style.display = "flex";
+  });
+  // 關閉 changeDateModal（按鈕 & ✕）
+  document
+    .getElementById("changeDateModalClose")
+    .addEventListener("click", () => {
+      document.getElementById("changeDateModal").style.display = "none";
+    });
+  document
+    .getElementById("closeChangeDateModal")
+    .addEventListener("click", () => {
+      document.getElementById("changeDateModal").style.display = "none";
+    });
+
+  // 點「確認」處理更改日期邏輯
+  const confirmBtn = document.getElementById("changeDateModalConfirm");
+  if (confirmBtn) {
+    confirmBtn.onclick = async () => {
+      const range = document.getElementById("daterange").value;
+      if (!range) {
+        alert("請選擇新的入住與退房日期");
+        return;
+      }
+      const [checkin, checkout] = range.split(" 至 ");
+      console.log("range value:", range);
+
+      if (!checkin || !checkout) {
+        alert("請選擇完整的日期範圍");
+        return;
+      }
+      const bookingId = detail.orderNumber;
+
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/bookings/${bookingId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            },
+            body: JSON.stringify({
+              checkInDate: checkin,
+              checkOutDate: checkout,
+            }),
+          }
+        );
+
+        if (!res.ok) throw new Error("更改訂單失敗");
+
+        alert("更改成功！");
+        // 加入指定的程式碼
+        document.querySelector(".order-detail-panel").style.display = "none";
+        document
+          .querySelectorAll(".location")
+          .forEach((el) => (el.style.display = "block"));
+        document
+          .querySelectorAll(".order-list")
+          .forEach((el) => (el.style.display = "block"));
+        document.getElementById("changeDateModal").style.display = "none";
+
+        // 刷新訂單列表
+        const updatedOrders = await fetchAndClassifyOrders();
+        ordersByType = updatedOrders;
+        setActiveTab("future");
+        renderOrdersTab("future");
+      } catch (err) {
+        console.error(err);
+        alert("更改失敗：" + err.message);
+      }
+    };
+  }
+
+  // ============== 更改房型 ======================
+
+  const changeRoomBtn = document.querySelector(".change-room-btn");
+  if (changeRoomBtn) {
+    changeRoomBtn.onclick = async (e) => {
+      e.preventDefault();
+
+      const container = document.querySelector(".room-options");
+      container
+        .querySelectorAll(".room-card:not(.template)")
+        .forEach((c) => c.remove());
+      const checkInIso = detail.checkinIso;
+      const checkOutIso = detail.checkoutIso;
+
+      //查詢可用房型
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/rooms/order/available?hotelId=${detail.hotelId}&checkInDate=${checkInIso}&checkOutDate=${checkOutIso}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+            },
+          }
+        );
+        if (!res.ok) {
+          alert("取得可用房型失敗");
+          return;
+        }
+
+        const rooms = await res.json();
+        const template = container.querySelector(".room-card.template");
+        rooms.forEach((r) => {
+          const card = template.cloneNode(true);
+          card.classList.remove("template");
+          card.style.display = "";
+          card.querySelector(".room-img").src = r.imgUrl;
+          card.querySelector(".room-name").textContent = r.roomTypeName;
+          card.querySelector(
+            ".room-price"
+          ).textContent = `TWD ${r.price.toLocaleString()}`;
+          // 記錄房型 id 及價格在 dataset
+          card.dataset.roomtypeId = r.roomTypeId;
+          card.dataset.price = r.price;
+          card.addEventListener("click", () => {
+            container
+              .querySelectorAll(".room-card:not(.template)")
+              .forEach((c) => c.classList.remove("selected"));
+            card.classList.add("selected");
+          });
+          container.appendChild(card);
+        });
+
+        document.getElementById("changeRoomModal").style.display = "flex";
+      } catch (err) {
+        console.error(err);
+        alert("取得可用房型失敗：" + err.message);
+      }
+
+      // 確認後，呼叫更改房型api
+      const confirmRoomBtn = document.getElementById("changeRoomModalConfirm");
+      if (confirmRoomBtn) {
+        confirmRoomBtn.onclick = async () => {
+          const selectedCard = document.querySelector(".room-card.selected");
+          if (!selectedCard) {
+            alert("請選擇要更換的房型");
+            return;
+          }
+          const roomTypeId = selectedCard.dataset.roomtypeId;
+          const bookingId = detail.orderNumber;
+
+          try {
+            const res = await fetch(
+              `http://localhost:8080/api/bookings/${bookingId}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+                },
+                body: JSON.stringify({
+                  items: [
+                    {
+                      roomTypeId: Number(roomTypeId),
+                      quantity: 1,
+                    },
+                  ],
+                }),
+              }
+            );
+            if (!res.ok) throw new Error("更改房型失敗");
+            alert("房型更改成功！");
+            // 加入指定的程式碼
+            document.querySelector(".order-detail-panel").style.display =
+              "none";
+            document
+              .querySelectorAll(".location")
+              .forEach((el) => (el.style.display = "block"));
+            document
+              .querySelectorAll(".order-list")
+              .forEach((el) => (el.style.display = "block"));
+            document.getElementById("changeRoomModal").style.display = "none";
+
+            const updatedOrders = await fetchAndClassifyOrders();
+            ordersByType = updatedOrders;
+            setActiveTab("future");
+            renderOrdersTab("future");
+          } catch (err) {
+            console.error(err);
+            alert("更改房型失敗：" + err.message);
+          }
+        };
+      }
+    };
+
+    // 關閉 changeRoomModal（按鈕 & ✕）
+    document
+      .getElementById("changeRoomModalClose")
+      .addEventListener("click", () => {
+        document.getElementById("changeRoomModal").style.display = "none";
+      });
+    document
+      .getElementById("closeChangeRoomModal")
+      .addEventListener("click", () => {
+        document.getElementById("changeRoomModal").style.display = "none";
+      });
+  }
 }
 
 // ============ 訂單編號查詢功能 =============
@@ -434,192 +755,6 @@ document.querySelectorAll(".tab").forEach((tab) => {
     renderOrdersTab(tab.dataset.type);
   });
 });
-
-function showOrderDetail(detail) {
-  const locationEls = document.querySelectorAll(".location");
-  const orderListEls = document.querySelectorAll(".order-list");
-  const detailPanel = document.querySelector(".order-detail-panel");
-
-  locationEls.forEach((el) => (el.style.display = "none"));
-  orderListEls.forEach((el) => (el.style.display = "none"));
-
-  // 填入資料到 detailPanel 的各欄位
-  document.getElementById("detail-hotelName").textContent = detail.hotelName;
-  document.getElementById("detail-checkinDate").textContent =
-    detail.checkinDate;
-  document.getElementById("detail-checkoutDate").textContent =
-    detail.checkoutDate;
-  document.getElementById("detail-roomtype").textContent = detail.roomType;
-  document.getElementById("detail-location").textContent = detail.location;
-  document.getElementById("detail-phone").textContent = detail.phone;
-  document.getElementById("detail-orderNumber").textContent =
-    detail.orderNumber;
-  document.getElementById(
-    "detail-price"
-  ).textContent = `TWD ${detail.price.toFixed(2)}`;
-  document.getElementById("detail-tax").textContent = `TWD ${detail.tax.toFixed(
-    2
-  )}`;
-  document.getElementById(
-    "detail-total"
-  ).textContent = `TWD ${detail.total.toFixed(2)}`;
-  document.getElementById("detail-cardType").textContent = detail.cardType;
-  document.getElementById("detail-cardMasked").textContent = detail.cardMasked;
-
-  detailPanel.style.display = "block";
-
-  document.getElementById("backToList").addEventListener("click", () => {
-    detailPanel.style.display = "none";
-    document.querySelectorAll(".location").forEach((el) => {
-      el.style.display = "block";
-    });
-    orderListEls.forEach((el) => (el.style.display = "block"));
-  });
-
-  //取消訂單、更新日期、更改房型modal視窗
-  // 顯示 取消訂單 modal
-  document.querySelector(".cancel-order-btn").addEventListener("click", (e) => {
-    e.preventDefault();
-    document.getElementById("cancelModal").style.display = "flex";
-  });
-
-  // 顯示 changeDateModal
-
-  document.querySelector(".change-date-btn").addEventListener("click", (e) => {
-    e.preventDefault();
-    document.getElementById("changeDateModal").style.display = "flex";
-  });
-
-  // 關閉 cancelModal（關閉按鈕 & 關閉區塊）
-  document.getElementById("cancelModalClose").addEventListener("click", () => {
-    document.getElementById("cancelModal").style.display = "none";
-  });
-  document.getElementById("closeCancelModal").addEventListener("click", () => {
-    document.getElementById("cancelModal").style.display = "none";
-  });
-
-  // 點「繼續」處理邏輯
-  document
-    .getElementById("cancelModalConfirm")
-    .addEventListener("click", async () => {
-      const reason = document.getElementById("cancelReason").value;
-      if (!reason) {
-        alert("請選擇取消原因");
-        return;
-      }
-      const bookingId =
-        document.getElementById("detail-orderNumber").textContent;
-
-      try {
-        const res = await fetch(
-          `http://localhost:8080/api/bookings/${bookingId}/cancel`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-            },
-          }
-        );
-        if (!res.ok) {
-          throw new Error("取消失敗，請稍後再試");
-        }
-
-        alert("已送出取消申請");
-
-        // 關閉 modal 與訂單詳情，顯示列表
-        document.getElementById("cancelModal").style.display = "none";
-        document.querySelector(".order-detail-panel").style.display = "none";
-        document.querySelectorAll(".location").forEach((el) => {
-          el.style.display = "block";
-        });
-        document.querySelectorAll(".order-list").forEach((el) => {
-          el.style.display = "block";
-        });
-
-        // 重新分類與渲染取消後的訂單狀態
-        const updatedOrders = await fetchAndClassifyOrders();
-        ordersByType = updatedOrders;
-        // 設定 cancelled tab 為 active
-        document
-          .querySelectorAll(".tab")
-          .forEach((t) => t.classList.remove("active"));
-        document
-          .querySelector('.tab[data-type="cancelled"]')
-          .classList.add("active");
-        renderOrdersTab("cancelled");
-      } catch (err) {
-        console.error("取消訂單錯誤：", err);
-        alert("取消失敗：" + err.message);
-      }
-    });
-
-  // 關閉 changeDateModal（按鈕 & ✕）
-  document
-    .getElementById("changeDateModalClose")
-    .addEventListener("click", () => {
-      document.getElementById("changeDateModal").style.display = "none";
-    });
-  document
-    .getElementById("closeChangeDateModal")
-    .addEventListener("click", () => {
-      document.getElementById("changeDateModal").style.display = "none";
-    });
-
-  // 點「確認」處理邏輯
-  document.addEventListener("DOMContentLoaded", () => {
-    const confirmBtn = document.getElementById("changeDateModalConfirm");
-    if (confirmBtn && !confirmBtn._bound) {
-      confirmBtn.addEventListener("click", async () => {
-        const range = document.getElementById("daterange").value;
-        if (!range) {
-          alert("請選擇新的入住與退房日期");
-          return;
-        }
-        const [checkin, checkout] = range.split(" to ");
-        if (!checkin || !checkout) {
-          alert("請選擇完整的日期範圍");
-          return;
-        }
-
-        const bookingId =
-          document.getElementById("detail-orderNumber").textContent;
-
-        try {
-          const res = await fetch(
-            `http://localhost:8080/api/bookings/${bookingId}/update-dates`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-              },
-              body: JSON.stringify({
-                checkInDate: checkin,
-                checkOutDate: checkout,
-              }),
-            }
-          );
-
-          if (!res.ok) throw new Error("更改訂單失敗");
-
-          alert("更改成功！");
-          document.getElementById("changeDateModal").style.display = "none";
-
-          // 若需要刷新訂單列表，可加：
-          const updatedOrders = await fetchAndClassifyOrders();
-          ordersByType = updatedOrders;
-          setActiveTab("future");
-          renderOrdersTab("future");
-        } catch (err) {
-          console.error(err);
-          alert("更改失敗：" + err.message);
-        }
-      });
-      confirmBtn._bound = true;
-    }
-  });
-}
 
 // ===================== 住宿訊息聊天室 =====================
 document.addEventListener("DOMContentLoaded", () => {
