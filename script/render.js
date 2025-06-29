@@ -42,8 +42,11 @@ function renderRoom(room) {
           ${room.amenities.map(a => `<span class="feature-tag">${a}</span>`).join(" ")}
         </div>` : ""}
         <div style="margin-top: 10px;">
-          <p style="color: ${room.isCanceled ? '#28a745' : '#dc3545'}; font-weight: bold; margin: 0;">
-            ${room.isCanceled ? "✓ 可免費取消" : "⚠ 不可取消"}
+         <p style="color: ${room.isCanceled ? '#28a745' : '#dc3545'}; font-weight: bold; margin: 0;">
+        <i class="bi ${room.isCanceled ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
+        ${room.isCanceled ? " 可免費取消" : " 不可取消"}
+        </p>
+
           </p>
         </div>
       </div>
@@ -356,8 +359,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 //跳轉到付款流程
-
-// === 跳轉至付款流程 ===
 
 document.querySelector(".booking-btn").addEventListener("click", () => {
   const bookingData = {

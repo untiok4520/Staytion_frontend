@@ -6,11 +6,6 @@
   box-sizing: border-box;
 }
 
-.wireframe {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 20px;
-}
 
 
 .hotel-info-row {
@@ -147,12 +142,6 @@ body {
   font-size: 18px;
 }
 
-.photo-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: flex-start;
-}
 
 .photo-placeholder {
   width: 300px;
@@ -187,11 +176,11 @@ body {
 .room-card {
   border: 1px solid #dee2e6;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   background: #f8f9fa;
   display: grid;
   grid-template-columns: 300px 1fr 200px;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
   flex-direction: column;
   text-align: left;
@@ -221,7 +210,7 @@ body {
 .feature-tag {
   background: #17a2b8;
   color: white;
-  padding: 3px 8px;
+  padding: 4px 8px;
   border-radius: 12px;
   font-size: 11px;
   line-height: 1;
@@ -425,10 +414,6 @@ body {
                 max-width: calc(100% * 3.5 / 12);
             }
 
-            .col-md-1-5 {
-                flex: 0 0 calc(100% * 1.5 / 12);
-                max-width: calc(100% * 1.5 / 12);
-            }
         }
 
 
@@ -891,4 +876,20 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+@media (max-width: 768px) {
+  .room-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .room-image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .room-booking {
+    text-align: center;
+  }
 }
