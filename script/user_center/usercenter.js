@@ -50,8 +50,8 @@ document
         window.bootstrap && window.bootstrap.Modal
           ? window.bootstrap.Modal.getInstance(modalEl)
           : typeof bootstrap !== "undefined" && bootstrap.Modal
-            ? bootstrap.Modal.getInstance(modalEl)
-            : null;
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
       if (modalInstance) modalInstance.hide();
     });
   });
@@ -76,8 +76,8 @@ document
         window.bootstrap && window.bootstrap.Modal
           ? window.bootstrap.Modal.getInstance(modalEl)
           : typeof bootstrap !== "undefined" && bootstrap.Modal
-            ? bootstrap.Modal.getInstance(modalEl)
-            : null;
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
       if (modalInstance) modalInstance.hide();
     });
   });
@@ -227,6 +227,8 @@ function renderUnreviewedCards(data) {
         if (res.ok) {
           alert("評論送出成功！");
           card.remove();
+          // 再呼叫取得已評論資料
+          loadReviewPage();
         } else {
           alert("評論送出失敗！");
         }
