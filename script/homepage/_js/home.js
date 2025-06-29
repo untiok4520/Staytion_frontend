@@ -634,6 +634,12 @@ async function loadTopHotels() {
 
 // 精選飯店卡片點擊（hotelId + cityName 帶到搜尋頁，highlight_hotel_id 強制排最上面）
 document.addEventListener('click', function (e) {
+
+    // 如果點擊的目標是在愛心按鈕上，直接 return，阻止後面跳轉
+    if (e.target.closest('.heart-btn')) {
+        return;  // 不處理跳轉，讓愛心事件自己處理
+    }
+
     // 假設你卡片裡的 <a> 會加 data-hotel-id, data-city
     const link = e.target.closest('#recommendation-carousel .card a'); if (link) {
         e.preventDefault();

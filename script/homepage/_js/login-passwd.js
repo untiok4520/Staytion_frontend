@@ -59,6 +59,25 @@ if (form) {
     }
 
     try {
+      // 1. 先呼叫檢查 email 是否驗證 API
+      const verifyRes = await fetch(`http://localhost:8080/api/auth/check-email-verified?email=${encodeURIComponent(email)}`);
+      if (!verifyRes.ok) {
+        alert('無法確認電子郵件驗證狀態，請稍後再試');
+        return;
+      }
+      const verifyData = await verifyRes.json();
+      if (!verifyData.emailVerified) {
+        // 顯示重新寄驗證信按鈕
+        const resendBtn = document.getElementById("resendVerificationBtn");
+        if (resendBtn) {
+          resendBtn.style.display = 'block';
+          resendBtn.dataset.email = email;
+        }
+        alert("您的電子郵件尚未驗證，請先驗證信箱。");
+        return;
+      }
+
+      // 2. 驗證通過，才呼叫登入 API
       const res = await fetch('http://localhost:8080/api/auth/login-password', {
         method: 'POST',
         headers: {
@@ -68,30 +87,25 @@ if (form) {
       });
 
       if (!res.ok) {
-        // 從後端取得錯誤訊息
-        const errorText = await res.text();
-        if (errorText.includes("尚未驗證") || errorText.includes("email not verified")) {
-          const resendBtn = document.getElementById("resendVerificationBtn");
-          if (resendBtn) {
-            resendBtn.style.display = 'block'; // 顯示按鈕
-            resendBtn.dataset.email = email;          // 暫存 email
-          }
+        if (res.status === 401) {
+          alert("帳號或密碼錯誤");
+        } else {
+          const errorData = await res.json().catch(() => ({}));
+          alert("登入失敗：" + (errorData.message || "未知錯誤"));
         }
+        return;
       }
+
 
       const data = await res.json();
       localStorage.setItem('jwtToken', data.token);
-      console.log(data);
-
-      // 調用 getUserIdFromToken 來解析 token 並獲取 userId
       await getUserIdFromToken();
-
       alert('登入成功');
-      // 登入成功後導回首頁或會員頁
       window.location.href = '../../pages/homepage/home.html';
 
     } catch (err) {
-      alert('帳號或密碼錯誤');
+      alert('系統錯誤，請稍後再試');
+      console.error(err);
     }
   });
 }
