@@ -661,6 +661,27 @@ function showOrderDetail(detail) {
         document.getElementById("changeRoomModal").style.display = "none";
       });
   }
+  //============= 查看住宿規定 ==================
+  // 查看住宿規定按鈕
+  const viewRulesBtn = document.querySelector(".view-rules-btn");
+  if (viewRulesBtn) {
+    viewRulesBtn.onclick = (e) => {
+      e.preventDefault();
+      document.getElementById("hotelRulesModal").style.display = "flex";
+    };
+  }
+
+  // 關閉住宿規定 modal
+  document
+    .getElementById("closeHotelRulesModal")
+    ?.addEventListener("click", () => {
+      document.getElementById("hotelRulesModal").style.display = "none";
+    });
+  document
+    .getElementById("hotelRulesModalClose")
+    ?.addEventListener("click", () => {
+      document.getElementById("hotelRulesModal").style.display = "none";
+    });
 }
 
 // ============ 訂單編號查詢功能 =============
