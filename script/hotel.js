@@ -1,5 +1,4 @@
-
-// 愛心收藏功能
+// 變數定義
 
 const favoriteBtn = document.getElementById("favoriteBtn");
 const favoriteIcon = document.getElementById("favoriteIcon");
@@ -7,9 +6,6 @@ let isFavorited = false;
 
 const userId = localStorage.getItem("userId");
 const hotelId = new URLSearchParams(window.location.search).get("hotelId");
-
-
-
 
 function updateFavoriteIcon() {
   favoriteIcon.classList.toggle("bi-heart", !isFavorited);
@@ -54,21 +50,32 @@ favoriteBtn.addEventListener("click", async () => {
 // 初始執行
 checkIfFavorited();
 
-
 // 地點自動完成
 
 const destinationInput = document.getElementById("destinationInput");
 const suggestionsEl = document.getElementById("suggestions");
 
 let cityList = [];
-let cityDistrictList = [];
 
 fetch("http://localhost:8080/api/areas/all")
   .then(res => res.json())
   .then(data => {
-    cityDistrictList = data.map(d => `${d.city} ${d.label}`);
-    const uniqueCities = [...new Set(data.map(d => d.city))];
-    cityList = uniqueCities;
+    let allCities = data.map(d => d.city); // 只取縣市，不取鄉鎮區
+    let withBoth = [];
+
+    allCities.forEach(city => {
+      withBoth.push(city);
+      // 如果有「臺」，加上「台」版本
+      if (city.includes("臺")) {
+        withBoth.push(city.replace("臺", "台"));
+      }
+      // 如果有「台」，加上「臺」版本
+      if (city.includes("台")) {
+        withBoth.push(city.replace("台", "臺"));
+      }
+    });
+
+    cityList = [...new Set(withBoth)];
   });
 
 function showSuggestions(keyword = "") {
@@ -77,7 +84,7 @@ function showSuggestions(keyword = "") {
   if (keyword === "") {
     results = cityList;
   } else {
-    results = cityDistrictList.filter(item =>
+    results = cityList.filter(item =>
       item.includes(keyword) || item.replace(/\s/g, "").includes(keyword)
     );
   }
@@ -113,7 +120,6 @@ document.addEventListener("click", (e) => {
     suggestionsEl.style.display = "none";
   }
 });
-
 
 // 日期選擇器
 
@@ -161,7 +167,6 @@ const checkoutPicker = flatpickr("#checkout-date", {
   minDate: "today",
   dateFormat: "Y-m-d",
 });
-
 
 // 人數 popup
 const guestBtn = document.getElementById("guest-btn");
@@ -229,7 +234,6 @@ document.getElementById("search-btn").addEventListener("click", () => {
 
   window.location.href = `/SearchPageV2.html?${searchParams.toString()}`;
 });
-
 
 // 房型庫存更新
 
