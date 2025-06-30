@@ -501,7 +501,7 @@ $(function () {
     hotels.forEach(hotel => {
       const detailUrl = `roomsdetailpage.html?hotelId=${hotel.id}&${getSearchParams()}`;
       const $card = $(`
-        <article class="hotel-card">
+        <article class="hotel-card" data-href="${detailUrl}">
           <div class="hotel-image">
             <img src="${hotel.imgUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
           </div>
@@ -544,7 +544,7 @@ $(function () {
     hotels.forEach(hotel => {
       const detailUrl = `roomsdetailpage.html?hotelId=${hotel.id}&${getSearchParams()}`;
       const $card = $(`
-        <article class="hotel-card">
+        <article class="hotel-card" data-href="${detailUrl}">
           <div class="hotel-image">
             <img src="${hotel.imgUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
           </div>
@@ -666,7 +666,7 @@ $(function () {
         hotels.forEach(hotel => {
           const detailUrl = `roomsdetailpage.html?hotelId=${hotel.id}&${getSearchParams()}`;
           const $card = $(`
-            <article class="hotel-card">
+            <article class="hotel-card" data-href="${detailUrl}">
               <div class="hotel-image">
                 <img src="${hotel.imgUrl || 'https://fakeimg.pl/200x200/?text=No+Image'}" alt="${hotel.name}">
               </div>
@@ -704,6 +704,12 @@ $(function () {
         $('#mapHotelList').empty().append(`<div class="no-result text-center py-4">資料載入失敗</div>`);
       });
   }
+
+  $(document).on('click','.hotel-card', function (e) {
+    if ($(e.target).is('a') || $(e.target).closest('button').length) return;
+    const href = $(this).data('href');
+    if (href) window.location.href = href;
+  });
 
   function initGoogleMap(hotels = []) {
     if (!hotels.length) return;
@@ -878,4 +884,29 @@ $(window).on('scroll', function () {
     currentPage++;
     fetchHotelsMain(filterState, currentPage, true);
   }
+});
+
+// 使用者登入狀態檢查
+document.addEventListener('DOMContentLoaded', function () {
+  const token = localStorage.getItem('jwtToken');
+  const loginBtn = document.getElementById('loginBtn');
+  const userDropdown = document.getElementById('userDropdown');
+
+  if (token) {
+      // 使用者已登入，顯示 dropdown
+      loginBtn.classList.add('d-none');
+      userDropdown.classList.remove('d-none');
+  } else {
+      // 使用者未登入，顯示登入按鈕
+      loginBtn.classList.remove('d-none');
+      userDropdown.classList.add('d-none');
+  }
+
+  // 登出邏輯
+  const logoutBtn = document.getElementById('logoutBtn');
+  logoutBtn?.addEventListener('click', function () {
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('userId');
+      location.reload(); // 重新整理頁面回到未登入狀態
+  });
 });

@@ -635,22 +635,11 @@ async function loadTopHotels() {
 // 精選飯店卡片點擊（hotelId + cityName 帶到搜尋頁，highlight_hotel_id 強制排最上面）
 document.addEventListener('click', function (e) {
     // 假設你卡片裡的 <a> 會加 data-hotel-id, data-city
-    const link = e.target.closest('#recommendation-carousel .card a'); if (link) {
+    const link = e.target.closest('#recommendation-carousel .card a'); 
+    if (link) {
         e.preventDefault();
         const hotelId = link.closest('.card').querySelector('button.heart-btn').dataset.hotelId;
-        // 注意：你要確定 cityName 正確掛在 a 或其他元素上（這裡 demo 用 data-city）
-        const cityName = link.closest('.card').querySelector('.card-text').textContent.split(',')[1]?.trim() || '';
-        // 組參數
-        const params = new URLSearchParams({
-            destination: cityName,
-            checkin: '',
-            checkout: '',
-            adults: 2,
-            children: 0,
-            rooms: 1,
-            highlight_hotel_id: hotelId
-        });
-        window.location.href = `/pages/SearchPageV2.html?${params.toString()}`;
+        window.location.href = `/pages/roomsdetailpage.html?hotelId=${hotelId}`;
     }
 });
 

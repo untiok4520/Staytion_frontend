@@ -71,10 +71,13 @@ export function renderOrderHTML(b) {
       <div class="order-detail">
         <button class="btn btn-secondary show-detail"
           data-id="${b.orderId}"
+          data-hotel-id="${item.hotelId}"
           data-name="${hotelName}"
           data-roomtype="${roomTypeName}"
           data-checkin="${checkIn}"
+          data-checkin-iso="${b.checkInDate}"
           data-checkout="${checkOut}"
+          data-checkout-iso="${b.checkOutDate}"
           data-location="${address}"
           data-price="${b.totalPrice}"
           data-total="${b.totalPrice}"
