@@ -69,8 +69,8 @@ async function handleChatListItemClick(item) {
   const chatRoomId = Number(item.dataset.chatRoomId);
   const receiverId = Number(item.dataset.receiverId);
   const hotelId = Number(item.dataset.hotelId);
-  const hotelName =
-    item.dataset.hotelName ||
+  const displayName =
+    item.dataset.displayName ||
     item.querySelector(".chat-hotel-name").textContent;
   console.log("點擊聊天室：", {
     chatRoomId,
@@ -84,7 +84,7 @@ async function handleChatListItemClick(item) {
   subscribeChatRoom(chatRoomId);
 
   //渲染聊天室頁面
-  renderChatBox(hotelName);
+  renderChatBox(displayName);
 
   //載入歷史訊息
   const history = await loadChatHistory(chatRoomId);

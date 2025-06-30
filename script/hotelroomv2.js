@@ -1,7 +1,7 @@
 // admin.js
 $(function () {
     const token = localStorage.getItem("token") || "";
-    const ownerId = 201;
+    const ownerId = 1;
 
     const headers = {
         "Content-Type": "application/json",

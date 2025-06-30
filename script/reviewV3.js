@@ -2,7 +2,7 @@ $(document).ready(function () {
   const reviewList = $("#reviewList");
   const avgRating = $("#avgRating");
   const hotelSelect = $("select.form-select").first();
-  const ownerId = 201; // TODO: 替換為登入者的 ID
+  const ownerId = 1; // TODO: 替換為登入者的 ID
   let hotelMap = {};
 
   const token = localStorage.getItem("jwtToken") || "";

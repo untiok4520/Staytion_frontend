@@ -9,7 +9,7 @@ $(document).ready(function () {
     };
 
     let currentPage = 0;
-    let currentUserId = 201;
+    let currentUserId = 1;
 
     let orderData = []; // 儲存當前訂單資料
     let guestData = {}; // 儲存客戶資料（如果有的話）
