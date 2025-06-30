@@ -248,10 +248,12 @@ $(function () {
 
     // ---------- 載入所有房型
     function loadRooms() {
-        const hid = $("#hotelFilter").val() || "";
-        const url = hid === ""
-            ? `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`
-            : `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`; // 待處理
+        const hid = $("#hotelFilter").val() || "all";
+        if (!hid || hid === "all") {
+            $("#roomTableBody").empty().append(`<tr><td colspan="6">請選擇飯店</td></tr>`);
+            return;
+        }
+        const url = `http://localhost:8080/api/admin/roomTypes/hotel/${hid}`;
 
         $.ajax({
             url,
@@ -302,7 +304,7 @@ $(function () {
                         allAmenities.forEach(a => {
                             nameToId[a.aname] = a.id;
                         });
-    
+
                         // 2. 將 amenities 名稱陣列轉 id 陣列
                         let selectedAmenityIds = [];
                         if (Array.isArray(r.amenities)) {
@@ -319,7 +321,7 @@ $(function () {
                                 selectedAmenityIds = r.amenities.map(a => a.id);
                             }
                         }
-    
+
                         // 3. 其它欄位填充
                         $roomHotel.val(r.hotelId);
                         $roomName.val(r.rname);
@@ -344,7 +346,7 @@ $(function () {
                 }
             });
         });
-    
+
         $(".btn-del-room").off("click").on("click", function () {
             if (!confirm("刪除此房型？")) return;
             $.ajax({
@@ -378,7 +380,7 @@ $(function () {
             });
         });
     }
-    
+
     // ---------- 新增/編輯 房型
     $("#btnAddRoom").on("click", () => {
         roomEditId = null;
@@ -402,7 +404,7 @@ $(function () {
             size: $roomSize.val(),
             bedType: $roomBedType.val(),
             bedCount: $roomBedCount.val(),
-            capacity: $roomCapacity.val(),    
+            capacity: $roomCapacity.val(),
             refundable: $roomRefund.val() === "可退款",
             isCanceled: $roomCancel.val() === "不可取消",
             imgUrl: $roomImageUrlInput.val().trim(),
