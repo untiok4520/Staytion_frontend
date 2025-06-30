@@ -39,10 +39,6 @@
           margin-bottom: 0;
         }
 
-        // .info {
-        //   flex: 1;
-        // }
-
         .edit-btn {
           padding: 6px 10px;
           background-color: v.$secondary;
@@ -140,6 +136,46 @@
             font-size: 14px;
             background-color: #f9f9f9;
             // focus 樣式
+            &:focus {
+              outline: 2px solid v.$secondary;
+              outline-offset: 2px;
+            }
+          }
+        }
+
+        .button-group {
+          display: flex;
+          justify-content: flex-start;
+          gap: 12px;
+          margin-top: 1rem;
+
+          .btn {
+            min-width: 80px;
+          }
+        }
+      }
+      .edit-tel {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+
+          label {
+            margin: 0.8rem 0px;
+            font-weight: 600;
+          }
+
+          input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+
             &:focus {
               outline: 2px solid v.$secondary;
               outline-offset: 2px;

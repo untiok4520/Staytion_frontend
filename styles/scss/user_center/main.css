@@ -13115,6 +13115,40 @@ input.choose-date:focus {
 #profile .profile-card .profile-field .edit-passport-name .button-group .btn {
   min-width: 80px;
 }
+#profile .profile-card .profile-field .edit-tel {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+#profile .profile-card .profile-field .edit-tel .form-group {
+  display: flex;
+  flex-direction: column;
+}
+#profile .profile-card .profile-field .edit-tel .form-group label {
+  margin: 0.8rem 0px;
+  font-weight: 600;
+}
+#profile .profile-card .profile-field .edit-tel .form-group input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+#profile .profile-card .profile-field .edit-tel .form-group input:focus {
+  outline: 2px solid #1f487e;
+  outline-offset: 2px;
+}
+#profile .profile-card .profile-field .edit-tel .button-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-top: 1rem;
+}
+#profile .profile-card .profile-field .edit-tel .button-group .btn {
+  min-width: 80px;
+}
 #profile .profile-card .profile-field .edit-password {
   margin-top: 12px;
   display: flex;

@@ -877,7 +877,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       ".profile-field.name .profile-value .value"
     ).textContent = `${data.firstName} ${data.lastName}`;
     document.querySelector(".email").textContent = data.email || "";
-    document.querySelector(".tel").textContent = data.tel || "";
+    document.querySelector(
+      ".profile-field.tel .profile-value .value"
+    ).textContent = data.tel || "";
   } catch (err) {
     console.error(err);
   }
@@ -969,7 +971,61 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// 更改密碼 - 只綁一次事件監聽，避免重複 alert
+//更改電話
+document.addEventListener("DOMContentLoaded", () => {
+  const telEditBtn = document.querySelector(".edit-btn.tel");
+  const field = document.querySelector(".profile-field.tel");
+  const displayArea = field ? field.querySelector(".profile-value") : null;
+  const editArea = field ? field.querySelector(".edit-tel") : null;
+  if (telEditBtn && field && displayArea && editArea) {
+    telEditBtn.addEventListener("click", () => {
+      displayArea.style.display = "none";
+      editArea.style.display = "block";
+    });
+  }
+  if (editArea && displayArea) {
+    const cancelBtn = editArea.querySelector(".cancel-tel-btn");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", () => {
+        editArea.style.display = "none";
+        displayArea.style.display = "";
+      });
+    }
+    const saveBtn = editArea.querySelector(".save-tel-btn");
+    if (saveBtn) {
+      saveBtn.addEventListener("click", async () => {
+        const newTel = document.getElementById("newTel").value.trim();
+        if (!/^09\d{8}$/.test(newTel)) {
+          alert("請輸入正確的台灣手機號碼，例如 0912345678");
+          return;
+        }
+        try {
+          const res = await fetch(
+            "http://localhost:8080/api/user/update-profile",
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+              },
+              body: JSON.stringify({ tel: newTel }),
+            }
+          );
+          if (!res.ok) throw new Error("更新電話號碼失敗");
+          displayArea.querySelector(".value").textContent = newTel;
+          editArea.style.display = "none";
+          displayArea.style.display = "flex";
+          alert("電話號碼更新成功！");
+        } catch (err) {
+          console.error(err);
+          alert("更新電話號碼失敗：" + err.message);
+        }
+      });
+    }
+  }
+});
+
+// 更改密碼
 document.addEventListener("DOMContentLoaded", () => {
   const passwordEditBtn = document.querySelector(".edit-btn.password");
   const field = document.querySelector(".profile-field.password");

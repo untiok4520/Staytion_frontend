@@ -502,12 +502,34 @@
               </div>
             </div>
 
-            <div class="profile-field">
+            <div class="profile-field tel">
               <label>電話號碼</label>
               <div class="profile-value">
-                <p class="tel"></p>
-                <div class="verified">
-                  <p class="verified">已通過驗證</p>
+                <p class="value"></p>
+                <button class="edit-btn tel">更改</button>
+              </div>
+              <div class="edit-tel" style="display: none">
+                <div class="form-group">
+                  <label for="newTel">新電話號碼</label>
+                  <input
+                    type="tel"
+                    id="newTel"
+                    class="form-control"
+                    pattern="09\d{8}"
+                    maxlength="10"
+                    placeholder="請輸入電話號碼"
+                  />
+                </div>
+                <div class="button-group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary me-2 cancel-tel-btn"
+                  >
+                    取消
+                  </button>
+                  <button type="button" class="btn btn-primary save-tel-btn">
+                    儲存
+                  </button>
                 </div>
               </div>
             </div>
