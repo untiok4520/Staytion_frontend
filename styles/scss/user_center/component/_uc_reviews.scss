@@ -1,0 +1,218 @@
+@use "../abstract/custom-variables" as v;
+
+#reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  .review-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+    padding: 20px;
+    background-color: #fff;
+    margin-bottom: 1rem;
+
+    .review-img {
+      width: 150px;
+      height: 150px;
+      background-size: cover;
+      // background-color: #ccc;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 8px;
+      margin-right: 20px;
+    }
+
+    .review-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      h5 {
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      .review-date {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .review-score {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+
+        .score {
+          background-color: v.$secondary;
+          padding: 6px 12px;
+          border-radius: 10px;
+          color: white;
+          width: 50px;
+          height: 50px;
+          text-align: center;
+          font-size: 1.6rem;
+        }
+      }
+
+      .review-text {
+        font-size: 14px;
+        line-height: 1.4;
+        white-space: pre-line;
+      }
+    }
+  }
+  // 尚未評論區
+  .unreview-section {
+    .unreview-card {
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 16px;
+      padding: 20px;
+      background-color: #fff;
+      margin-bottom: 1rem;
+      gap: 1rem;
+
+      .review-img {
+        width: 150px;
+        height: 150px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 8px;
+        margin-right: 20px;
+      }
+
+      .review-content {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 2rem;
+        .left-info {
+          flex: 4;
+          h5 {
+            font-weight: bold;
+            margin-bottom: 1rem;
+          }
+
+          .review-dates {
+            display: flex;
+            gap: 2rem;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+            line-height: 1.4;
+          }
+        }
+        .right-info {
+          flex: 1;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .rating-options {
+            margin-top: 8px;
+
+            label {
+              font-weight: 500;
+              margin-bottom: 6px;
+            }
+
+            // .radio-group {
+            //   display: flex;
+            //   gap: 4px;
+            //   flex-wrap: wrap;
+            //   justify-content: center;
+
+            //   label {
+            //     display: flex;
+            //     align-items: center;
+            //     gap: 5px;
+            //     font-size: 14px;
+            //     cursor: pointer;
+            //     padding: 4px 8px;
+            //     border-radius: 8px;
+            //     transition: background-color 0.2s ease;
+            //   }
+
+            //   label:hover {
+            //     background-color: #f0f0f0;
+            //   }
+
+            //   input[type="radio"] {
+            //     appearance: none; // 隱藏原生樣式
+            //     width: 16px;
+            //     height: 16px;
+            //     border: 2px solid #888;
+            //     border-radius: 50%;
+            //     background-color: white;
+            //     cursor: pointer;
+            //     position: relative;
+            //     transition: all 0.2s ease;
+            //   }
+
+            //   input[type="radio"]:checked {
+            //     border-color: v.$primary;
+            //     background-color: v.$primary;
+            //   }
+
+            //   input[type="radio"]:checked::after {
+            //     content: "";
+            //     position: absolute;
+            //     top: 3px;
+            //     left: 3px;
+            //     width: 6px;
+            //     height: 6px;
+            //     background-color: white;
+            //     border-radius: 50%;
+            //   }
+            // }
+            .score-slider {
+              width: 200px;
+            }
+
+            .review-text {
+              display: flex;
+              align-items: center;
+              gap: 0.8rem;
+              justify-content: space-between;
+              textarea {
+                margin-top: 10px;
+                width: 400px;
+                height: 100px;
+                padding: 8px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+                outline: none;
+                transition: border-color 0.2s ease;
+
+                &:focus {
+                  border: 2px solid v.$primary;
+                }
+              }
+              .btn {
+                font-size: 14px;
+                height: 40px;
+                width: 60px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
