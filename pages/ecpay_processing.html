@@ -42,6 +42,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         // const userId = localStorage.getItem("userId");
         const userId = 4;
+        const orderId = localStorage.getItem("orderId");
         if (!userId) {
           alert("找不到 userId，請重新登入");
           return;
@@ -56,6 +57,7 @@
           },
           body: JSON.stringify({
             userId: userId,
+            orderId: orderId,
             paymentMethod: paymentMethod
           })
         })
