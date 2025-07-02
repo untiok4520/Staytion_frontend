@@ -127,59 +127,93 @@ function fetchRooms() {
 }
 
 function renderRoom(room) {
-  return `
-    <div class="room-card">
-      <div class="room-image">
-        <img src="${room.imgUrl}" alt="${room.rname}" width="100%">
-      </div>
-      <div class="room-info">
-        <h3>${room.rname}</h3>
-        <p>${room.description}</p>
-        <div class="room-features">
-          <span class="feature-tag">${room.bedType} × ${room.bedCount}</span>
-          <span class="feature-tag">${room.capacity}人</span>
-          <span class="feature-tag">${room.size}平方公尺</span>
-          <span class="feature-tag">${room.view}</span>
-        </div>
-        ${
-          room.amenities && room.amenities.length > 0
-            ? `
-        <div class="room-amenities" style="margin-top: 5px;">
-          ${room.amenities
-            .map((a) => `<span class="feature-tag">${a}</span>`)
-            .join(" ")}
-        </div>`
-            : ""
-        }
-        <div style="margin-top: 10px;">
-          <p style="color: ${
-            room.isCanceled ? "#28a745" : "#dc3545"
-          }; font-weight: bold; margin: 0;">
-            ${room.isCanceled ? "✓ 可免費取消" : "⚠ 不可取消"}
-          </p>
-        </div>
-      </div>
-      <div class="room-booking">
-        <div class="price stock">剩餘${room.quantity}間房間</div>
-        <small>每晚價格</small>
-        <div class="price">NT$ ${room.price.toLocaleString()}</div>
-        <select
-          class="booking-select"
-          data-room="${room.rname}"
-          data-price="${room.price}"
-          data-roomtypeid="${room.id}"
-        
-        >
-          <option value='${JSON.stringify({
-            room: room.rname,
-            price: room.price,
-            count: 0,
-            roomtypeid: room.id,
-          })}'>0 間</option>
-        </select>
-      </div>
-    </div>
-  `;
+  // 取得 template
+  const tpl = document.getElementById("room-card-template");
+  if (!tpl) return document.createElement("div");
+  const node = tpl.content.cloneNode(true);
+
+  // 填入圖片
+  const img = node.querySelector(".room-image img");
+  if (img) {
+    img.src = room.imgUrl;
+    img.alt = room.rname;
+  }
+  // 標題
+  const h3 = node.querySelector(".room-info h3");
+  if (h3) h3.textContent = room.rname;
+  // 描述
+  const desc = node.querySelector(".room-info .room-desc");
+  if (desc) desc.textContent = room.description;
+  // 房間特色
+  const features = node.querySelector(".room-features");
+  if (features) {
+    features.innerHTML = "";
+    [
+      `${room.bedType} × ${room.bedCount}`,
+      `${room.capacity}人`,
+      `${room.size}平方公尺`,
+      room.view,
+    ].forEach((txt) => {
+      const span = document.createElement("span");
+      span.className = "feature-tag";
+      span.textContent = txt;
+      features.appendChild(span);
+    });
+  }
+  // 設施
+  const amenities = node.querySelector(".room-amenities");
+  if (amenities) {
+    amenities.innerHTML = "";
+    if (room.amenities && room.amenities.length > 0) {
+      room.amenities.forEach((a) => {
+        const span = document.createElement("span");
+        span.className = "feature-tag";
+        span.textContent = a;
+        amenities.appendChild(span);
+      });
+      amenities.classList.remove("d-none");
+    } else {
+      amenities.classList.add("d-none");
+    }
+  }
+  // 取消政策
+  const cancel = node.querySelector(".room-cancel");
+  if (cancel) {
+    cancel.textContent = room.isCanceled ? "✓ 可免費取消" : "⚠ 不可取消";
+    cancel.classList.remove("cancel-allowed", "cancel-not-allowed");
+    cancel.classList.add(
+      room.isCanceled ? "cancel-allowed" : "cancel-not-allowed"
+    );
+  }
+  // 剩餘數量
+  const stock = node.querySelector(".price.stock");
+  if (stock) stock.textContent = `剩餘${room.quantity}間房間`;
+  // 價格
+  const priceEl = node.querySelector(".room-booking .price:not(.stock)");
+  if (priceEl) priceEl.textContent = `NT$ ${room.price.toLocaleString()}`;
+  // select
+  const select = node.querySelector(".booking-select");
+  if (select) {
+    select.dataset.room = room.rname;
+    select.dataset.price = room.price;
+    select.dataset.roomtypeid = room.id;
+    // 初始 option
+    select.innerHTML = "";
+    const opt = document.createElement("option");
+    opt.value = JSON.stringify({
+      room: room.rname,
+      price: room.price,
+      count: 0,
+      roomtypeid: room.id,
+    });
+    opt.textContent = "0 間";
+    select.appendChild(opt);
+  }
+  // 返回 DOM 元素
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(node);
+  // 返回內容為 .room-card 元素
+  return wrapper.firstElementChild;
 }
 
 // ---- 選擇房型 Summary ----
@@ -282,24 +316,33 @@ function fetchReviews() {
 }
 
 function renderSingleReview(r) {
-  const date = new Date(r.createdAt).toLocaleDateString("zh-TW");
-  return `
-    <div class="review-item">
-      <div class="reviewer-info">
-        <strong>${r.firstName}</strong>
-        <div><small>${date}</small></div>
-      </div>
-      <p>⭐ ${r.score}｜${r.comment}</p>
-      ${
-        r.reply
-          ? `
-        <div style="font-size: 14px; color: #555; background: #f6f6f6; padding: 8px; border-left: 3px solid #007bff;">
-          管理員回覆：${r.reply}
-        </div>`
-          : ""
-      }
-    </div>
-  `;
+  const tpl = document.getElementById("review-item-template");
+  if (!tpl) return document.createElement("div");
+  const node = tpl.content.cloneNode(true);
+  // 姓名
+  const nameEl = node.querySelector(".reviewer-info strong");
+  if (nameEl) nameEl.textContent = r.firstName;
+  // 日期
+  const dateEl = node.querySelector(".reviewer-info small");
+  if (dateEl)
+    dateEl.textContent = new Date(r.createdAt).toLocaleDateString("zh-TW");
+  // 評分與內容
+  const p = node.querySelector(".review-item p");
+  if (p) p.textContent = `${r.score}｜${r.comment}`;
+  // 管理員回覆
+  const replyBox = node.querySelector(".reply-box");
+  if (replyBox) {
+    if (r.reply) {
+      replyBox.textContent = `管理員回覆：${r.reply}`;
+      replyBox.classList.remove("d-none");
+    } else {
+      replyBox.classList.add("d-none");
+    }
+  }
+  // 返回
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(node);
+  return wrapper.firstElementChild;
 }
 
 function renderReviewsSection(data) {
@@ -320,14 +363,19 @@ function renderReviewsSection(data) {
   const reviews = data.reviews;
   const maxToShow = 3;
   const firstFive = reviews.slice(0, maxToShow);
-  container.innerHTML = firstFive.map(renderSingleReview).join("");
+  // 使用 fragment 批量 append
+  const frag = document.createDocumentFragment();
+  firstFive.forEach((r) => frag.appendChild(renderSingleReview(r)));
+  container.appendChild(frag);
   if (reviews.length > maxToShow) {
     const btn = document.createElement("button");
     btn.textContent = "查看更多評價";
-    btn.style =
-      "margin-top: 10px; padding: 8px 12px; background:rgba(0, 123, 255, 0.97); color: white; border: none; border-radius: 4px; cursor: pointer;";
+    btn.className = "show-more-reviews-btn";
     btn.addEventListener("click", () => {
-      container.innerHTML = reviews.map(renderSingleReview).join("");
+      container.innerHTML = "";
+      const allFrag = document.createDocumentFragment();
+      reviews.forEach((r) => allFrag.appendChild(renderSingleReview(r)));
+      container.appendChild(allFrag);
       btn.remove();
     });
     container.appendChild(btn);
@@ -359,18 +407,26 @@ function renderHotelDetail(hotel) {
   const introEl = document.querySelector("#hotel-description");
   if (introEl) introEl.textContent = hotel.description;
 
-  const gallery = document.querySelector(".photo-gallery");
-  if (gallery && Array.isArray(hotel.images)) {
-    gallery.innerHTML = hotel.images
-      .map(
-        (img) => `
-      <div class="photo-placeholder">
-        <img src="${img.imgUrl}" width="300" height="200" alt="飯店圖片">
-      </div>
-    `
-      )
-      .join("");
+  const galleryGrid = document.querySelector(".photo-gallery-grid");
+  if (galleryGrid && Array.isArray(hotel.images) && hotel.images.length > 0) {
+    const mainPhotoEl = galleryGrid.querySelector(".main-photo img");
+    if (mainPhotoEl) {
+      mainPhotoEl.src = hotel.images[0].imgUrl;
+      mainPhotoEl.alt = hotel.images[0].alt || "飯店主圖";
+    }
+
+    const subPhotosEl = galleryGrid.querySelector(".sub-photos");
+    if (subPhotosEl) {
+      subPhotosEl.innerHTML = "";
+      hotel.images.slice(1, 5).forEach((img) => {
+        const imgEl = document.createElement("img");
+        imgEl.src = img.imgUrl;
+        imgEl.alt = img.alt || "飯店圖片";
+        subPhotosEl.appendChild(imgEl);
+      });
+    }
   }
+
   const mapFrame = document.getElementById("hotel-map");
   if (mapFrame && hotel.address) {
     const encodedAddress = encodeURIComponent(hotel.address);
@@ -429,9 +485,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- 4. 房型 ----------
   fetchRooms().then((rooms) => {
-    document.getElementById("room-list").innerHTML = rooms
-      .map(renderRoom)
-      .join("");
+    const list = document.getElementById("room-list");
+    list.innerHTML = "";
+    rooms.forEach((room) => {
+      const el = renderRoom(room);
+      list.appendChild(el);
+    });
     setupBookingEvents();
     // 頁面第一次載入時自動抓剩餘庫存
     const checkin = document.getElementById("checkin-date").value;
