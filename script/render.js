@@ -304,14 +304,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutInput = document.getElementById("checkout-date");
 
   if (checkinInput && checkoutInput) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const checkinParam = urlParams.get("checkin");
-    const checkoutParam = urlParams.get("checkout");
-
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
+  
     const format = (d) => {
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -319,9 +316,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return `${yyyy}-${mm}-${dd}`;
     };
 
-    checkinInput.value = checkinParam || format(today);
-    checkoutInput.value = checkoutParam || format(tomorrow);
-
+    checkinInput.value = format(today);
+    checkoutInput.value = format(tomorrow);
     checkinInput.min = format(today);
     checkoutInput.min = format(today);
   }
@@ -358,7 +354,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkin = document.getElementById("checkin-date").value;
   });
 });
- 
+
+
 //跳轉到付款流程
 
 document.querySelector(".booking-btn").addEventListener("click", () => {
