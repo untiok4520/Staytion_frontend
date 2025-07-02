@@ -502,6 +502,7 @@ main .hotel-card {
     transition: box-shadow 0.2s;
     border: 1px solid var(--color-gray);
     display: flex;
+    cursor: pointer;
 }
 
 .hotel-card:hover {
@@ -530,6 +531,13 @@ main .hotel-card {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--color-primary);
+}
+
+.hotel-name a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
 }
 
 .hotel-location {
@@ -854,12 +862,13 @@ main .hotel-card {
         align-items: flex-start;
         gap: 9px;
         padding: 10px 5px;
+        cursor: pointer;
     }
 
     .hotel-image img {
-        width: 100%;
+        width: 200%;
         height: 120px;
-        max-width: 350px;
+        max-width: 200px;
     }
 
     .hotel-extra {
@@ -1029,4 +1038,62 @@ main .hotel-card {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+}
+
+.user-dropdown {
+    background-color: var(--color-light);
+    border-radius: 8px;
+    min-width: 160px;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 2px 10px rgba(55, 105, 150, 0.09);
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.user-dropdown ul,
+.user-dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-dropdown li {
+    padding: 0;
+    margin: 0;
+}
+
+.user-dropdown .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 18px;
+    font-size: 15px;
+    color: #333;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    transition: background 0.16s, color 0.16s;
+    box-sizing: border-box;
+}
+
+.user-dropdown li:first-child .dropdown-item {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.user-dropdown li:last-child .dropdown-item {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.user-dropdown .dropdown-item:hover, 
+.user-dropdown .dropdown-item:focus {
+    background-color: var(--color-primary);
+    color: var(--color-light);
+}
+
+.user-dropdown li,
+.user-dropdown .dropdown-item,
+.user-dropdown li a {
+    border: none !important;
+    border-bottom: none !important;
 }

@@ -2,7 +2,8 @@ $(document).ready(function () {
   const reviewList = $("#reviewList");
   const avgRating = $("#avgRating");
   const hotelSelect = $("select.form-select").first();
-  const ownerId = 201; // TODO: 替換為登入者的 ID
+  const ownerId = localStorage.getItem("userId") || "";
+  // const ownerId = 1; // TODO: 替換為登入者的 ID
   let hotelMap = {};
 
   const token = localStorage.getItem("jwtToken") || "";
@@ -319,4 +320,29 @@ $(document).ready(function () {
   // 初始化
   loadHotels();
   fetchReviews(0);
+});
+// 使用者登入狀態檢查
+$(function () {
+  const token = localStorage.getItem('jwtToken');
+  const userName = localStorage.getItem('userName') || '使用者名稱'; // 可從登入回傳存userName
+
+  const $loginBtn = $('#loginBtn');
+  const $userDropdown = $('#userDropdown');
+  const $logoutBtn = $('#logoutBtn');
+  const $userDropdownToggle = $('#userDropdownMenu');
+
+  if (token) {
+    $loginBtn.addClass('d-none');
+    $userDropdown.removeClass('d-none');
+    $userDropdownToggle.text(userName);
+  } else {
+    $loginBtn.removeClass('d-none');
+    $userDropdown.addClass('d-none');
+  }
+
+  $logoutBtn.on('click', function () {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userName');
+    location.reload();
+  });
 });

@@ -1,4 +1,5 @@
 import { renderIncomingMessage } from "./domUtils.js";
+import { getChatContext } from "./chatContext.js";
 
 let stompClient = null;
 let currentChatRoomId;
@@ -43,26 +44,18 @@ export function subscribeChatRoom(chatRoomId) {
 
 export function sendMessage(content) {
   console.log("sendMessage 被呼叫");
-  if (
-    !stompClient ||
-    !currentChatRoomId ||
-    !currentReceiverId ||
-    !currentHotelId
-  ) {
-    console.log("【條件不符】不送出訊息", {
-      stompClient,
-      currentChatRoomId,
-      currentReceiverId,
-      currentHotelId,
-    });
+  if (!stompClient) return;
+  const { chatRoomId, receiverId, hotelId } = getChatContext();
+  // const senderId = Number(localStorage.getItem("userId"));
+  if (!chatRoomId || !receiverId || !hotelId) {
+    alert("尚未選擇聊天室！");
     return;
   }
-
   const payload = {
-    chatRoomId: Number(currentChatRoomId),
-    senderId: Number(localStorage.getItem("userId")),
-    receiverId: currentReceiverId,
-    hotelId: currentHotelId,
+    chatRoomId,
+    receiverId,
+    // senderId,
+    hotelId,
     content,
   };
   const token = localStorage.getItem("jwtToken");
@@ -72,7 +65,6 @@ export function sendMessage(content) {
     JSON.stringify(payload)
   );
   console.log("準備送出訊息：", content);
-  // return;
 }
 
 export async function loadChatHistory(chatRoomId) {

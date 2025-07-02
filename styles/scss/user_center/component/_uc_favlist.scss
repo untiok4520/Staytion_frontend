@@ -38,7 +38,40 @@
 
     .fav-img {
       height: 150px;
-      background-color: #ccc;
+      width: 100%; /* 讓圖片填滿整個卡片寬度 */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0; /* 消除可能的縫隙 */
+    }
+
+    .fav-img-wrapper {
+      position: relative;
+
+      .fav-img {
+        height: 150px;
+        background-color: #ccc;
+      }
+
+      .fav-heart-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        i {
+          color: #dc3545;
+          font-size: 16px;
+        }
+      }
     }
 
     .fav-content {
@@ -46,7 +79,7 @@
 
       h5 {
         font-weight: bold;
-        margin-bottom: 4px;
+        margin-bottom: 1rem;
       }
 
       .fav-stars {

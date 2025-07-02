@@ -150,7 +150,17 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-primary">登入</button>
+                    <button id="loginBtn" class="btn btn-primary"><a href="../pages/homepage/login.html" class="text-decoration-none text-reset">登入</a></button>
+                    <div id="userDropdown" class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-person-fill"></i>
+                        </button>
+                        <ul class="dropdown-menu user-dropdown text-center dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/pages/usercenter.html">個人資料</a></li>
+                            <li><a class="dropdown-item" href="/pages/homepage/home.html" id="logoutBtn">登出</a></li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -252,7 +262,7 @@
                         <span class="me-1">房型總覽</span>
                         <label for="hotelFilter" class="mb-0" style="color: #c6c6c6;">選擇飯店：</label>
                         <select id="hotelFilter" class="form-select form-select-sm" style="width: auto;">
-                            <option class="disabled" value="">全部飯店</option>
+                            <option class="disabled" value="all">全部飯店</option>
                             <!-- <option value="taipei">台北民宿一館</option>
                             <option value="taichung">台中青年旅店</option>
                             <option value="hualien">花蓮海景套房</option> -->
