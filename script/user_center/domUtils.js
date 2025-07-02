@@ -34,11 +34,11 @@ export function renderChatList(chatList, onItemClick) {
     item.dataset.receiverId = room.receiverId?.id || room.receiverId;
     item.dataset.hotelId = room.hotelId?.id || room.hotelId;
     item.dataset.lastMessage = room.lastMessage || "";
-    item.dataset.hotelName = room.hotelName || room.displayName || "未命名飯店";
+    item.dataset.displayName = room.displayName || "未命名";
 
     item.innerHTML = `
       <div class="chat-hotel-info">
-        <div class="chat-hotel-name">${item.dataset.hotelName}</div>
+        <div class="chat-hotel-name">${item.dataset.displayName}</div>
         <div class="chat-preview">${(item.dataset.lastMessage || "").slice(
           0,
           10
