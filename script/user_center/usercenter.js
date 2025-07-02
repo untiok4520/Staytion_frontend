@@ -16,19 +16,17 @@ import {
 } from "./userOrderService.js";
 import { setChatContext, getChatContext } from "./chatContext.js";
 
-// document.addEventListener('DOMContentLoaded', function () {
-//   // 檢查 localStorage 有沒有 token 或 userId
-//   const token = localStorage.getItem('token');
-//   // 或用 userId 判斷也可以：const userId = localStorage.getItem('userId');
+document.addEventListener("DOMContentLoaded", function () {
+  // 檢查 localStorage 有沒有 token 或 userId
+  const token = localStorage.getItem("jwtToken");
+  // 或用 userId 判斷也可以：const userId = localStorage.getItem('userId');
 
-//   if (!token) {
-//     // 沒有登入，導去登入頁
-//     window.location.href = '/pages/homepage/login.html';
-//     return;
-//   }
-
-//   // 通常可以這裡加載會員資料、渲染頁面內容...
-// });
+  if (!token) {
+    // 沒有登入，導去登入頁
+    window.location.href = "/pages/homepage/login.html";
+    return;
+  }
+});
 
 // document.addEventListener('DOMContentLoaded', function () {
 //   // 檢查 localStorage 有沒有 token 或 userId
@@ -1282,6 +1280,7 @@ function deleteAccountApiCall() {
     .then((data) => {
       alert("帳號已刪除！");
       // 導回首頁
+      logout();
       window.location.href = "/pages/homepage/home.html";
     })
     .catch((err) => {
@@ -1306,10 +1305,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // 登出邏輯
-  const logoutBtn = document.getElementById("logoutBtn");
-  logoutBtn?.addEventListener("click", function () {
+  function logout() {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("userId");
-    location.reload(); // 重新整理頁面回到未登入狀態
-  });
+    window.location.href = "/pages/homepage/home.html";
+  }
+  const logoutBtn = document.getElementById("logoutBtn");
+  logoutBtn?.addEventListener("click", logout);
 });
