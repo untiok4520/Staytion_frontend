@@ -66,6 +66,7 @@
 }
 
 .chat-container .chat-box .chat-header h4 {
+  font-weight: bold;
   margin-bottom: 0;
 }
 

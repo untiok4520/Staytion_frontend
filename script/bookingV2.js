@@ -2,14 +2,15 @@ $(document).ready(function () {
     const apiUrl = "http://localhost:8080/api/admins/orders/filter";
     const hotelSelect = $("select.form-select").first();
 
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem("jwtToken") || "";
+    const ownerId = localStorage.getItem("userId") || "";
     const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
     };
 
     let currentPage = 0;
-    let currentUserId = 1;
+    let currentUserId = ownerId;
 
     let orderData = []; // 儲存當前訂單資料
     let guestData = {}; // 儲存客戶資料（如果有的話）

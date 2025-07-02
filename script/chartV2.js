@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    const ownerId = 1; // 預設 ownerId，可從登入資訊取得
+    const ownerId = localStorage.getItem("userId") || "";
+    // const ownerId = 1; // 預設 ownerId，可從登入資訊取得
     // const headers = {
     //     "Content-Type": "application/json",
     //     Authorization: `Bearer ${token}`,

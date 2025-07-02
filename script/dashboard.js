@@ -3,7 +3,8 @@ let revenueChart = null;
 
 $(function () {
     const token = localStorage.getItem("jwtToken") || "";
-    const ownerId = 1; // TODO: 日後改為從 localStorage 拿值
+    const ownerId = localStorage.getItem("userId") || "";
+    // const ownerId = 1; // TODO: 日後改為從 localStorage 拿值
 
     const today = new Date();
     const currentYear = today.getFullYear();

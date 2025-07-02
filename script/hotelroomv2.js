@@ -1,7 +1,8 @@
 // admin.js
 $(function () {
-    const token = localStorage.getItem("token") || "";
-    const ownerId = 1;
+    const token = localStorage.getItem("jwtToken") || "";
+    // const ownerId = 1;
+    const ownerId = localStorage.getItem("userId") || "";
 
     const headers = {
         "Content-Type": "application/json",
