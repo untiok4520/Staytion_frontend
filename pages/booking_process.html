@@ -95,6 +95,52 @@
       border: 2px solid #376996;
     }
 
+    /* 自訂下拉選單的外觀 */
+    .user-dropdown {
+      background-color: #ffffff;
+      border-radius: 8px;
+      min-width: 160px;
+      padding: 0;
+    }
+
+    /* 調整下拉選單內每個選項的樣式 */
+    .user-dropdown .dropdown-item {
+      padding: 10px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .user-dropdown li:first-child .dropdown-item {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .user-dropdown li:last-child .dropdown-item {
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      border: none;
+    }
+
+    .user-dropdown li a {
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .dropdown-menu {
+      position: absolute !important;
+      z-index: 1050;
+      /* 比 navbar 高即可 */
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+
+    .user-dropdown .dropdown-item:hover {
+      background-color: #376996;
+      color: #fff;
+    }
+
     body {
       background: linear-gradient(to bottom right, #eef7ff, #ffffff);
       font-family: "Segoe UI", sans-serif;
@@ -239,7 +285,23 @@
           </div>
         </li>
         <li class="nav-item">
-          <button class="btn btn-primary">登入</button>
+          <button id="loginBtn" class="btn btn-primary"><a href="/pages/homepage/login.html"
+              class="text-decoration-none text-reset">登入</a></button>
+          <div id="userDropdown" class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="bi bi-person-fill"></i>
+            </button>
+            <ul class="dropdown-menu user-dropdown text-center dropdown-menu-end">
+              <li><a class="dropdown-item" href="/pages/usercenter.html">管理訂單</a></li>
+              <li><a class="dropdown-item" href="#">住宿訊息</a></li>
+              <li><a class="dropdown-item" href="#">住宿評論</a></li>
+              <li><a class="dropdown-item" href="#">個人資料</a></li>
+              <li><a class="dropdown-item" href="#">收藏清單</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutBtn">登出</a></li>
+            </ul>
+          </div>
+
         </li>
       </ul>
     </div>
@@ -398,6 +460,31 @@
       let value = input.value.replace(/\D/g, "").substring(0, 4);
       input.value = value.length > 2 ? value.substring(0, 2) + "/" + value.substring(2) : value;
     }
+
+    // 使用者登入狀態檢查
+    document.addEventListener('DOMContentLoaded', function () {
+      const token = localStorage.getItem('jwtToken');
+      const loginBtn = document.getElementById('loginBtn');
+      const userDropdown = document.getElementById('userDropdown');
+
+      if (token) {
+        // 使用者已登入，顯示 dropdown
+        loginBtn.classList.add('d-none');
+        userDropdown.classList.remove('d-none');
+      } else {
+        // 使用者未登入，顯示登入按鈕
+        loginBtn.classList.remove('d-none');
+        userDropdown.classList.add('d-none');
+      }
+
+      // 登出邏輯
+      const logoutBtn = document.getElementById('logoutBtn');
+      logoutBtn?.addEventListener('click', function () {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('userId');
+        location.reload(); // 重新整理頁面回到未登入狀態
+      });
+    });
 
     // 自動填入訂房資料與會員資料
     document.addEventListener("DOMContentLoaded", function () {

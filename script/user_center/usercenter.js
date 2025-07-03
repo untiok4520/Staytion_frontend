@@ -30,6 +30,20 @@ import { setChatContext, getChatContext } from "./chatContext.js";
 //   // 通常可以這裡加載會員資料、渲染頁面內容...
 // });
 
+// document.addEventListener('DOMContentLoaded', function () {
+//   // 檢查 localStorage 有沒有 token 或 userId
+//   const token = localStorage.getItem('token');
+//   // 或用 userId 判斷也可以：const userId = localStorage.getItem('userId');
+
+//   if (!token) {
+//     // 沒有登入，導去登入頁
+//     window.location.href = '/pages/homepage/login.html';
+//     return;
+//   }
+
+//   // 通常可以這裡加載會員資料、渲染頁面內容...
+// });
+
 //貨幣按鈕
 document
   .querySelectorAll("#currencyModal .modal-body.modal-grid a")
@@ -50,8 +64,8 @@ document
         window.bootstrap && window.bootstrap.Modal
           ? window.bootstrap.Modal.getInstance(modalEl)
           : typeof bootstrap !== "undefined" && bootstrap.Modal
-          ? bootstrap.Modal.getInstance(modalEl)
-          : null;
+            ? bootstrap.Modal.getInstance(modalEl)
+            : null;
       if (modalInstance) modalInstance.hide();
     });
   });
@@ -76,8 +90,8 @@ document
         window.bootstrap && window.bootstrap.Modal
           ? window.bootstrap.Modal.getInstance(modalEl)
           : typeof bootstrap !== "undefined" && bootstrap.Modal
-          ? bootstrap.Modal.getInstance(modalEl)
-          : null;
+            ? bootstrap.Modal.getInstance(modalEl)
+            : null;
       if (modalInstance) modalInstance.hide();
     });
   });
