@@ -793,7 +793,7 @@ document.querySelectorAll(".tab").forEach((tab) => {
   });
 });
 
-// ===================== 住宿訊息聊天室 =====================
+// ===================== 住宿訊息聊天室列表 =====================
 document.addEventListener("DOMContentLoaded", () => {
   connectWebSocket();
   fetch("http://localhost:8080/api/chatrooms/my", {
@@ -819,12 +819,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==================== 點聊天室項目 =====================
 
 async function handleChatListItemClick(item) {
-  // 更新全域變數
+  // 讀取dataset
   const chatRoomId = Number(item.dataset.chatRoomId);
   const receiverId = Number(item.dataset.receiverId);
   const hotelId = Number(item.dataset.hotelId);
-  const hotelName =
-    item.dataset.hotelName ||
+  const displayName =
+    item.dataset.displayName ||
     item.querySelector(".chat-hotel-name").textContent;
   console.log("點擊聊天室：", {
     chatRoomId,
@@ -838,7 +838,7 @@ async function handleChatListItemClick(item) {
   subscribeChatRoom(chatRoomId);
 
   //渲染聊天室頁面
-  renderChatBox(hotelName);
+  renderChatBox(displayName);
 
   //載入歷史訊息
   const history = await loadChatHistory(chatRoomId);

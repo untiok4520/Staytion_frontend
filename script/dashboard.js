@@ -1,72 +1,130 @@
-// admin/index.html 裡面一進來先驗證
-// const token = localStorage.getItem("adminToken"); // 看你後台存的 key 叫什麼
-// if (!token) {
-//   // 沒有 token 直接跳轉
-//   window.location.href = "/pages/homepage/login.html";
-// }
-// 收入趨勢圖
-const ctx = document.getElementById('revenueChart').getContext('2d');
-const revenueChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ['6/1', '6/5', '6/10', '6/15', '6/20', '6/25', '6/30'],
-        datasets: [{
-            label: '收益 (NT$)',
-            data: [10500, 12000, 14800, 15600, 17900, 15200, 16000],
-            backgroundColor: 'rgba(31, 72, 126, 0.2)',
-            borderColor: '#1F487E',
-            borderWidth: 2,
-            tension: 0.3,
-            fill: true,
-            pointRadius: 4,
-            pointHoverRadius: 6
-        }]
-    },
-    options: {
-        scales: {
-            y: { beginAtZero: true }
-        },
-        plugins: {
-            legend: { display: false }
-        }
+let roomTypeChart = null;
+let revenueChart = null;
+
+$(function () {
+    const token = localStorage.getItem("jwtToken") || "";
+    const ownerId = localStorage.getItem("userId") || "";
+    // const ownerId = 1; // TODO: 日後改為從 localStorage 拿值
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1;
+
+    loadSummary(ownerId, currentYear, currentMonth);
+
+    const userName = localStorage.getItem('userName') || '使用者名稱'; // 可從登入回傳存userName
+    const userId = localStorage.getItem('userId') || '使用者代號'; // 可從登入回傳存userName
+
+    const $loginBtn = $('#loginBtn');
+    const $userDropdown = $('#userDropdown');
+    const $logoutBtn = $('#logoutBtn');
+    const $userDropdownToggle = $('#userDropdownMenu');
+
+    if (token) {
+        $loginBtn.addClass('d-none');
+        $userDropdown.removeClass('d-none');
+        $userDropdownToggle.text(userName);
+    } else {
+        $loginBtn.removeClass('d-none');
+        $userDropdown.addClass('d-none');
     }
+
+    $logoutBtn.on('click', function () {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userId');
+        location.reload();
+    });
 });
 
-// 房型圓餅圖
-const roomTypeCtx = document.getElementById('roomTypeChart').getContext('2d');
-const roomTypeChart = new Chart(roomTypeCtx, {
-    type: 'doughnut',
-    data: {
-        labels: ['雙人房', '單人房', '家庭房', '豪華套房'],
-        datasets: [{
-            label: '訂單數量',
-            data: [45, 20, 25, 10],
-            backgroundColor: ['#1F487E', '#4BA3C3', '#78C2AD', '#FFD166'],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        plugins: {
-            legend: {
-                position: 'bottom',
+// 從後端取得統計摘要資料
+function loadSummary(ownerId, year, month) {
+    $.ajax({
+        url: `http://localhost:8080/api/statistics/summary`,
+        method: 'GET',
+        data: { ownerId, year, month },
+        success: function (data) {
+            console.log("Summary data:", data);
+
+            $('#yearRevenue').text(`$${(data.yearRevenue || 0).toLocaleString()}`);
+            $('#monthRevenue').text(`$${(data.monthRevenue || 0).toLocaleString()}`);
+            $('#totalRevenue').text(`$${(data.totalRevenue || 0).toLocaleString()}`);
+            $('#occupancyRate').text(`${data.occupancyRate || 0}%`);
+            $('#totalOrders').text(`${data.orderCount || 0} 筆`);
+            $('#averagePrice').text(`$${data.averagePrice || 0}`);
+
+            renderRoomTypeChart(data.roomTypeChart || []);
+            renderRevenueTrendChart(data.trendChart || []);
+        },
+        error: function () {
+            alert('載入統計資料失敗，請稍後再試');
+        }
+    });
+}
+
+// 房型分布圓餅圖
+function renderRoomTypeChart(data) {
+    const labels = data.map(d => d.label);
+    const values = data.map(d => d.value);
+
+    if (roomTypeChart) roomTypeChart.destroy();
+
+    const ctx = document.getElementById('roomTypeChart');
+    if (!ctx) return;
+
+    roomTypeChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{
+                data: values,
+                backgroundColor: ['#1F487E', '#376996', '#4BA3C3', '#78C2AD', '#FFD166'],
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
             }
         }
-    }
-});
+    });
+}
 
-// KPI 假資料即時更新模擬
-// function getRandomInt(min, max) {
-//     return Math.floor(Math.random() * (max - min + 1) + min);
-// }
+// 收入趨勢折線圖
+function renderRevenueTrendChart(data) {
+    const labels = data.map(d => d.label);
+    const values = data.map(d => d.value);
 
-// setInterval(() => {
-//     const revenue = document.querySelectorAll('.card-body p')[0];
-//     const orders = document.querySelectorAll('.card-body p')[1];
-//     const occupancy = document.querySelectorAll('.card-body p')[2];
-//     const comments = document.querySelectorAll('.card-body p')[3];
+    const canvas = document.getElementById('revenueChart');
+    if (!canvas) return;
 
-//     revenue.textContent = 'NT$ ' + getRandomInt(100000, 150000).toLocaleString();
-//     orders.textContent = getRandomInt(20, 40) + ' 筆';
-//     occupancy.textContent = getRandomInt(60, 90) + '%';
-//     comments.textContent = getRandomInt(2, 10) + ' 則';
-// }, 5000);
+    const ctx = canvas.getContext('2d');
+    if (revenueChart) revenueChart.destroy();
+
+    revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: '每日收入 (NT$)',
+                data: values,
+                borderColor: '#1F487E',
+                backgroundColor: 'rgba(31,72,126,0.2)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
