@@ -33,10 +33,6 @@
         margin-bottom: 12px;
       }
 
-      .stars {
-        margin-bottom: 12px;
-      }
-
       .dates {
         display: flex;
         justify-content: flex-start;
@@ -73,6 +69,19 @@
       .contact {
         font-size: 14px;
         margin: 12px 0;
+      }
+      .chat {
+        font-size: 16px;
+        font-weight: bold;
+        color: v.$primary;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        i {
+          margin-right: 6px;
+        }
+        a {
+          text-decoration: none;
+        }
       }
     }
     .right-section {

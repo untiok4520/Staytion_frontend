@@ -12304,9 +12304,6 @@ footer a:hover {
   font-size: 20px;
   margin-bottom: 12px;
 }
-.order-detail-panel .order-header .left-section .stars {
-  margin-bottom: 12px;
-}
 .order-detail-panel .order-header .left-section .dates {
   display: flex;
   justify-content: flex-start;
@@ -12338,6 +12335,19 @@ footer a:hover {
 .order-detail-panel .order-header .left-section .contact {
   font-size: 14px;
   margin: 12px 0;
+}
+.order-detail-panel .order-header .left-section .chat {
+  font-size: 16px;
+  font-weight: bold;
+  color: #376996;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.order-detail-panel .order-header .left-section .chat i {
+  margin-right: 6px;
+}
+.order-detail-panel .order-header .left-section .chat a {
+  text-decoration: none;
 }
 .order-detail-panel .order-header .right-section {
   flex: 1;
