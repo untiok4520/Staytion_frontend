@@ -454,7 +454,6 @@
               name="paymentMethod"
               value="credit"
               class="form-check-input"
-              checked
             />信用卡付款
           </label>
           <label class="form-check-label me-3">
@@ -692,11 +691,22 @@
         fetchAndRenderUserProfile();
 
         // 頁面載入後顯示正確付款方式表單
-        const selectedRadio = document.querySelector(
-          'input[name="paymentMethod"]:checked'
-        );
-        if (selectedRadio) {
-          selectedRadio.dispatchEvent(new Event("change"));
+        const savedMethod = sessionStorage.getItem("paymentMethod");
+        if (savedMethod) {
+          const radio = document.querySelector(
+            `input[name="paymentMethod"][value="${savedMethod.toLowerCase()}"]`
+          );
+          if (radio) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event("change"));
+          }
+        } else {
+          const selectedRadio = document.querySelector(
+            'input[name="paymentMethod"]:checked'
+          );
+          if (selectedRadio) {
+            selectedRadio.dispatchEvent(new Event("change"));
+          }
         }
 
         // 綠界付款按鈕

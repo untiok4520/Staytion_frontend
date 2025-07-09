@@ -130,13 +130,15 @@ $(document).ready(function () {
             <div class="card-body">
               <div class="d-flex justify-content-between mb-2">
                 <div>
-                  <h6 class="mb-1">${r.firstName} · ${r.hotelName || "飯店"
-        }</h6>
+                  <h6 class="mb-1">${r.firstName} · ${
+        r.hotelName || "飯店"
+      }</h6>
                   <small class="text-muted">留言時間：${createdDate}</small>
                 </div>
                 <div>
-                  <span class="badge fs-6" style="background-color:#1f487e">${r.score
-        }</span>
+                  <span class="badge fs-6" style="background-color:#1f487e">${
+                    r.score
+                  }</span>
                 </div>
               </div>
               <p>${r.comment}</p>
@@ -148,8 +150,9 @@ $(document).ready(function () {
               <div class="collapse mt-2" id="replyBox${r.orderId}">
                 <textarea class="form-control mb-2" rows="2" placeholder="輸入回覆內容..."></textarea>
                 <div class="text-end">
-                  <button class="btn btn-primary btn-sm send-reply-btn" data-order-id="${r.orderId
-        }">送出回覆</button>
+                  <button class="btn btn-primary btn-sm send-reply-btn" data-order-id="${
+                    r.orderId
+                  }">送出回覆</button>
                 </div>
               </div>
             </div>
@@ -193,13 +196,14 @@ $(document).ready(function () {
     $.ajax({
       url: `http://localhost:8080/api/reviews/${orderId}/reply`,
       method: "PATCH",
+      headers,
       contentType: "application/json",
       data: JSON.stringify({ reply }),
       success: function () {
         fetchReviews(currentPage);
         const toastEl = $("#replyToast");
-        const toastBody = toastEl.find('.toast-body');
-        toastBody.text('回覆已送出！');
+        const toastBody = toastEl.find(".toast-body");
+        toastBody.text("回覆已送出！");
         if (toastEl.length) new bootstrap.Toast(toastEl[0]).show();
       },
       error: function () {
@@ -238,8 +242,8 @@ $(document).ready(function () {
         fetchReviews(currentPage); // Refresh the reviews to show updated content
         const toastEl = $("#replyToast");
         // 為了區分回覆和修改，可以修改 Toast 內容
-        const toastBody = toastEl.find('.toast-body');
-        toastBody.text('回覆已更新！');
+        const toastBody = toastEl.find(".toast-body");
+        toastBody.text("回覆已更新！");
         if (toastEl.length) new bootstrap.Toast(toastEl[0]).show();
       },
       error: function () {
@@ -271,8 +275,9 @@ $(document).ready(function () {
     let html = "";
 
     html += `<li class="page-item ${current === 0 ? "disabled" : ""}">
-                  <a class="page-link" href="#" data-page="${current - 1
-      }">上一頁</a>
+                  <a class="page-link" href="#" data-page="${
+                    current - 1
+                  }">上一頁</a>
               </li>`;
 
     let start = Math.max(0, current - Math.floor(maxVisible / 2));
@@ -287,8 +292,7 @@ $(document).ready(function () {
 
     for (let i = start; i <= end; i++) {
       html += `<li class="page-item ${i === current ? "active" : ""}">
-                    <a class="page-link" href="#" data-page="${i}">${i + 1
-        }</a>
+                    <a class="page-link" href="#" data-page="${i}">${i + 1}</a>
                 </li>`;
     }
 
@@ -296,13 +300,15 @@ $(document).ready(function () {
       if (end < total - 2) {
         html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
       }
-      html += `<li class="page-item"><a class="page-link" href="#" data-page="${total - 1
-        }">${total}</a></li>`;
+      html += `<li class="page-item"><a class="page-link" href="#" data-page="${
+        total - 1
+      }">${total}</a></li>`;
     }
 
     html += `<li class="page-item ${current + 1 >= total ? "disabled" : ""}">
-                  <a class="page-link" href="#" data-page="${current + 1
-      }">下一頁</a>
+                  <a class="page-link" href="#" data-page="${
+                    current + 1
+                  }">下一頁</a>
               </li>`;
 
     $pagination.append(html);
@@ -323,26 +329,26 @@ $(document).ready(function () {
 });
 // 使用者登入狀態檢查
 $(function () {
-  const token = localStorage.getItem('jwtToken');
-  const userName = localStorage.getItem('userName') || '使用者名稱'; // 可從登入回傳存userName
+  const token = localStorage.getItem("jwtToken");
+  const userName = localStorage.getItem("userName") || "使用者名稱"; // 可從登入回傳存userName
 
-  const $loginBtn = $('#loginBtn');
-  const $userDropdown = $('#userDropdown');
-  const $logoutBtn = $('#logoutBtn');
-  const $userDropdownToggle = $('#userDropdownMenu');
+  const $loginBtn = $("#loginBtn");
+  const $userDropdown = $("#userDropdown");
+  const $logoutBtn = $("#logoutBtn");
+  const $userDropdownToggle = $("#userDropdownMenu");
 
   if (token) {
-    $loginBtn.addClass('d-none');
-    $userDropdown.removeClass('d-none');
+    $loginBtn.addClass("d-none");
+    $userDropdown.removeClass("d-none");
     $userDropdownToggle.text(userName);
   } else {
-    $loginBtn.removeClass('d-none');
-    $userDropdown.addClass('d-none');
+    $loginBtn.removeClass("d-none");
+    $userDropdown.addClass("d-none");
   }
 
-  $logoutBtn.on('click', function () {
-    localStorage.removeItem('jwtToken');
-    localStorage.removeItem('userName');
+  $logoutBtn.on("click", function () {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userName");
     location.reload();
   });
 });
