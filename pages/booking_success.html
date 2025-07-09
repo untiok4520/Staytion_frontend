@@ -865,9 +865,9 @@
       // 主要成功頁渲染
       document.addEventListener("DOMContentLoaded", function () {
         const resultData = JSON.parse(
-          localStorage.getItem("bookingData") || "{}"
+          sessionStorage.getItem("bookingResult") || "{}"
         );
-        if (!bookingData || Object.keys(bookingData).length === 0) {
+        if (!resultData || !resultData.bookingData) {
           alert("找不到訂單資料，請重新下訂！");
           // window.location.href = "index.html";
           return;
@@ -902,7 +902,7 @@
         <li><strong>Email：</strong>${userInfo.email}</li>
       `;
         document.getElementById("orderInfoList").innerHTML = orderInfoHTML;
-        sessionStorage.removeItem("bookingResult");
+        // sessionStorage.removeItem("bookingResult");
       });
     </script>
     <!-- JS區塊 End -->

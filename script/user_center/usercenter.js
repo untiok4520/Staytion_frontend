@@ -62,8 +62,8 @@ document
         window.bootstrap && window.bootstrap.Modal
           ? window.bootstrap.Modal.getInstance(modalEl)
           : typeof bootstrap !== "undefined" && bootstrap.Modal
-            ? bootstrap.Modal.getInstance(modalEl)
-            : null;
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
       if (modalInstance) modalInstance.hide();
     });
   });
@@ -88,8 +88,8 @@ document
         window.bootstrap && window.bootstrap.Modal
           ? window.bootstrap.Modal.getInstance(modalEl)
           : typeof bootstrap !== "undefined" && bootstrap.Modal
-            ? bootstrap.Modal.getInstance(modalEl)
-            : null;
+          ? bootstrap.Modal.getInstance(modalEl)
+          : null;
       if (modalInstance) modalInstance.hide();
     });
   });
@@ -403,6 +403,9 @@ function showOrderDetail(detail) {
   ).textContent = `TWD ${detail.total.toFixed(2)}`;
   document.getElementById("detail-cardType").textContent = detail.cardType;
   document.getElementById("detail-cardMasked").textContent = detail.cardMasked;
+  document
+    .querySelector(".send-msg")
+    .setAttribute("data-hotel-id", detail.hotelId);
 
   detailPanel.style.display = "block";
 
@@ -712,6 +715,86 @@ function showOrderDetail(detail) {
     });
 }
 
+//訂單詳情--傳送訊息
+document.querySelectorAll(".send-msg").forEach((el) => {
+  el.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const hotelId = el.getAttribute("data-hotel-id");
+
+    if (!hotelId) {
+      alert("無法取得 hotelId");
+      return;
+    }
+
+    try {
+      // 呼叫你新建的查房東 API
+      const receiverId = await getHostUserId(hotelId);
+
+      // 建立或查找聊天室
+      const chatRoomId = await createOrGetChatRoom(receiverId, hotelId);
+
+      switchPageToMessages(chatRoomId);
+      await fetchChatList();
+    } catch (err) {
+      console.error(err);
+      alert("建立聊天室失敗：" + err.message);
+    }
+  });
+});
+
+//取得房東userId
+async function getHostUserId(hotelId) {
+  const res = await fetch(`http://localhost:8080/api/hotels/${hotelId}/owner`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("查詢房東失敗");
+  }
+
+  const data = await res.json();
+  return data.hostUserId;
+}
+
+//取得或建立聊天室
+async function createOrGetChatRoom(receiverId, hotelId) {
+  const res = await fetch(
+    "http://localhost:8080/api/chatrooms/find-or-create",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+      body: JSON.stringify({
+        receiverId,
+        hotelId,
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("建立或取得聊天室失敗");
+  }
+
+  const data = await res.json();
+  return data.chatRoomId;
+}
+
+//跳轉到住宿訊息
+function switchPageToMessages(chatRoomId) {
+  document
+    .querySelectorAll(".content-page")
+    .forEach((page) => (page.style.display = "none"));
+
+  document.getElementById("messages").style.display = "block";
+
+  // 也可以在這裡呼叫 loadChatRoom(chatRoomId)
+}
+
 // ============ 訂單編號查詢功能 =============
 function setActiveTab(type) {
   document
@@ -806,26 +889,26 @@ document.querySelectorAll(".tab").forEach((tab) => {
 });
 
 // ===================== 住宿訊息聊天室列表 =====================
+async function fetchChatList() {
+  try {
+    const res = await fetch("http://localhost:8080/api/chatrooms/my", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("未授權或伺服器錯誤");
+    }
+    const chatList = await res.json();
+    console.log("重新取得 chatList：", chatList);
+    renderChatList(chatList, handleChatListItemClick);
+  } catch (err) {
+    console.error("無法取得聊天室列表：", err);
+  }
+}
 document.addEventListener("DOMContentLoaded", () => {
   connectWebSocket();
-  fetch("http://localhost:8080/api/chatrooms/my", {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-    },
-  })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error("未授權或伺服器錯誤");
-      }
-      return res.json();
-    })
-    .then((chatList) => {
-      console.log("後端傳來的chatList：", chatList);
-      renderChatList(chatList, handleChatListItemClick);
-    })
-    .catch((err) => {
-      console.error("無法取得聊天室列表：", err);
-    });
+  fetchChatList();
 });
 
 // ==================== 點聊天室項目 =====================
