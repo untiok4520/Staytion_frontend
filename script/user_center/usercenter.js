@@ -16,6 +16,18 @@ import {
 } from "./userOrderService.js";
 import { setChatContext, getChatContext } from "./chatContext.js";
 
+document.addEventListener("DOMContentLoaded", function () {
+  // 檢查 localStorage 有沒有 token 或 userId
+  const token = localStorage.getItem("jwtToken");
+  // 或用 userId 判斷也可以：const userId = localStorage.getItem('userId');
+
+  if (!token) {
+    // 沒有登入，導去登入頁
+    window.location.href = "/pages/homepage/login.html";
+    return;
+  }
+});
+
 // document.addEventListener('DOMContentLoaded', function () {
 //   // 檢查 localStorage 有沒有 token 或 userId
 //   const token = localStorage.getItem('token');
@@ -391,6 +403,9 @@ function showOrderDetail(detail) {
   ).textContent = `TWD ${detail.total.toFixed(2)}`;
   document.getElementById("detail-cardType").textContent = detail.cardType;
   document.getElementById("detail-cardMasked").textContent = detail.cardMasked;
+  document
+    .querySelector(".send-msg")
+    .setAttribute("data-hotel-id", detail.hotelId);
 
   detailPanel.style.display = "block";
 
@@ -700,6 +715,86 @@ function showOrderDetail(detail) {
     });
 }
 
+//訂單詳情--傳送訊息
+document.querySelectorAll(".send-msg").forEach((el) => {
+  el.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const hotelId = el.getAttribute("data-hotel-id");
+
+    if (!hotelId) {
+      alert("無法取得 hotelId");
+      return;
+    }
+
+    try {
+      // 呼叫你新建的查房東 API
+      const receiverId = await getHostUserId(hotelId);
+
+      // 建立或查找聊天室
+      const chatRoomId = await createOrGetChatRoom(receiverId, hotelId);
+
+      switchPageToMessages(chatRoomId);
+      await fetchChatList();
+    } catch (err) {
+      console.error(err);
+      alert("建立聊天室失敗：" + err.message);
+    }
+  });
+});
+
+//取得房東userId
+async function getHostUserId(hotelId) {
+  const res = await fetch(`http://localhost:8080/api/hotels/${hotelId}/owner`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("查詢房東失敗");
+  }
+
+  const data = await res.json();
+  return data.hostUserId;
+}
+
+//取得或建立聊天室
+async function createOrGetChatRoom(receiverId, hotelId) {
+  const res = await fetch(
+    "http://localhost:8080/api/chatrooms/find-or-create",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+      body: JSON.stringify({
+        receiverId,
+        hotelId,
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("建立或取得聊天室失敗");
+  }
+
+  const data = await res.json();
+  return data.chatRoomId;
+}
+
+//跳轉到住宿訊息
+function switchPageToMessages(chatRoomId) {
+  document
+    .querySelectorAll(".content-page")
+    .forEach((page) => (page.style.display = "none"));
+
+  document.getElementById("messages").style.display = "block";
+
+  // 也可以在這裡呼叫 loadChatRoom(chatRoomId)
+}
+
 // ============ 訂單編號查詢功能 =============
 function setActiveTab(type) {
   document
@@ -794,26 +889,26 @@ document.querySelectorAll(".tab").forEach((tab) => {
 });
 
 // ===================== 住宿訊息聊天室列表 =====================
+async function fetchChatList() {
+  try {
+    const res = await fetch("http://localhost:8080/api/chatrooms/my", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error("未授權或伺服器錯誤");
+    }
+    const chatList = await res.json();
+    console.log("重新取得 chatList：", chatList);
+    renderChatList(chatList, handleChatListItemClick);
+  } catch (err) {
+    console.error("無法取得聊天室列表：", err);
+  }
+}
 document.addEventListener("DOMContentLoaded", () => {
   connectWebSocket();
-  fetch("http://localhost:8080/api/chatrooms/my", {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-    },
-  })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error("未授權或伺服器錯誤");
-      }
-      return res.json();
-    })
-    .then((chatList) => {
-      console.log("後端傳來的chatList：", chatList);
-      renderChatList(chatList, handleChatListItemClick);
-    })
-    .catch((err) => {
-      console.error("無法取得聊天室列表：", err);
-    });
+  fetchChatList();
 });
 
 // ==================== 點聊天室項目 =====================
@@ -1225,3 +1320,79 @@ function renderFavorites(favList) {
     grid.appendChild(card);
   });
 }
+
+//============== 刪除帳號 ===============
+document.addEventListener("DOMContentLoaded", () => {
+  const deleteAccountField = document.querySelector(
+    ".profile-field.delete-account"
+  );
+  const deleteModal = document.getElementById("deleteAccountModal");
+  const cancelBtn = document.getElementById("cancelDeleteAccountBtn");
+  const confirmBtn = document.getElementById("confirmDeleteAccountBtn");
+
+  if (deleteAccountField && deleteModal && cancelBtn && confirmBtn) {
+    deleteAccountField.addEventListener("click", () => {
+      deleteModal.style.display = "flex";
+    });
+
+    cancelBtn.addEventListener("click", () => {
+      deleteModal.style.display = "none";
+    });
+
+    confirmBtn.addEventListener("click", () => {
+      deleteModal.style.display = "none";
+      deleteAccountApiCall();
+    });
+  }
+});
+
+function deleteAccountApiCall() {
+  fetch("http://localhost:8080/api/user/delete-account", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("刪除失敗");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      alert("帳號已刪除！");
+      // 導回首頁
+      logout();
+      window.location.href = "/pages/homepage/home.html";
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("刪除失敗，請稍後再試！");
+    });
+}
+//登入鈕登入狀態檢查
+document.addEventListener("DOMContentLoaded", function () {
+  const token = localStorage.getItem("jwtToken");
+  const loginBtn = document.getElementById("loginBtn");
+  const userDropdown = document.getElementById("userDropdown");
+
+  if (token) {
+    // 使用者已登入，顯示 dropdown
+    loginBtn.classList.add("d-none");
+    userDropdown.classList.remove("d-none");
+  } else {
+    // 使用者未登入，顯示登入按鈕
+    loginBtn.classList.remove("d-none");
+    userDropdown.classList.add("d-none");
+  }
+
+  // 登出邏輯
+  function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userId");
+    window.location.href = "/pages/homepage/home.html";
+  }
+  const logoutBtn = document.getElementById("logoutBtn");
+  logoutBtn?.addEventListener("click", logout);
+});

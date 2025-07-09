@@ -1,520 +1,779 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>預訂流程 - 輸入個人資料</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      .navbar-shared {
+        background-color: #fff;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>預訂流程 - 輸入個人資料</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <style>
-    .navbar-shared {
-      background-color: #fff;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
+      .navbar-shared .container-fluid {
+        display: flex;
+        align-items: center;
+      }
 
-    .navbar-shared .container-fluid {
-      display: flex;
-      align-items: center;
-    }
+      .navbar-shared .logo_img {
+        width: 250px;
+        height: auto;
+      }
 
-    .navbar-shared .logo_img {
-      width: 250px;
-      height: auto;
-    }
+      .navbar-shared .navbar-nav {
+        display: flex;
+        justify-content: end;
+        flex-direction: row;
+        gap: 1rem;
+        margin-right: 1rem;
+      }
 
-    .navbar-shared .navbar-nav {
-      display: flex;
-      justify-content: end;
-      flex-direction: row;
-      gap: 1rem;
-      margin-right: 1rem;
-    }
+      .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3rem;
+      }
 
-    .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 3rem;
-    }
+      .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid > a,
+      .navbar-shared .modal-body.modal-grid > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 50px;
+        border-radius: 1rem;
+        transition: all 0.2s;
+        text-align: center;
+      }
 
-    .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid>a,
-    .navbar-shared .modal-body.modal-grid>div {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 200px;
-      height: 50px;
-      border-radius: 1rem;
-      transition: all 0.2s;
-      text-align: center;
-    }
+      .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid > a {
+        color: black;
+        text-decoration: none;
+      }
 
-    .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid>a {
-      color: black;
-      text-decoration: none;
-    }
+      .navbar-shared .modal-body.modal-grid > div span.fi {
+        margin-right: 10px;
+      }
 
-    .navbar-shared .modal-body.modal-grid>div span.fi {
-      margin-right: 10px;
-    }
+      .navbar-shared .modal-body.modal-grid > a:hover,
+      .navbar-shared .modal-body.modal-grid > div:hover {
+        background-color: rgba(55, 106, 150, 0.3);
+        cursor: pointer;
+      }
 
-    .navbar-shared .modal-body.modal-grid>a:hover,
-    .navbar-shared .modal-body.modal-grid>div:hover {
-      background-color: rgba(55, 106, 150, 0.3);
-      cursor: pointer;
-    }
+      .navbar-shared .btn {
+        padding: 0.375rem 1rem;
+        min-width: 80px;
+        border-radius: 1rem;
+        transition: all 0.3s;
+      }
 
-    .navbar-shared .btn {
-      padding: 0.375rem 1rem;
-      min-width: 80px;
-      border-radius: 1rem;
-      transition: all 0.3s;
-    }
+      .navbar-shared .btn:hover {
+        background-color: white;
+        color: #376996;
+      }
 
-    .navbar-shared .btn:hover {
-      background-color: white;
-      color: #376996;
-    }
+      .navbar-shared .btn-primary {
+        background-color: #376996;
+        border: 1px solid #376996;
+      }
 
-    .navbar-shared .btn-primary {
-      background-color: #376996;
-      border: 1px solid #376996;
-    }
+      .navbar-shared .btn-outline-primary {
+        border: 1px solid #376996;
+        color: #376996;
+      }
 
-    .navbar-shared .btn-outline-primary {
-      border: 1px solid #376996;
-      color: #376996;
-    }
+      .navbar-shared .btn-outline-primary:hover {
+        background-color: transparent;
+        color: #376996;
+        border: 2px solid #376996;
+      }
 
-    .navbar-shared .btn-outline-primary:hover {
-      background-color: transparent;
-      color: #376996;
-      border: 2px solid #376996;
-    }
+      /* 自訂下拉選單的外觀 */
+      .user-dropdown {
+        background-color: #ffffff;
+        border-radius: 8px;
+        min-width: 160px;
+        padding: 0;
+      }
 
-    body {
-      background: linear-gradient(to bottom right, #eef7ff, #ffffff);
-      font-family: "Segoe UI", sans-serif;
-    }
+      /* 調整下拉選單內每個選項的樣式 */
+      .user-dropdown .dropdown-item {
+        padding: 10px;
+        font-size: 15px;
+        color: #333;
+      }
 
-    .step-indicator {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      background-color: #e6f0ff;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1.5rem 0;
-      color: #003580;
-      font-weight: 600;
-    }
+      .user-dropdown li:first-child .dropdown-item {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
 
-    .section-title {
-      border-left: 5px solid #0071c2;
-      padding-left: 0.75rem;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-      color: #003580;
-    }
+      .user-dropdown li:last-child .dropdown-item {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border: none;
+      }
 
-    .form-control:focus {
-      border-color: #0071c2;
-      box-shadow: 0 0 0 0.2rem rgba(0, 113, 194, 0.25);
-    }
+      .user-dropdown li a {
+        border-bottom: 1px solid #e0e0e0;
+      }
 
-    .card-hover:hover {
-      background-color: #f8f9fa;
-      transform: scale(1.01);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s;
-    }
+      .dropdown-menu {
+        position: absolute !important;
+        z-index: 1050;
+        /* 比 navbar 高即可 */
+      }
 
-    .alert-info {
-      background-color: #e6f4ff;
-      border-left: 5px solid #0071c2;
-      color: #003580;
-    }
+      .dropdown {
+        position: relative;
+      }
 
-    .btn-next {
-  background-color: #0071c2;
+      .user-dropdown .dropdown-item:hover {
+        background-color: #376996;
+        color: #fff;
+      }
+
+      body {
+        background: linear-gradient(to bottom right, #eef7ff, #ffffff);
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .step-indicator {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #e6f0ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        color: #003580;
+        font-weight: 600;
+      }
+
+      .section-title {
+        border-left: 5px solid #0071c2;
+        padding-left: 0.75rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #003580;
+      }
+
+      .form-control:focus {
+        border-color: #0071c2;
+        box-shadow: 0 0 0 0.2rem rgba(0, 113, 194, 0.25);
+      }
+
+      .card-hover:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+
+      .alert-info {
+        background-color: #e6f4ff;
+        border-left: 5px solid #0071c2;
+        color: #003580;
+      }
+
+      .btn-next {
+        background-color: #0071c2;
+        color: #fff;
+        font-size: 1.1rem;
+      }
+
+  .btn-next:hover {
+    background-color: #005999;
   color: #fff;
-  font-size: 1.1rem;
-  border: none; /* 如果不需要邊框可以加上 */
-  transition: all 0.3s ease; /* 增加滑入過渡效果 */
-}
+  }
+    </style>
+  </head>
 
-.btn-next:hover {
-  background-color: #005999;
-  color: #fff;
-}
-  </style>
-</head>
-
-<body>
-  <!-- ✅ 共用 Navbar -->
-  <!-- ✅ 共用 Navbar -->
-  <nav class="navbar-shared navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/pages/homepage/home.html">
-        <img src="../assets/logo.png" class="logo_img" alt="logo" />
-      </a>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#currencyModal">
-            TWD
-          </button>
-          <div class="modal fade" id="currencyModal" tabindex="-1" aria-labelledby="currencyModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-xl">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">選擇您使用的貨幣</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body modal-grid">
-                  <a href="#">新台幣<br />TWD</a>
-                  <a href="#">日元<br />JPY</a>
-                  <a href="#">美元<br />USD</a>
-                  <a href="#">歐元<br />EUR</a>
-                  <a href="#">港幣<br />HKD</a>
-                  <a href="#">人民幣<br />CNY</a>
-                  <a href="#">英鎊<br />GBP</a>
-                  <a href="#">丹麥克朗<br />DKK</a>
-                  <a href="#">亞賽拜然新馬納特<br />AZN</a>
-                  <a href="#">以色列新謝克爾<br />ILS</a>
-                  <a href="#">俄羅斯盧布<br />RUB</a>
-                  <a href="#">保加利亞列弗<br />BGN</a>
-                  <a href="#">冰島克朗<br />ISK</a>
-                  <a href="#">加幣<br />CAD</a>
-                  <a href="#">匈牙利福林<br />HUF</a>
-                  <a href="#">南非鍰<br />ZAR</a>
-                  <a href="#">卡達里亞爾<br />QAR</a>
-                  <a href="#">印尼盾<br />IDR</a>
-                  <a href="#">印度盧比 <br />INR</a>
-                  <a href="#">哈薩克坦吉<br />KZT</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li class="nav-item">
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#languageModal">
-            <span class="fi fi-tw fis"></span>
-          </button>
-          <div class="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-xl">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">選擇您使用的語言</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body modal-grid">
-                  <div><span class="fi fi-tw fis"></span>繁體中文</div>
-                  <div><span class="fi fi-gb fis"></span>English(UK)</div>
-                  <div><span class="fi fi-us fis"></span>English(UA)</div>
-                  <div><span class="fi fi-jp fis"></span>日本語</div>
-                  <div><span class="fi fi-fr fis"></span>Français</div>
-                  <div><span class="fi fi-de fis"></span>Deutsch</div>
-                  <div><span class="fi fi-it fis"></span>Italiano</div>
-                  <div><span class="fi fi-es fis"></span>Español</div>
-                  <div><span class="fi fi-kr fis"></span>한국어</div>
-                  <div><span class="fi fi-cn fis"></span>简体中文</div>
-                  <div><span class="fi fi-hk fis"></span>粵語</div>
-                  <div><span class="fi fi-ru fis"></span>Русский</div>
-                  <div><span class="fi fi-th fis"></span>ไทย</div>
-                  <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
-                  <div>
-                    <span class="fi fi-id fis"></span>Bahasa Indonesia
+  <body>
+    <!-- ✅ 共用 Navbar -->
+    <!-- ✅ 共用 Navbar -->
+    <nav class="navbar-shared navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/pages/homepage/home.html">
+          <img src="../assets/logo.png" class="logo_img" alt="logo" />
+        </a>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#currencyModal"
+            >
+              TWD
+            </button>
+            <div
+              class="modal fade"
+              id="currencyModal"
+              tabindex="-1"
+              aria-labelledby="currencyModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的貨幣</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
                   </div>
-                  <div><span class="fi fi-my fis"></span>Bahasa Melayu</div>
-                  <div><span class="fi fi-ph fis"></span>Filipino</div>
-                  <div><span class="fi fi-in fis"></span>हिन्दी</div>
-                  <div><span class="fi fi-tr fis"></span>Türkçe</div>
-                  <div><span class="fi fi-sa fis"></span>العربية</div>
+                  <div class="modal-body modal-grid">
+                    <a href="#">新台幣<br />TWD</a>
+                    <a href="#">日元<br />JPY</a>
+                    <a href="#">美元<br />USD</a>
+                    <a href="#">歐元<br />EUR</a>
+                    <a href="#">港幣<br />HKD</a>
+                    <a href="#">人民幣<br />CNY</a>
+                    <a href="#">英鎊<br />GBP</a>
+                    <a href="#">丹麥克朗<br />DKK</a>
+                    <a href="#">亞賽拜然新馬納特<br />AZN</a>
+                    <a href="#">以色列新謝克爾<br />ILS</a>
+                    <a href="#">俄羅斯盧布<br />RUB</a>
+                    <a href="#">保加利亞列弗<br />BGN</a>
+                    <a href="#">冰島克朗<br />ISK</a>
+                    <a href="#">加幣<br />CAD</a>
+                    <a href="#">匈牙利福林<br />HUF</a>
+                    <a href="#">南非鍰<br />ZAR</a>
+                    <a href="#">卡達里亞爾<br />QAR</a>
+                    <a href="#">印尼盾<br />IDR</a>
+                    <a href="#">印度盧比 <br />INR</a>
+                    <a href="#">哈薩克坦吉<br />KZT</a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </li>
-        <li class="nav-item">
-          <button class="btn btn-primary">登入</button>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <!-- 頁面內容 -->
-  <div class="container my-4">
-    <div class="step-indicator">
-      <span><i class="bi bi-check-circle-fill me-1"></i>選擇房型與日期</span>
-      <span>② 新增入住資訊</span>
-      <span>③ 完成預訂</span>
-    </div>
-    <!-- 訂房資訊 -->
-    <div class="card p-4 mb-4 shadow-sm card-hover">
-      <div class="section-title h5 mb-3 text-primary">
-        <i class="bi bi-calendar-event me-2"></i>訂房資訊
+          </li>
+          <li class="nav-item">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#languageModal"
+            >
+              <span class="fi fi-tw fis"></span>
+            </button>
+            <div
+              class="modal fade"
+              id="languageModal"
+              tabindex="-1"
+              aria-labelledby="languageModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的語言</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-grid">
+                    <div><span class="fi fi-tw fis"></span>繁體中文</div>
+                    <div><span class="fi fi-gb fis"></span>English(UK)</div>
+                    <div><span class="fi fi-us fis"></span>English(UA)</div>
+                    <div><span class="fi fi-jp fis"></span>日本語</div>
+                    <div><span class="fi fi-fr fis"></span>Français</div>
+                    <div><span class="fi fi-de fis"></span>Deutsch</div>
+                    <div><span class="fi fi-it fis"></span>Italiano</div>
+                    <div><span class="fi fi-es fis"></span>Español</div>
+                    <div><span class="fi fi-kr fis"></span>한국어</div>
+                    <div><span class="fi fi-cn fis"></span>简体中文</div>
+                    <div><span class="fi fi-hk fis"></span>粵語</div>
+                    <div><span class="fi fi-ru fis"></span>Русский</div>
+                    <div><span class="fi fi-th fis"></span>ไทย</div>
+                    <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
+                    <div>
+                      <span class="fi fi-id fis"></span>Bahasa Indonesia
+                    </div>
+                    <div><span class="fi fi-my fis"></span>Bahasa Melayu</div>
+                    <div><span class="fi fi-ph fis"></span>Filipino</div>
+                    <div><span class="fi fi-in fis"></span>हिन्दी</div>
+                    <div><span class="fi fi-tr fis"></span>Türkçe</div>
+                    <div><span class="fi fi-sa fis"></span>العربية</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <button id="loginBtn" class="btn btn-primary">
+              <a
+                href="/pages/homepage/login.html"
+                class="text-decoration-none text-reset"
+                >登入</a
+              >
+            </button>
+            <div id="userDropdown" class="dropdown">
+              <button
+                class="btn btn-primary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="bi bi-person-fill"></i>
+              </button>
+              <ul
+                class="dropdown-menu user-dropdown text-center dropdown-menu-end"
+              >
+                <li>
+                  <a class="dropdown-item" href="/pages/usercenter.html"
+                    >管理訂單</a
+                  >
+                </li>
+                <li><a class="dropdown-item" href="#">住宿訊息</a></li>
+                <li><a class="dropdown-item" href="#">住宿評論</a></li>
+                <li><a class="dropdown-item" href="#">個人資料</a></li>
+                <li><a class="dropdown-item" href="#">收藏清單</a></li>
+                <li>
+                  <a class="dropdown-item" href="#" id="logoutBtn">登出</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
       </div>
-      <div class="row mb-2">
-        <div class="col-md-6">
-          <span class="text-muted small">Check-in：</span>
-          <span id="checkInDate" class="fw-semibold">—</span>
+    </nav>
+    <!-- 頁面內容 -->
+    <div class="container my-4">
+      <div class="step-indicator">
+        <span><i class="bi bi-check-circle-fill me-1"></i>選擇房型與日期</span>
+        <span>② 新增入住資訊</span>
+        <span>③ 完成預訂</span>
+      </div>
+      <!-- 訂房資訊 -->
+      <div class="card p-4 mb-4 shadow-sm card-hover">
+        <div class="section-title h5 mb-3 text-primary">
+          <i class="bi bi-calendar-event me-2"></i>訂房資訊
         </div>
-        <div class="col-md-6">
-          <span class="text-muted small">Check-out：</span>
-          <span id="checkOutDate" class="fw-semibold">—</span>
-        </div>
-      </div>
-      <p class="mb-1">
-        <span class="text-muted small">共入住：</span>
-        <span id="totalDays" class="fw-semibold">—</span>
-      </p>
-      <p class="mb-1">
-        <span class="text-muted small">已選擇房型：</span>
-        <span id="roomType" class="fw-semibold">—</span>
-      </p>
-      <p class="fw-bold fs-5 text-success">
-        總金額：<span id="totalPrice">—</span>
-      </p>
-    </div>
-    <!-- 個人資料 -->
-    <div class="card p-4 mb-4 card-hover">
-      <div class="section-title">
-        <i class="bi bi-person-fill me-1"></i>輸入個人資料
-      </div>
-      <form>
-        <div class="row g-3">
+        <div class="row mb-2">
           <div class="col-md-6">
-            <input type="text" id="firstName" class="form-control" placeholder="英文名字" required />
+            <span class="text-muted small">Check-in：</span>
+            <span id="checkInDate" class="fw-semibold">—</span>
           </div>
           <div class="col-md-6">
-            <input type="text" id="lastName" class="form-control" placeholder="英文姓氏" required />
+            <span class="text-muted small">Check-out：</span>
+            <span id="checkOutDate" class="fw-semibold">—</span>
           </div>
         </div>
-        <div class="mt-3">
-          <input type="email" id="email" class="form-control" placeholder="E-mail" required />
-        </div>
-        <div class="mt-3">
-          <input type="tel" id="phone" class="form-control" placeholder="電話" required />
-        </div>
-      </form>
-    </div>
-    <!-- 付款方式 -->
-    <div class="card p-4 mb-4 card-hover">
-      <div class="section-title">
-        <i class="bi bi-credit-card-fill me-1"></i>付款方式
+        <p class="mb-1">
+          <span class="text-muted small">共入住：</span>
+          <span id="totalDays" class="fw-semibold">—</span>
+        </p>
+        <p class="mb-1">
+          <span class="text-muted small">已選擇房型：</span>
+          <span id="roomType" class="fw-semibold">—</span>
+        </p>
+        <p class="fw-bold fs-5 text-success">
+          總金額：<span id="totalPrice">—</span>
+        </p>
       </div>
-      <div class="mb-3">
-        <label class="form-check-label me-3">
-          <input type="radio" name="paymentMethod" value="credit" class="form-check-input" checked />信用卡付款
-        </label>
-        <label class="form-check-label me-3">
-          <input type="radio" name="paymentMethod" value="cash" class="form-check-input" />現金付款
-        </label>
-        <label class="form-check-label">
-          <input type="radio" name="paymentMethod" value="ecpay" class="form-check-input" />綠界支付
-        </label>
+      <!-- 個人資料 -->
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">
+          <i class="bi bi-person-fill me-1"></i>輸入個人資料
+        </div>
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <input
+                type="text"
+                id="firstName"
+                class="form-control"
+                placeholder="英文名字"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <input
+                type="text"
+                id="lastName"
+                class="form-control"
+                placeholder="英文姓氏"
+                required
+              />
+            </div>
+          </div>
+          <div class="mt-3">
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              placeholder="E-mail"
+              required
+            />
+          </div>
+          <div class="mt-3">
+            <input
+              type="tel"
+              id="phone"
+              class="form-control"
+              placeholder="電話"
+              required
+            />
+          </div>
+        </form>
       </div>
-      <div id="creditCardForm">
+      <!-- 付款方式 -->
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">
+          <i class="bi bi-credit-card-fill me-1"></i>付款方式
+        </div>
         <div class="mb-3">
-          <label for="cardholder" class="form-label">持卡人姓名</label>
-          <input type="text" class="form-control" id="cardholder" placeholder="請輸入英文姓名，如 KEVIN LIAO"
-            oninput="this.value = this.value.toUpperCase();" required />
+          <label class="form-check-label me-3">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="credit"
+              class="form-check-input"
+            />信用卡付款
+          </label>
+          <label class="form-check-label me-3">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="cash"
+              class="form-check-input"
+            />現金付款
+          </label>
+          <label class="form-check-label">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="ecpay"
+              class="form-check-input"
+            />綠界支付
+          </label>
         </div>
-        <div class="mb-3">
-          <label for="cardnumber" class="form-label">卡號</label>
-          <input type="text" class="form-control" id="cardnumber" placeholder="請輸入 16 碼卡號" maxlength="19"
-            oninput="formatCardNumber(this)" required />
+        <div id="creditCardForm">
+          <div class="mb-3">
+            <label for="cardholder" class="form-label">持卡人姓名</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cardholder"
+              placeholder="請輸入英文姓名，如 KEVIN LIAO"
+              oninput="this.value = this.value.toUpperCase();"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="cardnumber" class="form-label">卡號</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cardnumber"
+              placeholder="請輸入 16 碼卡號"
+              maxlength="19"
+              oninput="formatCardNumber(this)"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="expiry" class="form-label">到期日</label>
+            <input
+              type="text"
+              class="form-control"
+              id="expiry"
+              placeholder="MM/YY"
+              maxlength="5"
+              oninput="formatExpiry(this)"
+              required
+            />
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="expiry" class="form-label">到期日</label>
-          <input type="text" class="form-control" id="expiry" placeholder="MM/YY" maxlength="5"
-            oninput="formatExpiry(this)" required />
+        <div id="cashPaymentInfo" style="display: none">
+          <p>
+            請於入住時以新台幣現金付款，現場人員將協助您完成付款與入住手續。
+          </p>
+        </div>
+        <div id="ecpayInfo" class="animate__animated" style="display: none">
+          <p>
+            您將在提交後被導向至「綠界科技
+            ECPay」進行第三方付款，請依畫面指示操作。
+          </p>
         </div>
       </div>
-      <div id="cashPaymentInfo" style="display: none">
-        <p>請於入住時以新台幣現金付款，現場人員將協助您完成付款與入住手續。</p>
+      <!-- 綠界付款按鈕 -->
+      <div id="ecpayButtonWrapper" class="text-center" style="display: none">
+        <button id="goToEcpayBtn" class="btn btn-success mt-3">
+          前往綠界付款
+        </button>
       </div>
-      <div id="ecpayInfo" class="animate__animated" style="display: none">
-        <p>您將在提交後被導向至「綠界科技 ECPay」進行第三方付款，請依畫面指示操作。</p>
+      <div class="alert alert-info">
+        <div class="fw-bold mb-1">
+          <i class="bi bi-clock-history me-1"></i>您的預留時間
+        </div>
+        <p>
+          <i class="bi bi-check-circle-fill me-1 text-success"></i
+          >房間目前已保留給您
+        </p>
+        <p>退房時間：隔日12:00前</p>
+        <p><i class="bi bi-headset me-1"></i>24hr 線上櫃檯隨時提供服務</p>
+        <p><strong>建議儘快填完以完成預訂</strong></p>
+      </div>
+      <div class="text-end mt-4">
+        <button id="goToSuccessBtn" class="btn btn-next btn-lg">
+          前往最後一步 ➤
+        </button>
       </div>
     </div>
-    <!-- 綠界付款按鈕 -->
-    <div id="ecpayButtonWrapper" class="text-center" style="display: none;">
-      <button id="goToEcpayBtn" class="btn btn-success mt-3">前往綠界付款</button>
-    </div>
-    <div class="alert alert-info">
-      <div class="fw-bold mb-1">
-        <i class="bi bi-clock-history me-1"></i>您的預留時間
-      </div>
-      <p><i class="bi bi-check-circle-fill me-1 text-success"></i>房間目前已保留給您</p>
-      <p>退房時間：隔日12:00前</p>
-      <p><i class="bi bi-headset me-1"></i>24hr 線上櫃檯隨時提供服務</p>
-      <p><strong>建議儘快填完以完成預訂</strong></p>
-    </div>
-    <div class="text-end mt-4">
-      <button id="goToSuccessBtn" class="btn btn-next btn-lg">前往最後一步 ➤</button>
-    </div>
-  </div>
-  <!-- JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // 付款方式切換
-    const creditCardForm = document.getElementById("creditCardForm");
-    const cashPaymentInfo = document.getElementById("cashPaymentInfo");
-    const ecpayInfo = document.getElementById("ecpayInfo");
-    const ecpayButtonWrapper = document.getElementById("ecpayButtonWrapper");
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // 付款方式切換
+      const creditCardForm = document.getElementById("creditCardForm");
+      const cashPaymentInfo = document.getElementById("cashPaymentInfo");
+      const ecpayInfo = document.getElementById("ecpayInfo");
+      const ecpayButtonWrapper = document.getElementById("ecpayButtonWrapper");
 
-    const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
-    paymentRadios.forEach((radio) => {
-      radio.addEventListener("change", function () {
-        if (this.value === "credit") {
-          creditCardForm.style.display = "block";
-          cashPaymentInfo.style.display = "none";
-          ecpayInfo.style.display = "none";
-          ecpayButtonWrapper.style.display = "none";
-        } else if (this.value === "cash") {
-          creditCardForm.style.display = "none";
-          cashPaymentInfo.style.display = "block";
-          ecpayInfo.style.display = "none";
-          ecpayButtonWrapper.style.display = "none";
-        } else if (this.value === "ecpay") {
-          creditCardForm.style.display = "none";
-          cashPaymentInfo.style.display = "none";
-          ecpayInfo.style.display = "block";
-          ecpayButtonWrapper.style.display = "block";
+      const paymentRadios = document.querySelectorAll(
+        'input[name="paymentMethod"]'
+      );
+      paymentRadios.forEach((radio) => {
+        radio.addEventListener("change", function () {
+          if (this.value === "credit") {
+            creditCardForm.style.display = "block";
+            cashPaymentInfo.style.display = "none";
+            ecpayInfo.style.display = "none";
+            ecpayButtonWrapper.style.display = "none";
+          } else if (this.value === "cash") {
+            creditCardForm.style.display = "none";
+            cashPaymentInfo.style.display = "block";
+            ecpayInfo.style.display = "none";
+            ecpayButtonWrapper.style.display = "none";
+          } else if (this.value === "ecpay") {
+            creditCardForm.style.display = "none";
+            cashPaymentInfo.style.display = "none";
+            ecpayInfo.style.display = "block";
+            ecpayButtonWrapper.style.display = "block";
+          }
+        });
+      });
+
+      // 格式化信用卡欄位
+      function formatCardNumber(input) {
+        let value = input.value.replace(/\D/g, "").substring(0, 16);
+        let formatted = value.match(/.{1,4}/g);
+        input.value = formatted ? formatted.join(" ") : "";
+      }
+      function formatExpiry(input) {
+        let value = input.value.replace(/\D/g, "").substring(0, 4);
+        input.value =
+          value.length > 2
+            ? value.substring(0, 2) + "/" + value.substring(2)
+            : value;
+      }
+
+      // 使用者登入狀態檢查
+      document.addEventListener("DOMContentLoaded", function () {
+        const token = localStorage.getItem("jwtToken");
+        const loginBtn = document.getElementById("loginBtn");
+        const userDropdown = document.getElementById("userDropdown");
+
+        if (token) {
+          // 使用者已登入，顯示 dropdown
+          loginBtn.classList.add("d-none");
+          userDropdown.classList.remove("d-none");
+        } else {
+          // 使用者未登入，顯示登入按鈕
+          loginBtn.classList.remove("d-none");
+          userDropdown.classList.add("d-none");
+        }
+
+        // 登出邏輯
+        const logoutBtn = document.getElementById("logoutBtn");
+        logoutBtn?.addEventListener("click", function () {
+          localStorage.removeItem("jwtToken");
+          localStorage.removeItem("userId");
+          location.reload(); // 重新整理頁面回到未登入狀態
+        });
+      });
+
+      // 自動填入訂房資料與會員資料
+      document.addEventListener("DOMContentLoaded", function () {
+        // 訂房資訊
+        const bookingData = JSON.parse(
+          localStorage.getItem("bookingData") || "{}"
+        );
+        if (bookingData && bookingData.checkin && bookingData.checkout) {
+          document.getElementById("checkInDate").textContent =
+            bookingData.checkin;
+          document.getElementById("checkOutDate").textContent =
+            bookingData.checkout;
+          const d1 = new Date(bookingData.checkin);
+          const d2 = new Date(bookingData.checkout);
+          const days = Math.max(1, (d2 - d1) / (1000 * 60 * 60 * 24));
+          document.getElementById("totalDays").textContent = days + " 天";
+          document.getElementById("roomType").textContent =
+            (bookingData.rooms || [])
+              .map((r) => `${r.room}（${r.count}間）`)
+              .join("、") || "—";
+          let total = 0;
+          if (bookingData.rooms) {
+            total = bookingData.rooms.reduce(
+              (sum, r) => sum + r.price * r.count * days,
+              0
+            );
+          }
+          document.getElementById("totalPrice").textContent = total
+            ? `TWD ${total.toLocaleString()}`
+            : "—";
+        }
+        // 會員資訊
+        // const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+        // document.getElementById("firstName").value = userInfo.firstName || "";
+        // document.getElementById("lastName").value = userInfo.lastName || "";
+        // document.getElementById("email").value = userInfo.email || "";
+        // document.getElementById("phone").value = userInfo.phone || "";
+        async function fetchAndRenderUserProfile() {
+          const token = localStorage.getItem("jwtToken");
+          if (!token) {
+            alert("請先登入！");
+            window.location.href = "/pages/login.html";
+            return;
+          }
+
+          try {
+            const res = await fetch("http://localhost:8080/api/user/profile", {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            if (!res.ok) {
+              throw new Error("取得使用者資料失敗");
+            }
+
+            const userInfo = await res.json();
+            console.log("取得的 userInfo:", userInfo);
+
+            document.getElementById("firstName").value =
+              userInfo.firstName || "";
+            document.getElementById("lastName").value = userInfo.lastName || "";
+            document.getElementById("email").value = userInfo.email || "";
+            document.getElementById("phone").value = userInfo.tel || "";
+          } catch (error) {
+            console.error(error);
+            alert("載入個人資料失敗！");
+          }
+        }
+
+        fetchAndRenderUserProfile();
+
+        // 頁面載入後顯示正確付款方式表單
+        const savedMethod = sessionStorage.getItem("paymentMethod");
+        if (savedMethod) {
+          const radio = document.querySelector(
+            `input[name="paymentMethod"][value="${savedMethod.toLowerCase()}"]`
+          );
+          if (radio) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event("change"));
+          }
+        } else {
+          const selectedRadio = document.querySelector(
+            'input[name="paymentMethod"]:checked'
+          );
+          if (selectedRadio) {
+            selectedRadio.dispatchEvent(new Event("change"));
+          }
+        }
+
+        // 綠界付款按鈕
+        const goToEcpayBtn = document.getElementById("goToEcpayBtn");
+        if (goToEcpayBtn) {
+          goToEcpayBtn.addEventListener("click", () => {
+            // 基本資料驗證（可根據 input id 自訂）
+            const requiredFields = [
+              document.getElementById("firstName"),
+              document.getElementById("lastName"),
+              document.getElementById("email"),
+              document.getElementById("phone"),
+            ];
+            for (let input of requiredFields) {
+              if (!input.value.trim()) {
+                alert("請完整填寫個人資料");
+                return;
+              }
+            }
+            // 儲存 email, phone, 付款方式
+            sessionStorage.setItem("paymentMethod", "ECPAY");
+            sessionStorage.setItem(
+              "email",
+              document.getElementById("email").value
+            );
+            sessionStorage.setItem(
+              "phone",
+              document.getElementById("phone").value
+            );
+            window.location.href = "ecpay_processing.html";
+          });
         }
       });
-    });
 
-    // 格式化信用卡欄位
-    function formatCardNumber(input) {
-      let value = input.value.replace(/\D/g, "").substring(0, 16);
-      let formatted = value.match(/.{1,4}/g);
-      input.value = formatted ? formatted.join(" ") : "";
-    }
-    function formatExpiry(input) {
-      let value = input.value.replace(/\D/g, "").substring(0, 4);
-      input.value = value.length > 2 ? value.substring(0, 2) + "/" + value.substring(2) : value;
-    }
+      document
+        .getElementById("goToSuccessBtn")
+        .addEventListener("click", function () {
+          // 1. 收集要傳到成功頁的資料（假設 bookingData 裡都有）
+          const bookingData = JSON.parse(
+            localStorage.getItem("bookingData") || "{}"
+          );
+          const userInfo = {
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+          };
 
-    // 自動填入訂房資料與會員資料
-    document.addEventListener("DOMContentLoaded", function () {
-      // 訂房資訊
-      const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-      if (bookingData && bookingData.checkin && bookingData.checkout) {
-        document.getElementById("checkInDate").textContent = bookingData.checkin;
-        document.getElementById("checkOutDate").textContent = bookingData.checkout;
-        const d1 = new Date(bookingData.checkin);
-        const d2 = new Date(bookingData.checkout);
-        const days = Math.max(1, (d2 - d1) / (1000 * 60 * 60 * 24));
-        document.getElementById("totalDays").textContent = days + " 天";
-        document.getElementById("roomType").textContent = (bookingData.rooms || []).map(r => `${r.room}（${r.count}間）`).join("、") || "—";
-        let total = 0;
-        if (bookingData.rooms) {
-          total = bookingData.rooms.reduce((sum, r) => sum + r.price * r.count * days, 0);
-        }
-        document.getElementById("totalPrice").textContent = total ? `TWD ${total.toLocaleString()}` : "—";
-      }
-      // 會員資訊
-      const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
-      document.getElementById("firstName").value = userInfo.firstName || "";
-      document.getElementById("lastName").value = userInfo.lastName || "";
-      document.getElementById("email").value = userInfo.email || "";
-      document.getElementById("phone").value = userInfo.phone || "";
+          // 如果你有付款狀態，這裡也可以加
+          const paymentMethod = document.querySelector(
+            'input[name="paymentMethod"]:checked'
+          ).value;
 
-      // 頁面載入後顯示正確付款方式表單
-      const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
-      if (selectedRadio) {
-        selectedRadio.dispatchEvent(new Event("change"));
-      }
+          // 2. 打包要顯示的資訊
+          const resultData = {
+            bookingData,
+            userInfo,
+            paymentMethod,
+          };
 
-      // 綠界付款按鈕
-      const goToEcpayBtn = document.getElementById("goToEcpayBtn");
-      if (goToEcpayBtn) {
-        goToEcpayBtn.addEventListener("click", () => {
-          // 基本資料驗證（可根據 input id 自訂）
-          const requiredFields = [
-            document.getElementById("firstName"),
-            document.getElementById("lastName"),
-            document.getElementById("email"),
-            document.getElementById("phone"),
-          ];
-          for (let input of requiredFields) {
-            if (!input.value.trim()) {
-              alert("請完整填寫個人資料");
-              return;
-            }
-          }
-          // 儲存 email, phone, 付款方式
-          sessionStorage.setItem("paymentMethod", "ECPAY");
-          sessionStorage.setItem("email", document.getElementById("email").value);
-          sessionStorage.setItem("phone", document.getElementById("phone").value);
-          window.location.href = "ecpay_processing.html";
+          // 3. 存進 sessionStorage（或 localStorage，建議 sessionStorage 比較安全）
+          sessionStorage.setItem("bookingResult", JSON.stringify(resultData));
+
+          // 4. 轉頁
+          window.location.href = "booking_success.html";
         });
-      }
-    });
-
-    document.getElementById("goToSuccessBtn").addEventListener("click", function () {
-      // 1. 收集要傳到成功頁的資料（假設 bookingData 裡都有）
-      const bookingData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-      const userInfo = {
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-      };
-
-      // 如果你有付款狀態，這裡也可以加
-      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-
-      // 2. 打包要顯示的資訊
-      const resultData = {
-        bookingData,
-        userInfo,
-        paymentMethod,
-      };
-
-      // 3. 存進 sessionStorage（或 localStorage，建議 sessionStorage 比較安全）
-      sessionStorage.setItem("bookingResult", JSON.stringify(resultData));
-
-      // 4. 轉頁
-      window.location.href = "booking_success.html";
-    });
-    // 5.改付款狀態PENDING成CONFIREMED
-    document.getElementById("goToSuccessBtn").addEventListener("click", () => {
-  const orderId = localStorage.getItem("orderId");
-
-  if (!orderId) {
-    alert("找不到訂單 ID，請重新進入預訂流程。");
-    return;
-  }
-
-  fetch("http://localhost:8080/api/payments/confirm-order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ orderId: orderId })
-  })
-    .then(res => {
-      if (!res.ok) throw new Error("後端回傳失敗");
-      return res.text();
-    })
-    .then(msg => {
-      console.log("後端回傳：", msg);
-      window.location.href = "booking_success.html";
-    })
-    .catch(err => {
-      console.error("訂單確認失敗：", err);
-      alert("訂單更新失敗，請稍後再試");
-    });
-});
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

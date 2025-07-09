@@ -120,7 +120,8 @@
 }
 
 h4 {
-    font-weight: bold;
+    font-weight: bolder;
+    color: #376996;
 }
 
 
@@ -191,32 +192,6 @@ h4 {
     box-shadow: 0 0 0px 2px #1a81ff
 }
 
-/* 重新發送、使用密碼按鈕樣式 */
-/* .verifiy-options button {
-    background-color: transparent;
-    font-weight: bold;
-    color: black;
-    border: 0;
-}
-
-.verifiy-options button:hover {
-    background-color: transparent;
-    color: #1a81ff;
-    border: 0;
-}
-
-.verifiy-options a {
-    text-decoration: none;
-    color: black;
-}
-
-.verifiy-options a:hover {
-    text-decoration: none;
-    color: #1a81ff;
-} */
-
-
-
 /* 或 */
 .hr-with-text {
     position: relative;
@@ -241,18 +216,16 @@ h4 {
     z-index: 1;
 }
 
+/* 重新發送驗證信按鈕 */
+#resendVerificationBtn {
+    display: none;
+}
+
 /* 忘記密碼靠右對齊 */
 .forgot-passwd-link {
     text-align: right;
 }
 
-/* google & fb 的 svg 樣式 */
-/* .social-icon {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-
-} */
 .S9gUrf-YoZ4jf div{
     display: flex;
     flex-direction: column;

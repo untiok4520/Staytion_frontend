@@ -1,458 +1,910 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>訂房成功 - Staytion</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"/>
-  <style>
-    body {
-      background: linear-gradient(to bottom right, #f3f9ff, #ffffff);
-      font-family: "Segoe UI", sans-serif;
-    }
-    .navbar-shared { background-color: #fff; padding-top: 0; padding-bottom: 0; }
-    .navbar-shared .container-fluid { display: flex; align-items: center; }
-    .navbar-shared .logo_img { width: 250px; height: auto; }
-    .navbar-shared .navbar-nav { display: flex; justify-content: end; flex-direction: row; gap: 1rem; margin-right: 1rem; }
-    .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3rem; }
-    .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid > a { display: flex; align-items: center; justify-content: center; width: 200px; height: 50px; border-radius: 1rem; transition: all 0.2s ease-in-out; text-align: center; color: black; text-decoration: none; }
-    .navbar-shared .modal-body.modal-grid > div span.fi { margin-right: 10px; }
-    .navbar-shared .modal-body.modal-grid > div { display: flex; align-items: center; justify-content: center; width: 200px; height: 50px; border-radius: 1rem; transition: all 0.2s ease-in-out; text-align: center; }
-    .navbar-shared .modal-body.modal-grid > a:hover, .navbar-shared .modal-body.modal-grid > div:hover { background-color: rgba(55, 106, 150, 0.3); cursor: pointer; }
-    .navbar-shared .btn { padding: 0.375rem 1rem; min-width: 80px; border-radius: 1rem; transition: all 0.3s ease-in-out; }
-    .navbar-shared .btn:hover { background-color: white; color: #376996; }
-    .navbar-shared .btn-primary { background-color: #376996; border: 1px solid #376996; }
-    .navbar-shared .btn-outline-primary { border: 1px solid #376996; color: #376996; }
-    .navbar-shared .btn-outline-primary:hover { background-color: transparent; color: #376996; border: 2px solid #376996; }
-    .checkmark-container { width: 100px; height: 100px; background-color: #e6f9ed; box-shadow: 0 0 10px rgba(40, 167, 69, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
-    .checkmark-container i { font-size: 64px; color: #28a745; animation: pop-in 0.6s ease; }
-    @keyframes pop-in { 0% { transform: scale(0.4); opacity: 0; } 80% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
-    .section-title { border-left: 5px solid #0071c2; padding-left: 0.75rem; margin-bottom: 1rem; font-size: 1.25rem; font-weight: 600; color: #003580; }
-    .btn-outline-custom { border-color: #0071c2; color: #0071c2; }
-    .btn-outline-custom:hover { background-color: #0071c2; color: white; }
-    .card-hover:hover { background-color: #f8f9fa; transform: scale(1.01); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; }
-    .firework { position: fixed; top: 50%; left: 50%; pointer-events: none; z-index: 9999; }
-    .particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; animation: explode 1s ease-out forwards; }
-    @keyframes explode { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--x), var(--y)) scale(0.5); opacity: 0; } }
-    .room-option { cursor: pointer; transition: transform 0.2s; }
-    .room-option:hover { transform: scale(1.02); }
-  </style>
-</head>
-<body>
-  <!-- ✅ 共用 Navbar -->
-  <nav class="navbar-shared navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/pages/homepage/home.html">
-        <img src="../assets/logo.png" class="logo_img" alt="logo" />
-      </a>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#currencyModal">TWD</button>
-          <div class="modal fade" id="currencyModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">選擇您使用的貨幣</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body modal-grid">
-                  <a href="#">新台幣<br />TWD</a><a href="#">日元<br />JPY</a><a href="#">美元<br />USD</a><a href="#">歐元<br />EUR</a>
-                  <a href="#">港幣<br />HKD</a><a href="#">人民幣<br />CNY</a><a href="#">英鎊<br />GBP</a><a href="#">丹麥克朗<br />DKK</a>
-                  <a href="#">亞賽拜然新馬納特<br />AZN</a><a href="#">以色列新謝克爾<br />ILS</a><a href="#">俄羅斯盧布<br />RUB</a><a href="#">保加利亞列弗<br />BGN</a>
-                  <a href="#">冰島克朗<br />ISK</a><a href="#">加幣<br />CAD</a><a href="#">匈牙利福林<br />HUF</a><a href="#">南非鍰<br />ZAR</a>
-                  <a href="#">卡達里亞爾<br />QAR</a><a href="#">印尼盾<br />IDR</a><a href="#">印度盧比 <br />INR</a><a href="#">哈薩克坦吉<br />KZT</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li class="nav-item">
-          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#languageModal">
-            <span class="fi fi-tw fis"></span>
-          </button>
-          <div class="modal fade" id="languageModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">選擇您使用的語言</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body modal-grid">
-                  <div><span class="fi fi-tw fis"></span>繁體中文</div>
-                  <div><span class="fi fi-gb fis"></span>English(UK)</div>
-                  <div><span class="fi fi-us fis"></span>English(UA)</div>
-                  <div><span class="fi fi-jp fis"></span>日本語</div>
-                  <div><span class="fi fi-fr fis"></span>Français</div>
-                  <div><span class="fi fi-de fis"></span>Deutsch</div>
-                  <div><span class="fi fi-it fis"></span>Italiano</div>
-                  <div><span class="fi fi-es fis"></span>Español</div>
-                  <div><span class="fi fi-kr fis"></span>한국어</div>
-                  <div><span class="fi fi-cn fis"></span>简体中文</div>
-                  <div><span class="fi fi-hk fis"></span>粵語</div>
-                  <div><span class="fi fi-ru fis"></span>Русский</div>
-                  <div><span class="fi fi-th fis"></span>ไทย</div>
-                  <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
-                  <div><span class="fi fi-id fis"></span>Bahasa Indonesia</div>
-                  <div><span class="fi fi-my fis"></span>Bahasa Melayu</div>
-                  <div><span class="fi fi-ph fis"></span>Filipino</div>
-                  <div><span class="fi fi-in fis"></span>हिन्दी</div>
-                  <div><span class="fi fi-tr fis"></span>Türkçe</div>
-                  <div><span class="fi fi-sa fis"></span>العربية</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li class="nav-item">
-          <button class="btn btn-primary">登入</button>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- ✅ 訂房成功內容 -->
-  <div class="container my-5">
-    <div class="text-center mb-5">
-      <div class="checkmark-container">
-        <i class="bi bi-check-circle-fill"></i>
-      </div>
-      <h2 class="text-success mt-4 fw-bold">預訂成功！</h2>
-      <p class="fs-5 text-secondary">
-        您已成功預訂 <strong id="confirmedRoomName" class="text-dark">—</strong>
-      </p>
-    </div>
-    <div id="firework-container"></div>
-    <div class="card p-4 mb-4 card-hover">
-      <div class="section-title"><i class="bi bi-camera-fill me-1"></i>房型圖片</div>
-      <div class="text-center">
-        <img id="mainRoomImage" src="../image/room.png" class="img-fluid rounded border" alt="房型圖片" style="max-width: 600px; width: 100%; height: auto;"/>
-        <p id="mainRoomDesc" class="text-muted mt-2">—</p>
-      </div>
-    </div>
-    <div class="card p-4 mb-4 card-hover">
-      <div class="section-title"><i class="bi bi-file-earmark-text-fill me-1"></i>訂單資訊</div>
-      <ul class="list-unstyled" id="orderInfoList">
-        <li>資料載入中...</li>
-      </ul>
-    </div>
-    <div class="card p-4 mb-4 card-hover">
-      <div class="section-title"><i class="bi bi-pencil-fill me-1"></i>如需修改訂單</div>
-      <div class="d-flex flex-column flex-md-row gap-3">
-        <a href="#" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#changeDateModal">修改日期</a>
-        <a href="#" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#changeCardModal">修改信用卡資料</a>
-        <a href="#" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#changeRoomModal">更換房型</a>
-      </div>
-    </div>
-    <div class="d-flex flex-wrap justify-content-center gap-3">
-      <a href="#" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#calendarModal">加入行事曆</a>
-      <a href="#" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#shareModal">分享訂房資訊</a>
-    </div>
-  </div>
-
-  <!-- Modals區塊 Start（完全保留你的設計） -->
-  <!-- 修改日期 Modal -->
-  <div class="modal fade" id="changeDateModal" tabindex="-1" aria-labelledby="changeDateModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changeDateModalLabel">更改入住日期</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <label for="checkinDate" class="form-label">入住日期</label>
-          <input type="date" id="checkinDate" class="form-control mb-3" />
-          <label for="checkoutDate" class="form-label">退房日期</label>
-          <input type="date" id="checkoutDate" class="form-control" />
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">關閉</button>
-          <button type="button" class="btn btn-primary" onclick="confirmDateChange()">確認</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 修改信用卡 Modal -->
-  <div class="modal fade" id="changeCardModal" tabindex="-1" aria-labelledby="changeCardModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changeCardModalLabel">修改信用卡資料</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="creditCardForm">
-            <div class="mb-3">
-              <label for="cardNumber" class="form-label">卡號</label>
-              <input type="text" class="form-control" id="cardNumber" placeholder="請輸入 16 位數卡號" maxlength="19"/>
-            </div>
-            <div class="row">
-              <div class="col">
-                <label for="expiry" class="form-label">有效期限</label>
-                <input type="month" class="form-control" id="expiry"/>
-              </div>
-              <div class="col">
-                <label for="cvc" class="form-label">CVC</label>
-                <input type="text" class="form-control" id="cvc" maxlength="4"/>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">關閉</button>
-          <button type="button" class="btn btn-primary" onclick="submitCreditCardChange()">確認修改</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 行事曆 Modal -->
-  <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="calendarModalLabel">加入行事曆</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p class="mb-2"><strong>活動：</strong>入住 Staytion 豪華雙人套房</p>
-          <p class="mb-2"><strong>時間：</strong>2025/07/18 至 2025/07/20</p>
-          <p class="mb-2"><strong>地點：</strong>台中市南屯區 公益路 123 號</p>
-          <p class="mb-2"><strong>提醒：</strong>入住當天中午 12:00 前完成報到手續</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">關閉</button>
-          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=入住+Staytion+豪華雙人套房&dates=20250718T120000/20250720T120000&details=地址%EF%BC%9A台中市北區XX路123號&location=台中市北區XX路123號" class="btn btn-primary" target="_blank">開啟 Google 日曆</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 分享訂房資訊 Modal -->
-  <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="shareModalLabel">分享您的訂房資訊</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p class="mb-2">您可以將以下連結分享給同行者：</p>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" id="shareLink" value="https://staytion.com/reservation/12345678" readonly/>
-            <button class="btn btn-outline-secondary" onclick="copyShareLink()">複製連結</button>
-          </div>
-          <p class="mt-3">或透過社群平台分享：</p>
-          <div class="d-flex gap-3">
-            <a href="#" class="btn btn-outline-primary disabled">Facebook</a>
-            <a href="#" class="btn btn-outline-success disabled">LINE</a>
-            <a href="#" class="btn btn-outline-info disabled">Messenger</a>
-          </div>
-          <small class="text-muted mt-2 d-block">（社群分享功能尚未開放）</small>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">關閉</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 更換房型 Modal -->
-  <div class="modal fade" id="changeRoomModal" tabindex="-1" aria-labelledby="changeRoomModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changeRoomModalLabel">選擇您要更換的房型</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card h-100 shadow-sm room-option" onclick="selectRoom('豪華雙人套房', event)">
-                <img src="../image/room.png" class="card-img-top" alt="豪華雙人套房" />
-                <div class="card-body">
-                  <h6 class="card-title">豪華雙人套房</h6>
-                  <p class="card-text">附陽台・含早餐・景觀視野佳</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="card h-100 shadow-sm room-option" onclick="selectRoom('經濟雙人房', event)">
-                <img src="../image/room2.png" class="card-img-top" alt="經濟雙人房" />
-                <div class="card-body">
-                  <h6 class="card-title">經濟雙人房</h6>
-                  <p class="card-text">不含早餐・簡約風格・平價舒適</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p class="mt-3">您選擇的房型：<strong id="selectedRoom">尚未選擇</strong></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="confirmRoomChange()">確認更換</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Modals區塊 End -->
-
-  <!-- JS區塊 Start -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // 貨幣切換
-    document.querySelectorAll("#currencyModal .modal-body.modal-grid a").forEach((item) => {
-      item.addEventListener("click", function (e) {
-        e.preventDefault();
-        const code = this.innerHTML.trim().split("<br>").pop().trim();
-        document.querySelector('button[data-bs-target="#currencyModal"]').textContent = code;
-        bootstrap.Modal.getInstance(document.getElementById("currencyModal")).hide();
-      });
-    });
-    // 語言切換
-    document.querySelectorAll("#languageModal .modal-body.modal-grid > div").forEach((item) => {
-      item.addEventListener("click", function (e) {
-        e.preventDefault();
-        const span = this.querySelector("span.fi");
-        if (span) {
-          document.querySelector('button[data-bs-target="#languageModal"]').innerHTML = span.outerHTML;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>訂房成功 - Staytion</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"
+    />
+    <style>
+      body {
+        background: linear-gradient(to bottom right, #f3f9ff, #ffffff);
+        font-family: "Segoe UI", sans-serif;
+      }
+      .navbar-shared {
+        background-color: #fff;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      .navbar-shared .container-fluid {
+        display: flex;
+        align-items: center;
+      }
+      .navbar-shared .logo_img {
+        width: 250px;
+        height: auto;
+      }
+      .navbar-shared .navbar-nav {
+        display: flex;
+        justify-content: end;
+        flex-direction: row;
+        gap: 1rem;
+        margin-right: 1rem;
+      }
+      .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3rem;
+      }
+      .navbar-shared .navbar-nav .nav-item .modal-body.modal-grid > a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 50px;
+        border-radius: 1rem;
+        transition: all 0.2s ease-in-out;
+        text-align: center;
+        color: black;
+        text-decoration: none;
+      }
+      .navbar-shared .modal-body.modal-grid > div span.fi {
+        margin-right: 10px;
+      }
+      .navbar-shared .modal-body.modal-grid > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 50px;
+        border-radius: 1rem;
+        transition: all 0.2s ease-in-out;
+        text-align: center;
+      }
+      .navbar-shared .modal-body.modal-grid > a:hover,
+      .navbar-shared .modal-body.modal-grid > div:hover {
+        background-color: rgba(55, 106, 150, 0.3);
+        cursor: pointer;
+      }
+      .navbar-shared .btn {
+        padding: 0.375rem 1rem;
+        min-width: 80px;
+        border-radius: 1rem;
+        transition: all 0.3s ease-in-out;
+      }
+      .navbar-shared .btn:hover {
+        background-color: white;
+        color: #376996;
+      }
+      .navbar-shared .btn-primary {
+        background-color: #376996;
+        border: 1px solid #376996;
+      }
+      .navbar-shared .btn-outline-primary {
+        border: 1px solid #376996;
+        color: #376996;
+      }
+      .navbar-shared .btn-outline-primary:hover {
+        background-color: transparent;
+        color: #376996;
+        border: 2px solid #376996;
+      }
+      .checkmark-container {
+        width: 100px;
+        height: 100px;
+        background-color: #e6f9ed;
+        box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+      .checkmark-container i {
+        font-size: 64px;
+        color: #28a745;
+        animation: pop-in 0.6s ease;
+      }
+      @keyframes pop-in {
+        0% {
+          transform: scale(0.4);
+          opacity: 0;
         }
-        bootstrap.Modal.getInstance(document.getElementById("languageModal")).hide();
+        80% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .section-title {
+        border-left: 5px solid #0071c2;
+        padding-left: 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #003580;
+      }
+      .btn-outline-custom {
+        border-color: #0071c2;
+        color: #0071c2;
+      }
+      .btn-outline-custom:hover {
+        background-color: #0071c2;
+        color: white;
+      }
+      .card-hover:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .firework {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        pointer-events: none;
+        z-index: 9999;
+      }
+      .particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: explode 1s ease-out forwards;
+      }
+      @keyframes explode {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--x), var(--y)) scale(0.5);
+          opacity: 0;
+        }
+      }
+      .room-option {
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .room-option:hover {
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ✅ 共用 Navbar -->
+    <nav class="navbar-shared navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/pages/homepage/home.html">
+          <img src="../assets/logo.png" class="logo_img" alt="logo" />
+        </a>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#currencyModal"
+            >
+              TWD
+            </button>
+            <div
+              class="modal fade"
+              id="currencyModal"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的貨幣</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-grid">
+                    <a href="#">新台幣<br />TWD</a><a href="#">日元<br />JPY</a
+                    ><a href="#">美元<br />USD</a><a href="#">歐元<br />EUR</a>
+                    <a href="#">港幣<br />HKD</a><a href="#">人民幣<br />CNY</a
+                    ><a href="#">英鎊<br />GBP</a
+                    ><a href="#">丹麥克朗<br />DKK</a>
+                    <a href="#">亞賽拜然新馬納特<br />AZN</a
+                    ><a href="#">以色列新謝克爾<br />ILS</a
+                    ><a href="#">俄羅斯盧布<br />RUB</a
+                    ><a href="#">保加利亞列弗<br />BGN</a>
+                    <a href="#">冰島克朗<br />ISK</a
+                    ><a href="#">加幣<br />CAD</a
+                    ><a href="#">匈牙利福林<br />HUF</a
+                    ><a href="#">南非鍰<br />ZAR</a>
+                    <a href="#">卡達里亞爾<br />QAR</a
+                    ><a href="#">印尼盾<br />IDR</a
+                    ><a href="#">印度盧比 <br />INR</a
+                    ><a href="#">哈薩克坦吉<br />KZT</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#languageModal"
+            >
+              <span class="fi fi-tw fis"></span>
+            </button>
+            <div
+              class="modal fade"
+              id="languageModal"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">選擇您使用的語言</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body modal-grid">
+                    <div><span class="fi fi-tw fis"></span>繁體中文</div>
+                    <div><span class="fi fi-gb fis"></span>English(UK)</div>
+                    <div><span class="fi fi-us fis"></span>English(UA)</div>
+                    <div><span class="fi fi-jp fis"></span>日本語</div>
+                    <div><span class="fi fi-fr fis"></span>Français</div>
+                    <div><span class="fi fi-de fis"></span>Deutsch</div>
+                    <div><span class="fi fi-it fis"></span>Italiano</div>
+                    <div><span class="fi fi-es fis"></span>Español</div>
+                    <div><span class="fi fi-kr fis"></span>한국어</div>
+                    <div><span class="fi fi-cn fis"></span>简体中文</div>
+                    <div><span class="fi fi-hk fis"></span>粵語</div>
+                    <div><span class="fi fi-ru fis"></span>Русский</div>
+                    <div><span class="fi fi-th fis"></span>ไทย</div>
+                    <div><span class="fi fi-vn fis"></span>Tiếng Việt</div>
+                    <div>
+                      <span class="fi fi-id fis"></span>Bahasa Indonesia
+                    </div>
+                    <div><span class="fi fi-my fis"></span>Bahasa Melayu</div>
+                    <div><span class="fi fi-ph fis"></span>Filipino</div>
+                    <div><span class="fi fi-in fis"></span>हिन्दी</div>
+                    <div><span class="fi fi-tr fis"></span>Türkçe</div>
+                    <div><span class="fi fi-sa fis"></span>العربية</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-primary">登入</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- ✅ 訂房成功內容 -->
+    <div class="container my-5">
+      <div class="text-center mb-5">
+        <div class="checkmark-container">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h2 class="text-success mt-4 fw-bold">預訂成功！</h2>
+        <p class="fs-5 text-secondary">
+          您已成功預訂
+          <strong id="confirmedRoomName" class="text-dark">—</strong>
+        </p>
+      </div>
+      <div id="firework-container"></div>
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">
+          <i class="bi bi-camera-fill me-1"></i>房型圖片
+        </div>
+        <div class="text-center">
+          <img
+            id="mainRoomImage"
+            src="../image/room.png"
+            class="img-fluid rounded border"
+            alt="房型圖片"
+            style="max-width: 600px; width: 100%; height: auto"
+          />
+          <p id="mainRoomDesc" class="text-muted mt-2">—</p>
+        </div>
+      </div>
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">
+          <i class="bi bi-file-earmark-text-fill me-1"></i>訂單資訊
+        </div>
+        <ul class="list-unstyled" id="orderInfoList">
+          <li>資料載入中...</li>
+        </ul>
+      </div>
+      <div class="card p-4 mb-4 card-hover">
+        <div class="section-title">
+          <i class="bi bi-pencil-fill me-1"></i>如需修改訂單
+        </div>
+        <div class="d-flex flex-column flex-md-row gap-3">
+          <a
+            href="#"
+            class="btn btn-outline-primary w-100"
+            data-bs-toggle="modal"
+            data-bs-target="#changeDateModal"
+            >修改日期</a
+          >
+          <a
+            href="#"
+            class="btn btn-outline-primary w-100"
+            data-bs-toggle="modal"
+            data-bs-target="#changeCardModal"
+            >修改信用卡資料</a
+          >
+          <a
+            href="#"
+            class="btn btn-outline-primary w-100"
+            data-bs-toggle="modal"
+            data-bs-target="#changeRoomModal"
+            >更換房型</a
+          >
+        </div>
+      </div>
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <a
+          href="#"
+          class="btn btn-outline-custom"
+          data-bs-toggle="modal"
+          data-bs-target="#calendarModal"
+          >加入行事曆</a
+        >
+        <a
+          href="#"
+          class="btn btn-outline-success"
+          data-bs-toggle="modal"
+          data-bs-target="#shareModal"
+          >分享訂房資訊</a
+        >
+      </div>
+    </div>
+
+    <!-- Modals區塊 Start（完全保留你的設計） -->
+    <!-- 修改日期 Modal -->
+    <div
+      class="modal fade"
+      id="changeDateModal"
+      tabindex="-1"
+      aria-labelledby="changeDateModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changeDateModalLabel">更改入住日期</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <label for="checkinDate" class="form-label">入住日期</label>
+            <input type="date" id="checkinDate" class="form-control mb-3" />
+            <label for="checkoutDate" class="form-label">退房日期</label>
+            <input type="date" id="checkoutDate" class="form-control" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="confirmDateChange()"
+            >
+              確認
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 修改信用卡 Modal -->
+    <div
+      class="modal fade"
+      id="changeCardModal"
+      tabindex="-1"
+      aria-labelledby="changeCardModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changeCardModalLabel">
+              修改信用卡資料
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="creditCardForm">
+              <div class="mb-3">
+                <label for="cardNumber" class="form-label">卡號</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cardNumber"
+                  placeholder="請輸入 16 位數卡號"
+                  maxlength="19"
+                />
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label for="expiry" class="form-label">有效期限</label>
+                  <input type="month" class="form-control" id="expiry" />
+                </div>
+                <div class="col">
+                  <label for="cvc" class="form-label">CVC</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cvc"
+                    maxlength="4"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="submitCreditCardChange()"
+            >
+              確認修改
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 行事曆 Modal -->
+    <div
+      class="modal fade"
+      id="calendarModal"
+      tabindex="-1"
+      aria-labelledby="calendarModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="calendarModalLabel">加入行事曆</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2">
+              <strong>活動：</strong>入住 Staytion 豪華雙人套房
+            </p>
+            <p class="mb-2"><strong>時間：</strong>2025/07/18 至 2025/07/20</p>
+            <p class="mb-2">
+              <strong>地點：</strong>台中市南屯區 公益路 123 號
+            </p>
+            <p class="mb-2">
+              <strong>提醒：</strong>入住當天中午 12:00 前完成報到手續
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+            <a
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=入住+Staytion+豪華雙人套房&dates=20250718T120000/20250720T120000&details=地址%EF%BC%9A台中市北區XX路123號&location=台中市北區XX路123號"
+              class="btn btn-primary"
+              target="_blank"
+              >開啟 Google 日曆</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 分享訂房資訊 Modal -->
+    <div
+      class="modal fade"
+      id="shareModal"
+      tabindex="-1"
+      aria-labelledby="shareModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="shareModalLabel">分享您的訂房資訊</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2">您可以將以下連結分享給同行者：</p>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="shareLink"
+                value="https://staytion.com/reservation/12345678"
+                readonly
+              />
+              <button
+                class="btn btn-outline-secondary"
+                onclick="copyShareLink()"
+              >
+                複製連結
+              </button>
+            </div>
+            <p class="mt-3">或透過社群平台分享：</p>
+            <div class="d-flex gap-3">
+              <a href="#" class="btn btn-outline-primary disabled">Facebook</a>
+              <a href="#" class="btn btn-outline-success disabled">LINE</a>
+              <a href="#" class="btn btn-outline-info disabled">Messenger</a>
+            </div>
+            <small class="text-muted mt-2 d-block"
+              >（社群分享功能尚未開放）</small
+            >
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 更換房型 Modal -->
+    <div
+      class="modal fade"
+      id="changeRoomModal"
+      tabindex="-1"
+      aria-labelledby="changeRoomModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changeRoomModalLabel">
+              選擇您要更換的房型
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div
+                  class="card h-100 shadow-sm room-option"
+                  onclick="selectRoom('豪華雙人套房', event)"
+                >
+                  <img
+                    src="../image/room.png"
+                    class="card-img-top"
+                    alt="豪華雙人套房"
+                  />
+                  <div class="card-body">
+                    <h6 class="card-title">豪華雙人套房</h6>
+                    <p class="card-text">附陽台・含早餐・景觀視野佳</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div
+                  class="card h-100 shadow-sm room-option"
+                  onclick="selectRoom('經濟雙人房', event)"
+                >
+                  <img
+                    src="../image/room2.png"
+                    class="card-img-top"
+                    alt="經濟雙人房"
+                  />
+                  <div class="card-body">
+                    <h6 class="card-title">經濟雙人房</h6>
+                    <p class="card-text">不含早餐・簡約風格・平價舒適</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3">
+              您選擇的房型：<strong id="selectedRoom">尚未選擇</strong>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="confirmRoomChange()"
+            >
+              確認更換
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modals區塊 End -->
+
+    <!-- JS區塊 Start -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // 貨幣切換
+      document
+        .querySelectorAll("#currencyModal .modal-body.modal-grid a")
+        .forEach((item) => {
+          item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const code = this.innerHTML.trim().split("<br>").pop().trim();
+            document.querySelector(
+              'button[data-bs-target="#currencyModal"]'
+            ).textContent = code;
+            bootstrap.Modal.getInstance(
+              document.getElementById("currencyModal")
+            ).hide();
+          });
+        });
+      // 語言切換
+      document
+        .querySelectorAll("#languageModal .modal-body.modal-grid > div")
+        .forEach((item) => {
+          item.addEventListener("click", function (e) {
+            e.preventDefault();
+            const span = this.querySelector("span.fi");
+            if (span) {
+              document.querySelector(
+                'button[data-bs-target="#languageModal"]'
+              ).innerHTML = span.outerHTML;
+            }
+            bootstrap.Modal.getInstance(
+              document.getElementById("languageModal")
+            ).hide();
+          });
+        });
+      // Firework
+      const colors = [
+        "#ff4d4d",
+        "#ffcc00",
+        "#00ccff",
+        "#66ff66",
+        "#cc66ff",
+        "#ff9966",
+      ];
+      function createFirework() {
+        const firework = document.createElement("div");
+        firework.classList.add("firework");
+        firework.style.top = `${Math.random() * 80 + 10}%`;
+        firework.style.left = `${Math.random() * 80 + 10}%`;
+        for (let i = 0; i < 20; i++) {
+          const particle = document.createElement("div");
+          particle.classList.add("particle");
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          particle.style.backgroundColor = color;
+          const angle = Math.random() * 2 * Math.PI;
+          const radius = Math.random() * 80 + 20;
+          const x = Math.cos(angle) * radius + "px";
+          const y = Math.sin(angle) * radius + "px";
+          particle.style.setProperty("--x", x);
+          particle.style.setProperty("--y", y);
+          firework.appendChild(particle);
+        }
+        document.body.appendChild(firework);
+        setTimeout(() => {
+          firework.remove();
+        }, 1000);
+      }
+      for (let i = 0; i < 15; i++) {
+        setTimeout(createFirework, i * 200);
+      }
+      // 日期 Modal 預設值
+      window.addEventListener("DOMContentLoaded", () => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        const yyyy2 = tomorrow.getFullYear();
+        const mm2 = String(tomorrow.getMonth() + 1).padStart(2, "0");
+        const dd2 = String(tomorrow.getDate()).padStart(2, "0");
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+        const tomorrowStr = `${yyyy2}-${mm2}-${dd2}`;
+        const checkinInput = document.getElementById("checkinDate");
+        const checkoutInput = document.getElementById("checkoutDate");
+        checkinInput.min = todayStr;
+        checkoutInput.min = todayStr;
+        checkinInput.value = todayStr;
+        checkoutInput.value = tomorrowStr;
       });
-    });
-    // Firework
-    const colors = ["#ff4d4d", "#ffcc00", "#00ccff", "#66ff66", "#cc66ff", "#ff9966"];
-    function createFirework() {
-      const firework = document.createElement("div");
-      firework.classList.add("firework");
-      firework.style.top = `${Math.random() * 80 + 10}%`;
-      firework.style.left = `${Math.random() * 80 + 10}%`;
-      for (let i = 0; i < 20; i++) {
-        const particle = document.createElement("div");
-        particle.classList.add("particle");
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.backgroundColor = color;
-        const angle = Math.random() * 2 * Math.PI;
-        const radius = Math.random() * 80 + 20;
-        const x = Math.cos(angle) * radius + "px";
-        const y = Math.sin(angle) * radius + "px";
-        particle.style.setProperty("--x", x);
-        particle.style.setProperty("--y", y);
-        firework.appendChild(particle);
+      function confirmDateChange() {
+        const checkin = document.getElementById("checkinDate").value;
+        const checkout = document.getElementById("checkoutDate").value;
+        if (!checkin || !checkout) {
+          alert("請選擇完整日期！");
+          return;
+        }
+        if (checkout <= checkin) {
+          alert("退房日期必須晚於入住日期！");
+          return;
+        }
+        alert(`您選擇的日期為：\n入住：${checkin}\n退房：${checkout}`);
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById("changeDateModal")
+        );
+        modal.hide();
       }
-      document.body.appendChild(firework);
-      setTimeout(() => { firework.remove(); }, 1000);
-    }
-    for (let i = 0; i < 15; i++) {
-      setTimeout(createFirework, i * 200);
-    }
-    // 日期 Modal 預設值
-    window.addEventListener("DOMContentLoaded", () => {
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      const yyyy2 = tomorrow.getFullYear();
-      const mm2 = String(tomorrow.getMonth() + 1).padStart(2, "0");
-      const dd2 = String(tomorrow.getDate()).padStart(2, "0");
-      const todayStr = `${yyyy}-${mm}-${dd}`;
-      const tomorrowStr = `${yyyy2}-${mm2}-${dd2}`;
-      const checkinInput = document.getElementById("checkinDate");
-      const checkoutInput = document.getElementById("checkoutDate");
-      checkinInput.min = todayStr;
-      checkoutInput.min = todayStr;
-      checkinInput.value = todayStr;
-      checkoutInput.value = tomorrowStr;
-    });
-    function confirmDateChange() {
-      const checkin = document.getElementById("checkinDate").value;
-      const checkout = document.getElementById("checkoutDate").value;
-      if (!checkin || !checkout) { alert("請選擇完整日期！"); return; }
-      if (checkout <= checkin) { alert("退房日期必須晚於入住日期！"); return; }
-      alert(`您選擇的日期為：\n入住：${checkin}\n退房：${checkout}`);
-      const modal = bootstrap.Modal.getInstance(document.getElementById("changeDateModal"));
-      modal.hide();
-    }
-    function submitCreditCardChange() {
-      const cardNumber = document.getElementById("cardNumber").value.trim();
-      const expiry = document.getElementById("expiry").value;
-      const cvc = document.getElementById("cvc").value.trim();
-      if (!cardNumber || !expiry || !cvc) { alert("請填寫完整信用卡資訊！"); return; }
-      if (cardNumber.length < 16) { alert("卡號應為 16 位數！"); return; }
-      if (!/^\d{3,4}$/.test(cvc)) { alert("CVC 應為 3 或 4 位數字！"); return; }
-      alert(`卡號末四碼 ${cardNumber.slice(-4)} 已更新成功！`);
-      const modal = bootstrap.Modal.getInstance(document.getElementById("changeCardModal"));
-      modal.hide();
-    }
-    function copyShareLink() {
-      const input = document.getElementById("shareLink");
-      input.select();
-      input.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      alert("已複製訂房連結！");
-    }
-    let selectedRoom = null;
-    const roomData = {
-      "豪華雙人套房": { img: "../image/room.png", desc: "房型含特大床、落地窗、沙發座椅與高樓層景觀。" },
-      "經濟雙人房": { img: "../image/room2.png", desc: "不含早餐・簡約風格・平價舒適" }
-    };
-    function selectRoom(roomName, event) {
-      selectedRoom = roomName;
-      document.getElementById("selectedRoom").textContent = roomName;
-      document.querySelectorAll(".room-option").forEach((el) => { el.classList.remove("border-primary", "border-3"); });
-      event.currentTarget.classList.add("border-primary", "border-3");
-      const roomImage = document.getElementById("mainRoomImage");
-      const roomDesc = document.getElementById("mainRoomDesc");
-      const data = roomData[roomName];
-      if (data) {
-        roomImage.src = data.img;
-        roomDesc.textContent = data.desc;
+      function submitCreditCardChange() {
+        const cardNumber = document.getElementById("cardNumber").value.trim();
+        const expiry = document.getElementById("expiry").value;
+        const cvc = document.getElementById("cvc").value.trim();
+        if (!cardNumber || !expiry || !cvc) {
+          alert("請填寫完整信用卡資訊！");
+          return;
+        }
+        if (cardNumber.length < 16) {
+          alert("卡號應為 16 位數！");
+          return;
+        }
+        if (!/^\d{3,4}$/.test(cvc)) {
+          alert("CVC 應為 3 或 4 位數字！");
+          return;
+        }
+        alert(`卡號末四碼 ${cardNumber.slice(-4)} 已更新成功！`);
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById("changeCardModal")
+        );
+        modal.hide();
       }
-    }
-    function confirmRoomChange() {
-      if (!selectedRoom) { alert("請先選擇一個房型！"); return; }
-      const confirmedName = document.getElementById("confirmedRoomName");
-      if (confirmedName) { confirmedName.textContent = selectedRoom; }
-      alert(`您已成功更換為：${selectedRoom}`);
-      const modal = bootstrap.Modal.getInstance(document.getElementById("changeRoomModal"));
-      modal.hide();
-    }
-    // 主要成功頁渲染
-    document.addEventListener("DOMContentLoaded", function() {
-      const resultData = JSON.parse(sessionStorage.getItem("bookingResult") || "{}");
-      if (!resultData || !resultData.bookingData) {
-        alert("找不到訂單資料，請重新下訂！");
-        // window.location.href = "index.html";
-        return;
+      function copyShareLink() {
+        const input = document.getElementById("shareLink");
+        input.select();
+        input.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        alert("已複製訂房連結！");
       }
-      const { bookingData, userInfo, paymentMethod } = resultData;
-      const room = (bookingData.rooms && bookingData.rooms[0]) || {};
-      document.getElementById("confirmedRoomName").textContent = room.room || "—";
-      document.getElementById("mainRoomImage").src = room.imgUrl || "../image/room.png";
-      document.getElementById("mainRoomDesc").textContent = room.description || "—";
-      const checkIn = bookingData.checkin;
-      const checkOut = bookingData.checkout;
-      const d1 = new Date(checkIn);
-      const d2 = new Date(checkOut);
-      const days = Math.max(1, (d2 - d1) / (1000 * 60 * 60 * 24));
-      let paymentText = "尚未付款";
-      if (paymentMethod === "credit") paymentText = "已付款（信用卡）";
-      if (paymentMethod === "ecpay") paymentText = "已付款（綠界）";
-      if (paymentMethod === "cash") paymentText = "現場付款";
-      const orderInfoHTML = `
+      let selectedRoom = null;
+      const roomData = {
+        豪華雙人套房: {
+          img: "../image/room.png",
+          desc: "房型含特大床、落地窗、沙發座椅與高樓層景觀。",
+        },
+        經濟雙人房: {
+          img: "../image/room2.png",
+          desc: "不含早餐・簡約風格・平價舒適",
+        },
+      };
+      function selectRoom(roomName, event) {
+        selectedRoom = roomName;
+        document.getElementById("selectedRoom").textContent = roomName;
+        document.querySelectorAll(".room-option").forEach((el) => {
+          el.classList.remove("border-primary", "border-3");
+        });
+        event.currentTarget.classList.add("border-primary", "border-3");
+        const roomImage = document.getElementById("mainRoomImage");
+        const roomDesc = document.getElementById("mainRoomDesc");
+        const data = roomData[roomName];
+        if (data) {
+          roomImage.src = data.img;
+          roomDesc.textContent = data.desc;
+        }
+      }
+      function confirmRoomChange() {
+        if (!selectedRoom) {
+          alert("請先選擇一個房型！");
+          return;
+        }
+        const confirmedName = document.getElementById("confirmedRoomName");
+        if (confirmedName) {
+          confirmedName.textContent = selectedRoom;
+        }
+        alert(`您已成功更換為：${selectedRoom}`);
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById("changeRoomModal")
+        );
+        modal.hide();
+      }
+      // 主要成功頁渲染
+      document.addEventListener("DOMContentLoaded", function () {
+        const resultData = JSON.parse(
+          sessionStorage.getItem("bookingResult") || "{}"
+        );
+        if (!resultData || !resultData.bookingData) {
+          alert("找不到訂單資料，請重新下訂！");
+          // window.location.href = "index.html";
+          return;
+        }
+        const { bookingData, userInfo, paymentMethod } = resultData;
+        const room = (bookingData.rooms && bookingData.rooms[0]) || {};
+        document.getElementById("confirmedRoomName").textContent =
+          room.room || "—";
+        document.getElementById("mainRoomImage").src =
+          room.imgUrl || "../image/room.png";
+        document.getElementById("mainRoomDesc").textContent =
+          room.description || "—";
+        const checkIn = bookingData.checkin;
+        const checkOut = bookingData.checkout;
+        const d1 = new Date(checkIn);
+        const d2 = new Date(checkOut);
+        const days = Math.max(1, (d2 - d1) / (1000 * 60 * 60 * 24));
+        let paymentText = "尚未付款";
+        if (paymentMethod === "credit") paymentText = "已付款（信用卡）";
+        if (paymentMethod === "ecpay") paymentText = "已付款（綠界）";
+        if (paymentMethod === "cash") paymentText = "現場付款";
+        const orderInfoHTML = `
         <li><strong>入住日期：</strong>${checkIn}</li>
         <li><strong>退房日期：</strong>${checkOut}</li>
         <li><strong>入住天數：</strong>${days} 晚</li>
         <li><strong>付款狀態：</strong>${paymentText}</li>
         <li><strong>房型：</strong>${room.room || "—"}</li>
-        <li><strong>訂房者：</strong>${userInfo.firstName} ${userInfo.lastName}</li>
+        <li><strong>訂房者：</strong>${userInfo.firstName} ${
+          userInfo.lastName
+        }</li>
         <li><strong>電話：</strong>${userInfo.phone}</li>
         <li><strong>Email：</strong>${userInfo.email}</li>
       `;
-      document.getElementById("orderInfoList").innerHTML = orderInfoHTML;
-      sessionStorage.removeItem("bookingResult");
-    });
-  </script>
-  <!-- JS區塊 End -->
-</body>
+        document.getElementById("orderInfoList").innerHTML = orderInfoHTML;
+        // sessionStorage.removeItem("bookingResult");
+      });
+    </script>
+    <!-- JS區塊 End -->
+  </body>
 </html>
