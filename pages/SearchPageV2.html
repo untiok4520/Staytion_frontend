@@ -22,7 +22,7 @@
 <body>
   <nav class="my-navbar navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/pages/homepage/home.html">
         <img src="/assets/logo.png" class="logo_img" alt="logo" />
       </a>
       <ul class="navbar-nav">
@@ -111,8 +111,24 @@
           </div>
         </li>
         <li class="nav-item">
-          <button class="btn btn-primary" onclick="location.href='login.html'">登入</button>
-        </li>
+          <button id="loginBtn" class="btn btn-primary"><a href="/pages/homepage/login.html"
+                  class="text-decoration-none text-reset">登入</a></button>
+          <div id="userDropdown" class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <i class="bi bi-person-fill"></i>
+              </button>
+              <ul class="dropdown-menu user-dropdown text-center dropdown-menu-end">
+                  <li><a class="dropdown-item" href="/pages/usercenter.html">管理訂單</a></li>
+                  <li><a class="dropdown-item" href="#">住宿訊息</a></li>
+                  <li><a class="dropdown-item" href="#">住宿評論</a></li>
+                  <li><a class="dropdown-item" href="#">個人資料</a></li>
+                  <li><a class="dropdown-item" href="#">收藏清單</a></li>
+                  <li><a class="dropdown-item" href="#" id="logoutBtn">登出</a></li>
+              </ul>
+          </div>
+
+      </li>
       </ul>
     </div>
   </nav>

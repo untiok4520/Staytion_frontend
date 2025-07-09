@@ -23,10 +23,10 @@
     <header>
       <nav class="my-navbar navbar navbar-expand-lg">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="/pages/homepage/home.html">
             <img src="../assets/logo.png" class="logo_img" alt="logo" />
           </a>
-          <ul class="navbar-nav">
+          <div class="navbar-nav">
             <div class="nav-item">
               <button
                 type="button"
@@ -180,9 +180,37 @@
               </div>
             </div>
             <div class="nav-item">
-              <button class="btn btn-primary">登入</button>
+              <button id="loginBtn" class="btn btn-primary">
+                <a href="./login.html" class="text-decoration-none text-reset"
+                  >登入</a
+                >
+              </button>
+              <div id="userDropdown" class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="bi bi-person-fill"></i>
+                </button>
+                <ul class="dropdown-menu user-dropdown text-center">
+                  <li>
+                    <a class="dropdown-item" href="/pages/usercenter.html"
+                      >管理訂單</a
+                    >
+                  </li>
+                  <li><a class="dropdown-item" href="#">住宿訊息</a></li>
+                  <li><a class="dropdown-item" href="#">住宿評論</a></li>
+                  <li><a class="dropdown-item" href="#">個人資料</a></li>
+                  <li><a class="dropdown-item" href="#">收藏清單</a></li>
+                  <li>
+                    <a class="dropdown-item" href="#" id="logoutBtn">登出</a>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </ul>
+          </div>
         </div>
       </nav>
     </header>
@@ -283,13 +311,17 @@
                 <div class="contact">
                   聯絡電話：<span id="detail-phone"></span>
                 </div>
+                <div class="chat">
+                  <i class="bi bi-chat-left-dots"></i
+                  ><a href="#" class="send-msg">傳送訊息</a>
+                </div>
               </div>
               <div class="right-section col-lg-4">
                 <p>訂單編號：<span id="detail-orderNumber"></span></p>
                 <a href="#" class="cancel-order-btn">取消訂單</a>
                 <a href="#" class="change-date-btn">更改日期</a>
-                <a href="#">更改房型</a>
-                <a href="#">查看住宿規定</a>
+                <a href="#" class="change-room-btn">更改房型</a>
+                <a href="#" class="view-rules-btn">查看住宿規定</a>
               </div>
             </div>
             <div class="payment-info">
@@ -343,12 +375,13 @@
             </div>
           </div>
         </div>
+
         <!-- 住宿評論 -->
         <div id="reviews" class="content-page" style="display: none">
           <h2>尚未評論</h2>
           <div class="unreview-section">
             <div class="unreview-card template" style="display: none">
-              <img class="hotel-img" src="" alt="hotel image" />
+              <div class="review-img"></div>
               <div class="review-content">
                 <div class="left-info">
                   <h5 class="review-hotel-name"></h5>
@@ -365,39 +398,6 @@
                 </div>
                 <div class="right-info">
                   <div class="rating-options">
-                    <!-- <label>請為這間住宿評分：</label> -->
-                    <!-- <div class="radio-group">
-                      <label
-                        ><input type="radio" name="score" value="1" />1</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="2" />2</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="3" />3</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="4" />4</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="5" />5</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="6" />6</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="7" />7</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="8" />8</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="9" />9</label
-                      >
-                      <label
-                        ><input type="radio" name="score" value="10" />10</label
-                      >
-                    </div> -->
                     <label for="score">請為這間住宿評分：</label>
                     <input
                       type="range"
@@ -441,6 +441,7 @@
             </div>
           </div>
         </div>
+
         <!-- 收藏清單 -->
         <div id="favorites" class="content-page" style="display: none">
           <div class="favlist-filter">
@@ -450,76 +451,151 @@
               <option value="taipei">台北</option>
             </select>
           </div>
-          <h4 class="favlist-title">高雄</h4>
-          <div class="favlist-grid row">
-            <div class="fav-card col-sm-6 col-md-4 col-lg-3 mb-4">
-              <div class="fav-img"></div>
-              <div class="fav-content">
-                <h5>Hotel Name</h5>
-                <div class="fav-stars">★ ★ ★</div>
-                <div class="fav-score-line">
-                  <span class="score">8.0</span>
-                  <span class="count">99,999則評論</span>
-                </div>
-                <div class="fav-location">
-                  <i class="bi bi-geo-alt"></i> 鹽埕區，高雄
-                </div>
-                <div class="fav-price">TWD 99,999</div>
+          <h4 class="favlist-title"></h4>
+          <div class="favlist-grid row g-0">
+            <div
+              class="fav-card template col-sm-6 col-md-4 col-lg-3 mb-4"
+              style="display: none"
+            >
+              <div class="fav-img-wrapper" style="position: relative">
+                <div class="fav-img"></div>
+                <button class="fav-heart-btn">
+                  <i class="bi bi-heart-fill"></i>
+                </button>
               </div>
-            </div>
-
-            <div class="fav-card col-sm-6 col-md-4 col-lg-3 mb-4">
-              <div class="fav-img"></div>
               <div class="fav-content">
                 <h5>Hotel Name</h5>
-                <div class="fav-stars">★ ★</div>
                 <div class="fav-score-line">
                   <span class="score">8.0</span>
                   <span class="count">99,999則評論</span>
                 </div>
                 <div class="fav-location">
-                  <i class="bi bi-geo-alt"></i> 鹽埕區，高雄
+                  <i class="bi bi-geo-alt"></i
+                  ><span class="fav-district"></span>，<span
+                    class="fav-city"
+                  ></span>
                 </div>
                 <div class="fav-price">TWD 99,999</div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- 個人資料 -->
         <div id="profile" class="content-page" style="display: none">
           <h5>用戶詳細資料</h5>
           <div class="profile-card">
             <div class="profile-field name">
-              <div class="avatar"></div>
-              <div class="member-name">
-                <label>英文姓名</label>
-                <div class="profile-value">
-                  <p class="value">Yun-Chu Chu</p>
+              <label>英文姓名</label>
+              <div class="profile-value">
+                <p class="value"></p>
+                <button class="edit-btn name">編輯</button>
+              </div>
+              <div class="edit-passport-name" style="display: none">
+                <div class="form-group">
+                  <label for="passportFirstName">護照英文名</label>
+                  <input
+                    type="text"
+                    id="passportFirstName"
+                    class="form-control"
+                    placeholder="護照英文名"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="passportLastName">護照英文姓</label>
+                  <input
+                    type="text"
+                    id="passportLastName"
+                    class="form-control"
+                    placeholder="護照英文姓"
+                  />
+                </div>
+                <div class="button-group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary cancel-edit-btn"
+                  >
+                    取消
+                  </button>
+                  <button type="button" class="btn btn-primary save-edit-btn">
+                    儲存
+                  </button>
                 </div>
               </div>
-              <button class="edit-btn name">編輯</button>
             </div>
 
             <div class="profile-field">
               <label>電子郵件</label>
               <div class="profile-value">
-                <p class="value">yyy@gmail.com</p>
-                <button class="edit-btn">編輯</button>
+                <p class="email"></p>
+                <div class="verified">
+                  <p class="verified">已通過驗證</p>
+                </div>
               </div>
             </div>
 
-            <div class="profile-field">
+            <div class="profile-field tel">
               <label>電話號碼</label>
               <div class="profile-value">
-                <p class="value">+886 0912345678</p>
-                <button class="edit-btn">編輯</button>
+                <p class="value"></p>
+                <button class="edit-btn tel">更改</button>
+              </div>
+              <div class="edit-tel" style="display: none">
+                <div class="form-group">
+                  <label for="newTel">新電話號碼</label>
+                  <input
+                    type="tel"
+                    id="newTel"
+                    class="form-control"
+                    pattern="09\d{8}"
+                    maxlength="10"
+                    placeholder="請輸入電話號碼"
+                  />
+                </div>
+                <div class="button-group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary me-2 cancel-tel-btn"
+                  >
+                    取消
+                  </button>
+                  <button type="button" class="btn btn-primary save-tel-btn">
+                    儲存
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div class="profile-field">
+            <div class="profile-field password">
               <label>密碼</label>
               <div class="profile-value">
                 <p class="value">••••••••••••</p>
-                <button class="edit-btn">編輯</button>
+                <button class="edit-btn password">更改</button>
+              </div>
+              <div class="edit-password" style="display: none">
+                <div class="form-group">
+                  <label for="newPassword">新密碼</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    class="form-control"
+                    placeholder="請輸入新密碼"
+                  />
+                </div>
+                <div class="button-group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary me-2 cancel-password-btn"
+                  >
+                    取消
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary save-password-btn"
+                  >
+                    儲存
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -554,11 +630,21 @@
               </div>
             </div>
           </div>
+
+          <div class="profile-card">
+            <div class="profile-field delete-account">
+              <div class="profile-value">
+                <h5>刪除帳號</h5>
+                <i class="bi bi-trash delete-icon"></i>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
 
     <!-- modal視窗 -->
+
     <!-- 取消訂單modal視窗 -->
     <div id="cancelModal" class="modal-overlay" style="display: none">
       <div class="cancel-modal">
@@ -566,8 +652,12 @@
         <h2>取消原因</h2>
         <select id="cancelReason">
           <option value="">請選擇原因</option>
-          <option value="change_plan">改變行程</option>
-          <option value="found_better">找到更便宜的住宿</option>
+          <option value="change_plan">改變原訂行程</option>
+          <option value="found_better">找到價格更優惠的住宿</option>
+          <option value="found_better">住宿地點不方便</option>
+          <option value="found_better">健康因素或突發疾病</option>
+          <option value="found_better">需要改變住宿類型</option>
+          <option value="found_better">同行者取消或無法出行</option>
           <option value="other">其他原因</option>
         </select>
         <div class="modal-actions">
@@ -613,6 +703,77 @@
       </div>
     </div>
 
+    <!-- 更改房型 modal 視窗 -->
+    <div id="changeRoomModal" class="modal-overlay" style="display: none">
+      <div class="changeRoom-modal">
+        <button id="closeChangeRoomModal" class="close-btn">✕</button>
+        <h2>更改房型</h2>
+        <div class="room-options">
+          <!-- template card -->
+          <div
+            class="room-card template"
+            style="display: none"
+            data-roomtype-id=""
+            data-price=""
+          >
+            <img src="" alt="房型圖片" class="room-img" />
+            <h3 class="room-name"></h3>
+            <p class="room-price"></p>
+          </div>
+          <!-- 動態插入卡片將放在這裡 -->
+        </div>
+        <div class="modal-actions">
+          <button id="changeRoomModalClose" class="btn btn-outline-secondary">
+            關閉
+          </button>
+          <button id="changeRoomModalConfirm" class="btn btn-secondary">
+            確認
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看住宿規定 Modal -->
+    <div id="hotelRulesModal" class="modal-overlay" style="display: none">
+      <div class="hotel-rules-modal">
+        <button id="closeHotelRulesModal" class="close-btn">✕</button>
+        <h2>住宿規定</h2>
+        <ul class="rules-list">
+          <li>入住時間：15:00後，退房時間：12:00前。</li>
+          <li>禁止攜帶寵物入住。</li>
+          <li>住宿期間禁止吸菸，違者將酌收清潔費用。</li>
+          <li>如需加床或嬰兒床，請提前告知，可能需額外付費。</li>
+          <li>入住時需出示有效身分證件及信用卡。</li>
+          <li>部分房價不含早餐，請留意訂房條件。</li>
+          <li>如需更改或取消訂房，請遵循各房型取消政策。</li>
+        </ul>
+        <div class="modal-actions">
+          <button id="hotelRulesModalClose" class="btn btn-secondary">
+            關閉
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 確認刪除帳號 modal -->
+    <div
+      id="deleteAccountModal"
+      class="delete-modal-overlay"
+      style="display: none"
+    >
+      <div class="delete-modal-box">
+        <h5>確認刪除帳號？</h5>
+        <div class="delete-modal-btns">
+          <button id="cancelDeleteAccountBtn" class="btn btn-outline-secondary">
+            取消
+          </button>
+          <button id="confirmDeleteAccountBtn" class="btn btn-danger">
+            確認
+          </button>
+        </div>
+      </div>
+    </div>
+
     <footer class="text-white py-4 mt-5">
       <div class="container">
         <div class="row row-cols-2 row-cols-md-4 g-4 text-center">
@@ -638,7 +799,7 @@
           <div>
             <h5>合作夥伴</h5>
             <ul class="list-unstyled">
-              <li><a href="#">登入後台</a></li>
+              <li><a href="/pages/staytion_dashboard.html">登入後台</a></li>
             </ul>
           </div>
         </div>

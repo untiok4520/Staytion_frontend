@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Staytion - 評論管理</title>
+    <title>Staytion - 訂單管理</title>
 
-    <!-- Bootstrap + icons + flag-icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
 
-    <!-- Custom styles -->
     <link rel="stylesheet" href="../styles/navbar.css" />
     <link rel="stylesheet" href="../styles/sidebar.css" />
 
@@ -23,15 +21,13 @@
         body {
             margin: 0;
             background-color: white;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
 
         .navbar {
             height: var(--navbar-height);
             /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
         }
-
-
 
         .card {
             background-color: #ffffff;
@@ -50,19 +46,31 @@
             background-color: #f0f4f8;
         }
 
-        .card h6 {
-            color: #376996;
-            font-weight: bold;
+        /* 為了讓 Modal 內的文字和下拉選單對齊，可以調整一下 */
+        #orderModal .modal-body p {
+            margin-bottom: 0.5rem;
+        }
+        #orderModal .modal-body strong {
+            display: inline-block;
+            width: 90px;
+        }
+
+        /* 讓付款狀態的文字和編輯按鈕能同行 - 這裡的樣式現在可能用不到，但保留 */
+        #orderModal .modal-body .col-md-6:has(#modalPaymentStatusText) {
+            display: flex;
+            align-items: center;
+        }
+        #modalPaymentStatusText {
+            margin-right: 8px;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Navbar -->
     <nav class="my-navbar navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/pages/homepage/home.html">
+            <a class="navbar-brand" href="#">
                 <img src="../assets/logo.png" class="logo_img" alt="logo" />
             </a>
             <ul class="navbar-nav">
@@ -155,25 +163,12 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <button id="loginBtn" class="btn btn-primary"><a href="../pages/homepage/login.html"
-                            class="text-decoration-none text-reset">登入</a></button>
-                    <div id="userDropdown" class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="bi bi-person-fill"></i>
-                        </button>
-                        <ul class="dropdown-menu user-dropdown text-center dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/pages/usercenter.html">個人資料</a></li>
-                            <li><a class="dropdown-item" href="/pages/homepage/home.html" id="logoutBtn">登出</a></li>
-                        </ul>
-                    </div>
+                    <button class="btn btn-primary">登入</button>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <!-- Sidebar -->
-    <!-- <aside class="sidebar position-fixed start-0 bg-white border-end shadow-sm"> -->
     <aside class="sidebar position-fixed start-0 bg-white">
         <ul class="nav flex-column p-3 text-nowrap">
             <li class="nav-item">
@@ -187,12 +182,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="booking_management.html" class="nav-link">
+                <a href="#" class="nav-link active">
                     <i class="bi bi-journal-bookmark me-2"></i><span class="link-text">訂單管理</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link active">
+                <a href="review_management.html" class="nav-link">
                     <i class="bi bi-chat-dots me-2"></i><span class="link-text">評論管理</span>
                 </a>
             </li>
@@ -209,99 +204,169 @@
         </ul>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <h4 class="fw-bold text-primary mb-4">評論管理</h4>
+            <h4 class="fw-bold text-primary mb-4">訂單管理</h4>
 
-            <!-- 篩選區 -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <form class="row g-3 align-items-end">
+                    <form id="filterForm" class="row g-3 align-items-end">
                         <div class="col-md-3">
-                            <label class="form-label">關鍵字搜尋</label>
-                            <input type="text" class="form-control" placeholder="輸入姓名 / 評論內容">
+                            <label for="keyword" class="form-label">關鍵字搜尋</label>
+                            <input type="text" class="form-control" id="keyword" placeholder="輸入姓名 / 編號 / 房型">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">飯店選擇</label>
-                            <select class="form-select">
+                            <select id="hotelSelect" class="form-select">
                                 <option value="">全部</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">留言時間</label>
-                            <input type="date" class="form-control">
+                            <label class="form-label">訂購日期</label>
+                            <input type="date" class="form-control" id="createdAt">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label">評分篩選</label>
-                            <select class="form-select">
-                                <option>全部</option>
-                                <option>8 分以上</option>
-                                <option>6~7 分</option>
-                                <option>5 分以下</option>
+                            <label class="form-label">付款狀態</label>
+                            <select class="form-select" id="paymentStatusFilter">
+                                <option value="">全部</option>
+                                <option value="PAID">已付款</option>
+                                <option value="UNPAID">未付款</option>
+                                <option value="CANCELED">已取消</option>
                             </select>
                         </div>
                         <div class="col-md-1 d-grid">
-                            <button class="btn btn-primary">查詢</button>
+                            <button type="submit" class="btn btn-primary">查詢</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- 平均評分與匯出 -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="alert border-primary text-primary mb-0">
-                    <strong>目前平均評分：</strong>
-                    <span id="avgRating" class="fw-bold text-success fs-5">-- </span>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-success">
-                        <i class="bi bi-file-earmark-excel"></i> 匯出 Excel
-                    </button>
-                    <button class="btn btn-outline-danger">
-                        <i class="bi bi-file-earmark-pdf"></i> 匯出 PDF
-                    </button>
-                </div>
+            <div class="d-flex justify-content-end mb-3 gap-2">
+                <button class="btn btn-outline-success">
+                    <i class="bi bi-file-earmark-excel"></i> 匯出 Excel
+                </button>
+                <button class="btn btn-outline-danger">
+                    <i class="bi bi-file-earmark-pdf"></i> 匯出 PDF
+                </button>
             </div>
 
-            <!-- 評論列表 -->
             <div class="card mb-4">
-                <div class="card-header fw-bold">評論總覽</div>
-                <div class="card-body">
-                    <div id="reviewList" class="row g-3"></div>
-                </div>
-            </div>
+                <div class="card-header fw-bold">訂單總覽</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered table-hover align-middle mb-0" id="orderTable" style="min-width: 1200px;">
+                        <thead>
+                            <tr>
+                                <th>訂單編號</th>
+                                <th>房客姓名</th>
+                                <th>飯店名稱</th>
+                                <th>房型</th>
+                                <th>訂購日期</th>
+                                <th>付款狀態</th>
+                                <th>付款方式</th>
+                                <th>金額</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
 
-            <!-- 分頁 -->
-            <nav class="mt-4">
-                <ul id="pagination" class="pagination pagination-sm justify-content-center">
-                    <li class="page-item disabled"><a class="page-link" href="#">上一頁</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">下一頁</a></li>
-                </ul>
-            </nav>
-
-            <!-- 回覆成功提示 -->
-            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
-                <div id="replyToast" class="toast align-items-center text-bg-success border-0" role="alert">
-                    <div class="d-flex">
-                        <div class="toast-body">回覆已送出！</div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                            data-bs-dismiss="toast"></button>
+                    <div class="text-center mt-3">
+                        <ul id="pagination" class="pagination pagination-sm justify-content-center">
+                            <li class="page-item disabled"><a class="page-link" href="#">上一頁</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">下一頁</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="orderModalLabel">訂單詳情</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-2">
+                                <div class="col-md-6"><strong>訂單編號：</strong> <span id="modalOrderCode"></span></div>
+                                <div class="col-md-6"><strong>訂購日：</strong> <span id="modalOrderDate"></span></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6"><strong>房客姓名：</strong> <span id="modalGuestName"></span></div>
+                                <div class="col-md-6"><strong>入住日期：</strong> <span id="modalStayDate"></span></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6"><strong>飯店名稱：</strong> <span id="modalHotelName"></span></div>
+                                <div class="col-md-6"><strong>房型：</strong> <span id="modalRoomType"></span></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <strong>付款狀態：</strong>
+                                    <span id="modalPaymentStatusText" class="fw-bold"></span>
+                                    <select class="form-select  w-auto ms-2" id="modalPaymentStatusSelect" style="display:none;">
+                                        <option value="PAID">已付款</option>
+                                        <option value="UNPAID">未付款</option>
+                                        <option value="CANCELED">已取消</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6"><strong>付款方式：</strong> <span id="modalPaymentMethod"></span></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6"><strong>金額：</strong> <span id="modalAmount"></span></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="editOrderBtn">編輯</button>
+                            <button type="button" class="btn btn-success" id="saveOrderChangesBtn" style="display:none;">儲存修改</button>
+                            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">取消</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalBtn">關閉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="guestModalLabel">房客詳細資料</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>姓名：</strong><span id="modalName"></span></p>
+                            <p><strong>Email：</strong><span id="modalEmail"></span></p>
+                            <p><strong>電話：</strong><span id="modalPhone"></span></p>
+                            <p><strong>總訂單：</strong><span id="modalOrders"></span></p>
+                            <p><strong>總消費：</strong><span id="modalAmountGuest"></span></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
+                <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">操作成功！</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../script/navbar.js"></script>
-    <!-- <script src="../script/review.js"></script> -->
-    <script src="../script/reviewV3.js"></script>
+    <script src="../script/bookingV3.js"></script> 
+
 
 </body>
 

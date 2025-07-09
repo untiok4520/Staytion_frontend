@@ -101,27 +101,50 @@ function showSuggestions(keyword = "") {
 }
 
 destinationInput.addEventListener("input", () => {
+
+  // 地點自動完成功能 
+
   showSuggestions(destinationInput.value.trim());
 });
 
 destinationInput.addEventListener("focus", () => {
+
+  //  地點自動完成功能 
+
   showSuggestions(destinationInput.value.trim());
 });
 
 suggestionsEl.addEventListener("click", (e) => {
   if (e.target.tagName === "LI") {
+
+    // === 地點自動完成功能 ===
+
     destinationInput.value = e.target.textContent;
     suggestionsEl.style.display = "none";
   }
 });
 
 document.addEventListener("click", (e) => {
+
+  // === 地點自動完成功能 ===
+
   if (!suggestionsEl.contains(e.target) && e.target !== destinationInput) {
     suggestionsEl.style.display = "none";
   }
 });
 
-// 日期選擇器
+
+// 點擊外部隱藏清單
+document.addEventListener("click", (e) => {
+
+  // === 地點自動完成功能 ===
+
+  if (!suggestionsEl.contains(e.target) && e.target !== destinationInput) {
+    suggestionsEl.style.display = "none";
+  }
+});
+
+// 選擇日期 搜尋欄位日期選擇
 
 flatpickr("#daterange", {
   locale: "zh_tw",
@@ -129,7 +152,7 @@ flatpickr("#daterange", {
   minDate: "today",
   dateFormat: "Y-m-d",
   showMonths: 2,
-  onChange: function(selectedDates) {
+  onChange: function (selectedDates) {
     if (selectedDates.length === 2) {
       const format = (d) => {
         const yyyy = d.getFullYear();
@@ -140,25 +163,33 @@ flatpickr("#daterange", {
 
       const checkin = format(selectedDates[0]);
       const checkout = format(selectedDates[1]);
-      updateRoomQuantitiesByAvailability(checkin, checkout);
 
+      // 這兩行就是同步到預訂面板
       document.getElementById("checkin-date").value = checkin;
       document.getElementById("checkout-date").value = checkout;
 
+      // 讓右側 date picker UI 也同步變動（不一定需要，但體驗更好）
       checkinPicker.setDate(checkin, true);
       checkoutPicker.set("minDate", checkin);
       checkoutPicker.setDate(checkout, true);
+
+      // 若要下拉選單即時更新房型庫存
+      updateRoomQuantitiesByAvailability(checkin, checkout);
     }
   }
 });
 
-// 入住退房 picker
+
+// 預定區塊 入住日、退房日分開
+
+// 入住退房日期選擇 
+
 const checkinPicker = flatpickr("#checkin-date", {
   locale: "zh_tw",
   minDate: "today",
   dateFormat: "Y-m-d",
   onChange: function (_, dateStr) {
-    checkoutPicker.set("minDate", dateStr);
+    checkoutPicker.set("minDate", dateStr); // 退房日不能早於入住日
   },
 });
 
@@ -168,26 +199,52 @@ const checkoutPicker = flatpickr("#checkout-date", {
   dateFormat: "Y-m-d",
 });
 
-// 人數 popup
+function syncToSearchBar() {
+  const checkin = document.getElementById('checkin-date').value;
+  const checkout = document.getElementById('checkout-date').value;
+  if (checkin && checkout) {
+    document.getElementById('daterange').value = `${checkin} - ${checkout}`;
+  }
+}
+
+document.getElementById('checkin-date').addEventListener('change', syncToSearchBar);
+document.getElementById('checkout-date').addEventListener('change', syncToSearchBar);
+
+// 選擇數量 -------------------------------------------------
+// 房客 popup 與數量控制
+
 const guestBtn = document.getElementById("guest-btn");
 const guestPopup = document.getElementById("guest-popup");
-const guestCounts = { adults: 2, children: 0, rooms: 1 };
 
+const guestCounts = {
+  adults: 2,
+  children: 0,
+  rooms: 1
+};
+
+// 更新顯示文字
 function updateGuestText() {
   guestBtn.value = `${guestCounts.adults} 位成人・${guestCounts.children} 位孩童・${guestCounts.rooms} 間房`;
 }
 
+// 顯示/隱藏 popup
 guestBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  guestPopup.style.display = guestPopup.style.display === "block" ? "none" : "block";
+  if (guestPopup.style.display === "block") {
+    guestPopup.style.display = "none";
+  } else {
+    guestPopup.style.display = "block";
+  }
 });
 
+// 點擊外部關閉 popup
 document.addEventListener("click", (e) => {
   if (!guestPopup.contains(e.target) && e.target !== guestBtn) {
     guestPopup.style.display = "none";
   }
 });
 
+// 控制加減按鈕
 guestPopup.querySelectorAll("button.qty-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const type = btn.dataset.type;
@@ -203,17 +260,66 @@ guestPopup.querySelectorAll("button.qty-btn").forEach(btn => {
       }
     }
 
+    // 更新 popup 顯示數字
     document.getElementById(type + "-count").textContent = guestCounts[type];
+    // 更新輸入欄文字
     updateGuestText();
   });
 });
 
+// 初始化文字顯示
 updateGuestText();
 
-// 搜尋跳轉
 
+
+
+//貨幣切換按鈕
+
+// === 貨幣切換 ===
+
+document.querySelectorAll("#currencyModal .modal-body.modal-grid a").forEach(function (item) {
+  item.addEventListener("click", function (e) {
+    e.preventDefault();
+    const html = this.innerHTML.trim();
+    const parts = html.split("<br>");
+    const code = parts[parts.length - 1].trim();
+
+    // === 貨幣切換 ===
+
+    const btn = document.querySelector('button[data-bs-target="#currencyModal"]');
+    if (btn) {
+      btn.textContent = code;
+    }
+    const modalEl = document.getElementById("currencyModal");
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance) modalInstance.hide();
+  });
+});
+
+//語言切換按鈕
+
+// === 語言切換 ===
+
+document.querySelectorAll("#languageModal .modal-body.modal-grid > div").forEach(function (item) {
+  item.addEventListener("click", function (e) {
+    e.preventDefault();
+    const span = this.querySelector("span.fi");
+
+    // === 語言切換 ===
+
+    const btn = document.querySelector('button[data-bs-target="#languageModal"]');
+    if (span && btn) {
+      btn.innerHTML = span.outerHTML;
+    }
+    const modalEl = document.getElementById("languageModal");
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance) modalInstance.hide();
+  });
+});
+
+// 跳轉搜尋結果頁
 document.getElementById("search-btn").addEventListener("click", () => {
-  const destination = encodeURIComponent(document.getElementById("destinationInput").value.trim());
+  const destination = document.getElementById("destinationInput").value.trim();
   const daterange = document.getElementById("daterange").value.trim();
   const { adults, children, rooms } = guestCounts;
 
@@ -222,7 +328,23 @@ document.getElementById("search-btn").addEventListener("click", () => {
     return;
   }
 
-  const [checkin, checkout] = daterange.split(" to ");
+  // 支援兩種分隔符：「 - 」與「 to 」
+  let checkin = '';
+  let checkout = '';
+  if (daterange.includes(" - ")) {
+    [checkin, checkout] = daterange.split(" - ");
+  } else if (daterange.includes(" to ")) {
+    [checkin, checkout] = daterange.split(" to ");
+  } else if (daterange.includes("至")) {
+    [checkin, checkout] = daterange.split("至").map(s => s.trim());
+  }
+
+  // 防呆：日期沒選完整
+  if (!checkin || !checkout) {
+    alert("請完整選擇入住與退房日期！");
+    return;
+  }
+
   const searchParams = new URLSearchParams({
     destination,
     checkin,
@@ -231,35 +353,5 @@ document.getElementById("search-btn").addEventListener("click", () => {
     children,
     rooms
   });
-
-  window.location.href = `/SearchPageV2.html?${searchParams.toString()}`;
+  window.location.href = `/pages/SearchPageV2.html?${searchParams.toString()}`;
 });
-
-// 房型庫存更新
-
-async function updateRoomQuantitiesByAvailability(checkin, checkout) {
-  const selects = document.querySelectorAll(".booking-select");
-
-  for (const select of selects) {
-    const roomTypeId = select.dataset.roomtypeid;
-    const roomName = select.dataset.room;
-    const price = parseInt(select.dataset.price, 10) || 0;
-
-    const res = await fetch(`http://localhost:8080/api/rooms/${roomTypeId}/availability?start=${checkin}&end=${checkout}`);
-    const data = await res.json();
-
-    const remaining = Math.min(...data.map(d => d.availableQuantity));
-    const safeRemaining = isFinite(remaining) ? remaining : 0;
-
-    const stockText = select.closest(".room-booking").querySelector(".price");
-    if (stockText) {
-      stockText.textContent = `剩餘${safeRemaining}間房間`;
-    }
-
-    select.innerHTML = Array.from({ length: safeRemaining + 1 }).map((_, n) => {
-      const total = n * price;
-      const optionData = { room: roomName, price: price, count: n };
-      return `<option value='${JSON.stringify(optionData)}'>${n} 間（NT$ ${total}）</option>`;
-    }).join("");
-  }
-}
