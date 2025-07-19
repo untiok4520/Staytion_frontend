@@ -434,9 +434,15 @@ function showOrderDetail(detail) {
   });
 
   // 點「繼續」處理取消訂單邏輯
-  document
-    .getElementById("cancelModalConfirm")
-    .addEventListener("click", async () => {
+
+  function bindCancelOrderHandler() {
+    const oldBtn = document.getElementById("cancelModalConfirm");
+
+    // 用 cloneNode 清除舊事件
+    const newBtn = oldBtn.cloneNode(true);
+    oldBtn.replaceWith(newBtn);
+
+    newBtn.addEventListener("click", async () => {
       const reason = document.getElementById("cancelReason").value;
       if (!reason) {
         alert("請選擇取消原因");
@@ -456,13 +462,9 @@ function showOrderDetail(detail) {
             },
           }
         );
-        if (!res.ok) {
-          throw new Error("取消失敗，請稍後再試");
-        }
+        if (!res.ok) throw new Error("取消失敗，請稍後再試");
 
         alert("已送出取消申請");
-
-        // 關閉 modal 與訂單詳情，顯示列表
         document.getElementById("cancelModal").style.display = "none";
         document.querySelector(".order-detail-panel").style.display = "none";
         document.querySelectorAll(".location").forEach((el) => {
@@ -472,10 +474,8 @@ function showOrderDetail(detail) {
           el.style.display = "block";
         });
 
-        // 重新分類與渲染取消後的訂單狀態
         const updatedOrders = await fetchAndClassifyOrders();
         ordersByType = updatedOrders;
-        // 設定 cancelled tab 為 active
         document
           .querySelectorAll(".tab")
           .forEach((t) => t.classList.remove("active"));
@@ -488,6 +488,8 @@ function showOrderDetail(detail) {
         alert("取消失敗：" + err.message);
       }
     });
+  }
+  bindCancelOrderHandler();
 
   //=============== 更改日期 ================
   // 顯示 changeDateModal
@@ -721,7 +723,6 @@ document.querySelectorAll(".send-msg").forEach((el) => {
     e.preventDefault();
 
     const hotelId = el.getAttribute("data-hotel-id");
-
     if (!hotelId) {
       alert("無法取得 hotelId");
       return;
@@ -730,12 +731,20 @@ document.querySelectorAll(".send-msg").forEach((el) => {
     try {
       // 呼叫你新建的查房東 API
       const receiverId = await getHostUserId(hotelId);
-
       // 建立或查找聊天室
       const chatRoomId = await createOrGetChatRoom(receiverId, hotelId);
-
+      console.log("建立或取得聊天室 chatRoomId：", chatRoomId);
       switchPageToMessages(chatRoomId);
       await fetchChatList();
+      const chatItem = document.querySelector(
+        `.chat-list-item[data-chat-room-id="${chatRoomId}"]`
+      );
+
+      if (chatItem) {
+        handleChatListItemClick(chatItem);
+      } else {
+        console.warn("找不到新建立的聊天室項目");
+      }
     } catch (err) {
       console.error(err);
       alert("建立聊天室失敗：" + err.message);
